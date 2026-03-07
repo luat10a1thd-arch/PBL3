@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <title>Quản Lý Kho Hàng - Cafe 24/7</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="admin-dashboard dash-bg-wrapper">
+    <div class="dash-bg-overlay"></div>
+    <div class="dash-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="dash-sidebar">
+      <div class="dash-logo-wrap">
+        <i class="fa-solid fa-mug-saucer dash-logo-icon"></i>
+        <div class="dash-logo-text-wrap">
+          <h1 class="dash-logo-title">CAFE 24/7</h1>
+          <p class="dash-logo-subtitle">Bảng Quản Trị</p>
+        </div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="AdminDashboard.html" class="dash-nav-item">
+          <i class="fa-solid fa-chart-line dash-nav-icon"></i>
+          <span class="dash-nav-text">Tổng Quan</span>
+        </a>
+        <a href="Orders.html" class="dash-nav-item">
+          <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
+          <span class="dash-nav-text">Đơn Hàng</span>
+        </a>
+        <a href="AdminMenuManagement.html" class="dash-nav-item">
+          <i class="fa-solid fa-utensils dash-nav-icon"></i>
+          <span class="dash-nav-text">Thực Đơn</span>
+        </a>
+        <a href="Inventory.html" class="dash-nav-item active">
+          <i class="fa-solid fa-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Kho Hàng</span>
+        </a>
+        <a href="#" class="dash-nav-item">
+          <i class="fa-solid fa-users dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhân Viên</span>
+        </a>
+      </nav>
+
+      <div class="dash-bottom-actions">
+        <a href="ShiftClosingReport.html" class="dash-nav-item">
+          <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
+          <span class="dash-nav-text">Chốt Ca</span>
+        </a>
+        <a href="#" class="dash-nav-item dash-settings-link">
+          <i class="fa-solid fa-gear dash-nav-icon"></i>
+          <span class="dash-nav-text">Cài Đặt</span>
+        </a>
+        <div class="dash-user-profile">
+          <div class="dash-user-avatar">AM</div>
+          <div class="dash-user-info">
+            <span class="dash-user-name">Alex Morgan</span>
+            <span class="dash-user-role">Quản Trị Viên</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <header class="dash-header">
+        <div class="dash-header-left">
+          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <h2 class="dash-page-title">Kho Hàng</h2>
+          <div class="dash-shift-badge">
+            <div class="dash-shift-dot"></div>
+            <span class="dash-shift-text">CA 2: 12:00 - 17:00</span>
+          </div>
+        </div>
+        
+        <div class="dash-header-right">
+          <div class="dash-search-box">
+            <i class="fa-solid fa-search dash-search-icon"></i>
+            <input type="text" placeholder="Tìm kiếm nguyên liệu..." class="dash-search-input" />
+          </div>
+          <button class="dash-notification-btn">
+            <i class="fa-solid fa-bell"></i>
+            <span class="dash-notification-dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="dash-content-area">
+        <div class="dash-content-container">
+          
+          <div class="dash-kpi-grid">
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Tổng Loại Nguyên Liệu</h3>
+              <p class="dash-kpi-value">142</p>
+            </div>
+            
+            <div class="dash-card">
+              <h3 class="dash-kpi-title text-warning">Cảnh Báo Sắp Hết</h3>
+              <p class="dash-kpi-value text-warning">8</p>
+            </div>
+
+            <div class="dash-card">
+              <h3 class="dash-kpi-title text-danger">Đã Hết Hàng</h3>
+              <p class="dash-kpi-value text-danger">2</p>
+            </div>
+
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Tổng Giá Trị Kho</h3>
+              <p class="dash-kpi-value">311,250,000₫</p>
+            </div>
+          </div>
+
+          <div class="dash-actions-bar">
+            <div class="dash-filter-group">
+              <select class="dash-select-box">
+                <option>Tất cả danh mục</option>
+                <option>Hạt cà phê</option>
+                <option>Sữa & Chế phẩm</option>
+                <option>Syrup</option>
+                <option>Bao bì</option>
+              </select>
+            </div>
+            <button class="dash-btn-primary">
+              <i class="fa-solid fa-plus"></i> Nhập Hàng
+            </button>
+          </div>
+
+          <div class="dash-table-card no-padding">
+            <table class="dash-table no-margin">
+              <thead>
+                <tr>
+                  <th class="td-checkbox"><input type="checkbox" /></th>
+                  <th>Tên Nguyên Liệu</th>
+                  <th>Danh Mục</th>
+                  <th>Trạng Thái</th>
+                  <th class="right">Số Lượng</th>
+                  <th class="right">Đơn Giá</th>
+                  <th class="right">Tổng Giá Trị</th>
+                  <th class="right td-actions">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-checkbox"><input type="checkbox" /></td>
+                  <td>
+                    <div class="dash-product-cell">
+                      <div class="dash-product-img icon-cell">
+                        <i class="fa-solid fa-mug-hot"></i>
+                      </div>
+                      <div class="dash-product-info">
+                        <span class="dash-product-name">Cà phê Yirgacheffe</span>
+                        <span class="dash-product-id">Mã: CB-001</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="dash-category-badge coffee">Hạt cà phê</span></td>
+                  <td>
+                    <div class="dash-status-indicator">
+                      <div class="dash-status-dot in-stock"></div>
+                      <span class="text-success">Còn hàng</span>
+                    </div>
+                  </td>
+                  <td class="right dash-price">12.5 kg</td>
+                  <td class="right dash-cost">462,500₫</td>
+                  <td class="right dash-price">5,781,250₫</td>
+                  <td class="right td-actions">
+                    <div class="dash-table-actions">
+                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
+                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="td-checkbox"><input type="checkbox" /></td>
+                  <td>
+                    <div class="dash-product-cell">
+                      <div class="dash-product-img icon-cell">
+                        <i class="fa-solid fa-bottle-droplet"></i>
+                      </div>
+                      <div class="dash-product-info">
+                        <span class="dash-product-name">Sữa Tươi Nguyên Kem</span>
+                        <span class="dash-product-id">Mã: DY-024</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="dash-category-badge breakfast">Sữa & Chế phẩm</span></td>
+                  <td>
+                    <div class="dash-status-indicator">
+                      <div class="dash-status-dot low-stock"></div>
+                      <span class="text-warning">Sắp hết</span>
+                    </div>
+                  </td>
+                  <td class="right dash-price">2.0 L</td>
+                  <td class="right dash-cost">30,000₫</td>
+                  <td class="right dash-price">60,000₫</td>
+                  <td class="right td-actions">
+                    <div class="dash-table-actions">
+                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
+                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="td-checkbox"><input type="checkbox" /></td>
+                  <td>
+                    <div class="dash-product-cell">
+                      <div class="dash-product-img icon-cell">
+                        <i class="fa-solid fa-wine-bottle"></i>
+                      </div>
+                      <div class="dash-product-info">
+                        <span class="dash-product-name">Vanilla Syrup</span>
+                        <span class="dash-product-id">Mã: SY-102</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="dash-category-badge pastries">Syrup</span></td>
+                  <td>
+                    <div class="dash-status-indicator">
+                      <div class="dash-status-dot out-of-stock"></div>
+                      <span class="text-danger">Đã hết hàng</span>
+                    </div>
+                  </td>
+                  <td class="right dash-price">0 Chai</td>
+                  <td class="right dash-cost">300,000₫</td>
+                  <td class="right dash-price">0₫</td>
+                  <td class="right td-actions">
+                    <div class="dash-table-actions">
+                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
+                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="no-border-row">
+                  <td class="td-checkbox"><input type="checkbox" /></td>
+                  <td>
+                    <div class="dash-product-cell">
+                      <div class="dash-product-img icon-cell">
+                        <i class="fa-solid fa-box-open"></i>
+                      </div>
+                      <div class="dash-product-info">
+                        <span class="dash-product-name">Ly Giấy (12oz)</span>
+                        <span class="dash-product-id">Mã: PK-500</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="dash-category-badge tea">Bao bì</span></td>
+                  <td>
+                    <div class="dash-status-indicator">
+                      <div class="dash-status-dot in-stock"></div>
+                      <span class="text-success">Còn hàng</span>
+                    </div>
+                  </td>
+                  <td class="right dash-price">450 Cái</td>
+                  <td class="right dash-cost">2,000₫</td>
+                  <td class="right dash-price">900,000₫</td>
+                  <td class="right td-actions">
+                    <div class="dash-table-actions">
+                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
+                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+
+            <div class="dash-pagination pd-25">
+              <div class="dash-pagination-info">
+                Đang hiển thị <span>1</span> đến <span>4</span> trong số <span>142</span> kết quả
+              </div>
+              <div class="dash-pagination-controls">
+                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="dash-page-btn active">1</button>
+                <button class="dash-page-btn">2</button>
+                <button class="dash-page-btn">3</button>
+                <span class="dash-pagination-dots">...</span>
+                <button class="dash-page-btn">12</button>
+                <button class="dash-page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+    <script>
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const sidebar = document.querySelector('.dash-sidebar');
+      function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); }
+      function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); }
+      sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
+      sidebarOverlay.addEventListener('click', closeSidebar);
+    </script>
+  </body>
+</html>

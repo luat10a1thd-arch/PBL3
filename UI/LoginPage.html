@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta name="theme-color" content="#4f46e5" />
+    <title>Trang Đăng Nhập</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  </head>
+  <body>
+    <div class="bd-container">
+      <div class="bg-container">
+        <img
+          src="./img/top-view-coffee-accessories-table.jpg"
+          alt="Background"
+          class="bg-image"
+        />
+      </div>
+      <main class="main-content">
+        <div class="config-card login-config-card">
+          <div class="logo-container">
+            <i class="fa-duotone fa-solid fa-mug-saucer"></i>
+            <h2>CAFE 24/7</h2>
+
+            <p>Đăng nhập để tiếp tục</p>
+          </div>
+
+          <div class="form-group">
+            <label for="login_username"
+              >Tài khoản <span class="required">*</span></label
+            >
+            <div class="input-wrapper">
+              <i class="fa-solid fa-user"></i>
+              <input
+                id="login_username"
+                class="form-control"
+                placeholder="Tên đăng nhập"
+                autocomplete="username"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="login_password"
+              >Mật khẩu <span class="required">*</span></label
+            >
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input
+                id="login_password"
+                type="password"
+                class="form-control"
+                placeholder="Mật khẩu"
+                autocomplete="current-password"
+              />
+            </div>
+          </div>
+
+          <button id="btnLoginUser" class="btn-primary">
+            <i class="fa-solid fa-sign-in-alt"></i>
+            Đăng nhập
+          </button>
+          <i class="support-contact">v1.0.0 • SUPPORT: abc@gmail.com</i>
+        </div>
+      </main>
+    </div>
+
+    <script src="../Back/Common.cs"></script>
+    <script src="../Back/Login.cs"></script>
+  </body>
+</html>
