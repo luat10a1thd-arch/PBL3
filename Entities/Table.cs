@@ -1,9 +1,9 @@
 namespace WebApi.Entities;
 
 using System.ComponentModel.DataAnnotations;
-using system.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Tables 
+public class Table
 {
     [Key]
     public int TableId { get; set; }
@@ -12,5 +12,5 @@ public class Tables
 
     public int Capacity { get; set; }
 
-    public string Status { get; set; }
+    public string Status { get; set; } = string.Empty;  
 }

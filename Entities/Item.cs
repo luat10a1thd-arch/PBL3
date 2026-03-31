@@ -3,7 +3,7 @@ namespace WebApi.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Items
+public class Item
 {
 	[Key]
 	public int ItemId { get; set; }
@@ -16,5 +16,6 @@ public class Items
 	[Column(TypeName = "decimal(18, 2)")]
 	public decimal BasePrice { get; set; }
 
-
+	[ForeignKey("CategoryId")]
+	public Category Category { get; set; }
 }

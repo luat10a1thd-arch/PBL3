@@ -24,5 +24,5 @@ public class User
     [JsonIgnore]
     public string PasswordHash { get; set; }
 
-    public List<Shifts> Shifts { get; set; }
+    public List<Shift> Shift { get; set; }
 }

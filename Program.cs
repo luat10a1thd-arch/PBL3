@@ -10,14 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
     var services = builder.Services;
     var env = builder.Environment;
  
-    // use sql server db in production and sqlite db in development
-    if (env.IsProduction())
-        services.AddDbContext<DataContext>();
-    else
-        services.AddDbContext<DataContext, SqliteDataContext>();
- 
+    // use sql server db
+    services.AddDbContext<DataContext>();
+
     services.AddCors();
     services.AddControllers();
+
+    // configure swagger
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
 
     // configure automapper with all automapper profiles from this assembly
     services.AddAutoMapper(typeof(Program));
@@ -41,6 +42,10 @@ using (var scope = app.Services.CreateScope())
 
 // configure HTTP request pipeline
 {
+    // configure swagger
+    app.UseSwagger();
+    app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
+
     // global cors policy
     app.UseCors(x => x
         .AllowAnyOrigin()

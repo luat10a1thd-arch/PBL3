@@ -1,7 +1,7 @@
 namespace WebApi.Entities;
 
-using system.componentmodel.DataAnnotations;
-using system.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Toppings
 {

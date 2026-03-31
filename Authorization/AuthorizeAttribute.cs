@@ -7,7 +7,7 @@ using WebApi.Entities;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
-    private readonly Ilist<Role> _roles;
+    private readonly IList<Role> _roles;
     public AuthorizeAttribute(params Role[] roles)
     {
         _roles = roles ?? new Role[] { };
@@ -26,3 +26,4 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }
     }
+}

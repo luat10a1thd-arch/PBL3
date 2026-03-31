@@ -36,7 +36,8 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize(Entities.Role.Admin, Entities.Role.Owner)]
+    // [Authorize(Entities.Role.Admin, Entities.Role.Owner)]
+    [AllowAnonymous]
     [HttpPost("register")]
     public IActionResult Register(RegisterRequest model)
     {

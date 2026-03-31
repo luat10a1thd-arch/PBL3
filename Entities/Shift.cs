@@ -1,9 +1,9 @@
 namespace WebApi.Entities;
 
-using system.componentmodel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Shifts
+public class Shift
 {
     [Key]
     public int ShiftId { get; set; }
@@ -12,12 +12,12 @@ public class Shifts
     public int EmployeeId { get; set; }
 
     [Column(TypeName = "decimal(18,2)")]
-    public decimal Opening{get; set; }
+    public decimal Opening { get; set; }
     
     [Column(TypeName = "decimal(18,2)")]
     public decimal Expected { get; set; }
 
-    [ForeignKey("EmployeeID")]
+    [ForeignKey("EmployeeId")]
     public User Employee { get; set; }
 
 }
