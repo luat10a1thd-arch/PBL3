@@ -534,7 +534,22 @@
       </div>
     </div>
 
+    <script src="Common.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="RealtimeShiftSync.js"></script>
     <script>
+      const user = window.ensureAuthByRole(['Admin', 'Owner']);
+      if (!user) { /* redirected by guard */ }
+
+      if (user && user.firstName && user.lastName) {
+        const name = `${user.firstName} ${user.lastName}`;
+        const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+        const role = window.normalizeRole(user.role);
+        document.querySelector('.dash-user-name').textContent = name;
+        document.querySelector('.dash-user-role').textContent = role === 'Owner' ? 'Chủ Sở Hữu' : 'Quản Trị Viên';
+        document.querySelector('.dash-user-avatar').textContent = initials;
+      }
+
       // Sidebar toggle
       const sidebarToggle = document.getElementById('sidebarToggle');
       const sidebarOverlay = document.getElementById('sidebarOverlay');

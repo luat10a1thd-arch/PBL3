@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using WebApi.Authorization;
 using WebApi.Helpers;
+using WebApi.Hubs;
 using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +15,17 @@ var builder = WebApplication.CreateBuilder(args);
     // use sql server db
     services.AddDbContext<DataContext>();
 
-    services.AddCors();
+    services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", policy =>
+            policy
+                .WithOrigins("http://localhost:4000")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+    });
     services.AddControllers();
+    services.AddSignalR();
 
     // configure swagger
     services.AddEndpointsApiExplorer();
@@ -29,6 +40,14 @@ var builder = WebApplication.CreateBuilder(args);
     // configure DI for application services
     services.AddScoped<IJwtUtils, JwtUtils>();
     services.AddScoped<IUserService, UserService>();
+    services.AddScoped<ITableService, TableService>();
+    services.AddScoped<IMenuService, MenuService>();
+    services.AddScoped<IOrderService, OrderService>();
+    services.AddScoped<ICategoryService, CategoryService>();
+    services.AddScoped<IItemService, ItemService>();
+    services.AddScoped<IToppingService, ToppingService>();
+    services.AddScoped<ICashierService, CashierService>();
+    services.AddScoped<IShiftService, ShiftService>();
 }
 
 var app = builder.Build();
@@ -47,18 +66,23 @@ using (var scope = app.Services.CreateScope())
     app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
 
     // global cors policy
-    app.UseCors(x => x
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
+    app.UseCors("CorsPolicy");
 
     // global error handler
     app.UseMiddleware<ErrorHandlerMiddleware>();
+
+    // serve static UI files at /UI/*
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "UI")),
+        RequestPath = "/UI"
+    });
 
     // custom jwt auth middleware
     app.UseMiddleware<JwtMiddleware>();
 
     app.MapControllers();
+    app.MapHub<ShiftHub>("/hubs/shifts");
 }
 
 app.Run("http://localhost:4000");

@@ -313,20 +313,7 @@
     </div>
   </div>
 
-  <script>
-    document.querySelectorAll('.cashier-category-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cashier-category-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    document.querySelectorAll('.cashier-payment-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.cashier-payment-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-  </script>
+  <script src="Common.js"></script>
+  <script src="CashierInterface.js"></script>
 </body>
 </html>

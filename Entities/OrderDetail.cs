@@ -18,5 +18,5 @@ public class OrderDetail
     public Order Order { get; set; }
     [ForeignKey("ItemId")]
     public Item Item { get; set; }
-    public ICollection<OrderDetail> OrderDetails { get; set; }
+    public ICollection<OrderTopping> OrderToppings { get; set; }
 }

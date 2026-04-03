@@ -280,7 +280,12 @@
         </div>
       </div>
     </main>
+    <script src="Common.js"></script>
     <script>
+      // Auth guard - block anonymous and Staff
+      const user = window.ensureAuthByRole(['Admin', 'Owner']);
+      if (!user) { /* redirected by guard */ }
+
       const sidebarToggle = document.getElementById('sidebarToggle');
       const sidebarOverlay = document.getElementById('sidebarOverlay');
       const sidebar = document.querySelector('.dash-sidebar');

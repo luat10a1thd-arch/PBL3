@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const API_URL = window.location.protocol === 'file:' ? 'http://localhost:4000' : '';
     const btnLogin = document.getElementById('btnLoginUser');
     const usernameInput = document.getElementById('login_username');
     const passwordInput = document.getElementById('login_password');
@@ -15,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // Thay đổi domain và port phù hợp với .NET Web API của bạn
-            const response = await fetch('http://localhost:4000/Users/authenticate', {
+            const response = await fetch(`${API_URL}/Users/authenticate`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -33,15 +34,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Đăng nhập thành công
                 alert('Đăng nhập thành công!');
                 
-                // Lưu token và thông tin user vào localStorage
-                localStorage.setItem('token', data.token);
+                // Chỉ lưu thông tin user để hiển thị UI, token được lưu bằng HttpOnly cookie
                 localStorage.setItem('user', JSON.stringify(data));
 
                 // Điều hướng dựa theo role
-                if (data.role === 0 || data.role === 3) {
-                    window.location.href = 'AdminDashboard.html';
+                if (typeof window.redirectToRoleHome === 'function') {
+                    window.redirectToRoleHome(data);
                 } else {
-                    window.location.href = 'CashierInterface.html';
+                    const normalizedRole = typeof window.normalizeRole === 'function' ? window.normalizeRole(data?.role) : '';
+                    if (normalizedRole === 'Staff') {
+                        window.location.href = 'CashierInterface.html';
+                    } else if (normalizedRole === 'Admin' || normalizedRole === 'Owner') {
+                        window.location.href = 'AdminDashboard.html';
+                    } else {
+                        localStorage.removeItem('user');
+                        alert('Role không hợp lệ. Vui lòng đăng nhập lại.');
+                        window.location.href = 'LoginPage.html';
+                    }
                 }
             } else {
                 // Đăng nhập thất bại

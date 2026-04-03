@@ -314,12 +314,19 @@
       </div>
       <div class="staff-modal-footer">
         <button class="dash-btn-secondary" id="btnCancelClose2">Huỷ</button>
-        <button class="dash-btn-primary"><i class="fa-solid fa-lock"></i> Xác Nhận Chốt Ca</button>
+        <button class="dash-btn-primary" id="btnConfirmCloseShift"><i class="fa-solid fa-lock"></i> Xác Nhận Chốt Ca</button>
       </div>
     </div>
   </div>
 
+  <script src="Common.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+  <script src="RealtimeShiftSync.js"></script>
   <script>
+    // Auth guard - Staff, Admin, Owner can all access cashier reports
+    const user = window.ensureAuthByRole(['Staff', 'Admin', 'Owner']);
+    if (!user) { /* redirected by guard */ }
+
     const closeShiftModal = document.getElementById('closeShiftModal');
     document.getElementById('btnCloseShift').addEventListener('click', () => {
       closeShiftModal.classList.add('visible');

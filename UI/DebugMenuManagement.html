@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug AdminMenuManagement</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a0906;
+            color: white;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .pass {
+            background: #22c55e;
+            color: black;
+        }
+        .fail {
+            background: #ef4444;
+        }
+        h2 {
+            color: #c56517;
+        }
+    </style>
+</head>
+<body>
+    <h1>AdminMenuManagement Debug</h1>
+    <h2>Checking Elements...</h2>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function test(name, selector) {
+            const element = document.querySelector(selector);
+            const found = element !== null;
+            const div = document.createElement('div');
+            div.className = `test-result ${found ? 'pass' : 'fail'}`;
+            div.textContent = `${found ? '✓' : '✗'} ${name}: ${selector} ${found ? 'FOUND' : 'NOT FOUND'}`;
+            results.appendChild(div);
+            return found;
+        }
+
+        // Wait for potential page load
+        setTimeout(() => {
+            console.log('Running tests...');
+            
+            test('Add Button', '.dash-btn-primary');
+            test('Actions Bar', '.dash-actions-bar');
+            test('Filter Select', '.dash-select-box');
+            test('Search Input', '.dash-search-input');
+            test('Table', '.dash-table');
+            test('Table Body', '.dash-table tbody');
+            test('Table Header', '.dash-table-header');
+            test('Table Title', '.dash-table-title');
+            test('Pagination', '.dash-pagination');
+            
+            // Check if AdminMenuManagement.html is loaded
+            const currentPage = window.location.pathname.split('/').pop();
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'test-result';
+            pageDiv.style.background = '#3b82f6';
+            pageDiv.textContent = `Current Page: ${currentPage}`;
+            results.appendChild(pageDiv);
+            
+        }, 500);
+    </script>
+</body>
+</html>

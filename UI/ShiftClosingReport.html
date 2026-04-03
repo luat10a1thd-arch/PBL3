@@ -137,7 +137,7 @@
               <button class="dash-btn-secondary">
                 <i class="fa-solid fa-print"></i> In Báo Cáo
               </button>
-              <button class="dash-btn-primary">
+              <button class="dash-btn-primary" id="btnConfirmCloseShift">
                 <i class="fa-solid fa-lock"></i> Chốt Ca Ngay
               </button>
             </div>
@@ -299,7 +299,14 @@
         </div>
       </div>
     </main>
+    <script src="Common.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="RealtimeShiftSync.js"></script>
     <script>
+      // Auth guard - cashier/close shift: Staff, Admin, Owner
+      const user = window.ensureAuthByRole(['Staff', 'Admin', 'Owner']);
+      if (!user) { /* redirected by guard */ }
+
       const sidebarToggle = document.getElementById('sidebarToggle');
       const sidebarOverlay = document.getElementById('sidebarOverlay');
       const sidebar = document.querySelector('.dash-sidebar');

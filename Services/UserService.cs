@@ -69,6 +69,7 @@ public class UserService : IUserService
         // hash password
         user.PasswordHash = BCrypt.HashPassword(model.Password);
 
+
         // save user
         _context.Users.Add(user);
         _context.SaveChanges();

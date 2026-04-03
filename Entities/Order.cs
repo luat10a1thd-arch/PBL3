@@ -23,4 +23,5 @@ public class Order
     [ForeignKey("EmployeeId")]
     public User Employee { get; set; }
 
+    public ICollection<OrderDetail> OrderDetails { get; set; }
 }

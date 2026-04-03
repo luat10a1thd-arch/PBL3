@@ -18,4 +18,4 @@ public class Item
 
 	[ForeignKey("CategoryId")]
 	public Category Category { get; set; }
-}
+}	

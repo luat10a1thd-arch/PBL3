@@ -6,9 +6,8 @@ using System.Collections.Generic;
 public enum Role
 {
     Admin,
-    Staff,
-    Warehouse_manager,
-    Owner
+    Owner,
+    Staff
 
 }
 

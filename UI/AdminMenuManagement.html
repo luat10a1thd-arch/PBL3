@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>Quản Lý Thực Đơn - Cafe 24/7</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="AdminMenuManagement.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   </head>
@@ -81,7 +82,10 @@
           <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
             <i class="fa-solid fa-bars"></i>
           </button>
-          <h2 class="dash-page-title">Quản Lý Thực Đơn</h2>
+          <div>
+            <h2 class="dash-page-title">Quản Lý Thực Đơn</h2>
+            <p class="dash-page-subtitle">Quản lý món ăn, danh mục và topping</p>
+          </div>
           <div class="dash-shift-badge">
             <div class="dash-shift-dot"></div>
             <span class="dash-shift-text">CA 2: 12:00 - 17:00</span>
@@ -126,9 +130,20 @@
           </div>
 
           <div class="dash-actions-bar">
+            <div class="view-tabs" style="display: flex; gap: 10px; margin-right: auto;">
+              <button class="tab-btn active" data-view="items" id="tab-items">
+                <i class="fa-solid fa-utensils"></i> Món Ăn
+              </button>
+              <button class="tab-btn" data-view="categories" id="tab-categories">
+                <i class="fa-solid fa-list"></i> Danh Mục
+              </button>
+              <button class="tab-btn" data-view="toppings" id="tab-toppings">
+                <i class="fa-solid fa-cheese"></i> Topping
+              </button>
+            </div>
             <div class="dash-filter-group">
               <select class="dash-select-box">
-                <option>Tất cả danh mục</option>
+                <option value="all">Tất cả danh mục</option>
                 <option>Cà phê</option>
                 <option>Trà</option>
                 <option>Bánh ngọt</option>
@@ -141,6 +156,10 @@
           </div>
 
           <div class="dash-table-card no-padding">
+            <div class="dash-table-header pd-25">
+              <h3 class="dash-table-title"><i class="fa-solid fa-utensils"></i> Danh Sách Món</h3>
+              <i class="fa-solid fa-ellipsis-vertical dash-table-icon"></i>
+            </div>
             <table class="dash-table no-margin">
               <thead>
                 <tr>
@@ -259,6 +278,8 @@
         </div>
       </div>
     </main>
+    <script src="Common.js"></script>
+    <script src="AdminMenuManagement.js"></script>
     <script>
       const sidebarToggle = document.getElementById('sidebarToggle');
       const sidebarOverlay = document.getElementById('sidebarOverlay');

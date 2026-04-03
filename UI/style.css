@@ -843,7 +843,9 @@ body.admin-dashboard {
   text-align: left;
 }
 .dash-table th {
-  padding: 0 10px 12px 10px;
+  padding: 11px 10px;
+  line-height: 1.35;
+  vertical-align: middle;
   border-bottom: 1px solid rgba(203, 213, 225, 0.1);
   font-size: 0.75rem;
   color: #b6a8a2;
@@ -1845,7 +1847,7 @@ body.cashier-page {
   overflow-y: auto;
   padding: 20px 25px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 15px;
   align-content: start;
 }
@@ -1896,6 +1898,9 @@ body.cashier-page {
 .cashier-item-body {
   padding: 11px 13px;
   flex: 1;
+  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
 .cashier-item-name {
@@ -2133,12 +2138,13 @@ body.cashier-page {
 /* ---- Cashier Responsive ---- */
 @media (max-width: 900px) {
   .cashier-order-panel { width: 300px; }
-  .cashier-menu-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); padding: 15px; }
+  .cashier-menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 15px; }
 }
 @media (max-width: 700px) {
   .cashier-layout { flex-direction: column; height: auto; overflow-y: auto; }
   .cashier-menu-panel { height: 55vh; }
   .cashier-order-panel { width: 100%; border-left: none; border-top: 1px solid rgba(203,213,225,0.1); }
+  .cashier-menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ==================== STAFF MANAGEMENT ==================== */
