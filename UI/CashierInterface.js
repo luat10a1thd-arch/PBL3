@@ -161,49 +161,93 @@ function getCategoryIcon(categoryName) {
 
 // Render menu items
 function renderMenuItems() {
-    const gridContainer = document.querySelector('.cashier-menu-grid');
+    try {
+        const gridContainer = document.querySelector('.cashier-menu-grid');
 
-    const selectedCategory = normalizeCategoryValue(currentCategory);
-    let filteredItems = menuItems;
-    if (selectedCategory !== 'all') {
-        filteredItems = menuItems.filter(item => normalizeCategoryValue(item.categoryId ?? item.CategoryId) === selectedCategory);
-    }
-    
-    if (filteredItems.length === 0) {
-        gridContainer.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #b6a8a2;">
-                <i class="fa-solid fa-inbox" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;"></i>
-                <p>Không có món nào trong danh mục này</p>
-            </div>
-        `;
-        return;
-    }
-    
-    gridContainer.innerHTML = filteredItems.map(item => {
-        const itemId = Number(item.itemId ?? item.ItemId ?? 0);
-        const itemName = (item.name ?? item.Name ?? '').toString().trim() || 'Món chưa đặt tên';
-        const itemPrice = Number(item.basePrice ?? item.BasePrice ?? 0);
-
-        return `
-        <div class="cashier-item-card" data-item-id="${itemId}">
-            <div class="cashier-item-img" style="background-color: #e3e3e3;">
-                <div class="cashier-item-overlay"><i class="fa-solid fa-plus"></i></div>
-            </div>
-            <div class="cashier-item-body">
-                <p class="cashier-item-name">${itemName}</p>
-                <span class="cashier-item-price">${formatCurrency(itemPrice)}</span>
-            </div>
-        </div>
-    `;
-    }).join('');
-    
-    // Attach click events
-    gridContainer.querySelectorAll('.cashier-item-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const itemId = parseInt(card.dataset.itemId);
-            addItemToOrder(itemId);
+        const selectedCategory = normalizeCategoryValue(currentCategory);
+        let filteredItems = [...menuItems]; // Create a copy to avoid mutation
+        if (selectedCategory !== 'all') {
+            filteredItems = menuItems.filter(item => normalizeCategoryValue(item.categoryId ?? item.CategoryId) === selectedCategory);
+        }
+        
+        // Filter out invalid items
+        filteredItems = filteredItems.filter(item => {
+            const itemId = Number(item.itemId ?? item.ItemId ?? 0);
+            const itemName = (item.name ?? item.Name ?? '').toString().trim();
+            const itemPrice = Number(item.basePrice ?? item.BasePrice ?? 0);
+            return itemId > 0 && itemName.length > 0 && itemPrice >= 0;
         });
-    });
+        
+        console.log(`Rendering ${filteredItems.length} items for category:`, selectedCategory);
+        
+        if (filteredItems.length === 0) {
+            gridContainer.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #b6a8a2;">
+                    <i class="fa-solid fa-inbox" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.3;"></i>
+                    <p>Không có món nào trong danh mục này</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Clear existing items
+        gridContainer.innerHTML = '';
+        
+        // Create and append items using DOM manipulation to avoid HTML parsing issues
+        filteredItems.forEach(item => {
+            const itemId = Number(item.itemId ?? item.ItemId ?? 0);
+            const itemName = String(item.name ?? item.Name ?? '').trim() || 'Món chưa đặt tên';
+            const itemPrice = Number(item.basePrice ?? item.BasePrice ?? 0);
+            
+            // Create card
+            const card = document.createElement('div');
+            card.className = 'cashier-item-card';
+            card.dataset.itemId = itemId;
+            
+            // Create image section
+            const imgDiv = document.createElement('div');
+            imgDiv.className = 'cashier-item-img';
+            // Force aspect ratio with !important
+            imgDiv.setAttribute('style', 'background-color: #e3e3e3 !important; width: 100% !important; aspect-ratio: 4/3 !important; position: relative !important; background-size: cover !important; background-position: center !important;');
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'cashier-item-overlay';
+            overlay.innerHTML = '<i class="fa-solid fa-plus"></i>';
+            imgDiv.appendChild(overlay);
+            
+            // Create body section
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = 'cashier-item-body';
+            
+            const nameP = document.createElement('p');
+            nameP.className = 'cashier-item-name';
+            nameP.textContent = itemName;
+            
+            const priceSpan = document.createElement('span');
+            priceSpan.className = 'cashier-item-price';
+            priceSpan.textContent = formatCurrency(itemPrice);
+            
+            bodyDiv.appendChild(nameP);
+            bodyDiv.appendChild(priceSpan);
+            
+            // Assemble card
+            card.appendChild(imgDiv);
+            card.appendChild(bodyDiv);
+            
+            // Add to grid
+            gridContainer.appendChild(card);
+            
+            // Add click event
+            card.addEventListener('click', () => {
+                addItemToOrder(itemId);
+            });
+        });
+        
+        console.log('Rendered items using DOM manipulation');
+    } catch (error) {
+        console.error('Error rendering menu items:', error);
+        showError('Lỗi hiển thị thực đơn: ' + error.message);
+    }
 }
 
 // Add item to order

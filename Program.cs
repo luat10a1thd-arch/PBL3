@@ -48,6 +48,10 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<IToppingService, ToppingService>();
     services.AddScoped<ICashierService, CashierService>();
     services.AddScoped<IShiftService, ShiftService>();
+    services.AddScoped<IIngredientService, IngredientService>();
+    services.AddScoped<ISupplierService, SupplierService>();
+    services.AddScoped<IImportService, ImportService>();
+    services.AddScoped<IEmployeeService, EmployeeService>();
 }
 
 var app = builder.Build();

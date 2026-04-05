@@ -91,7 +91,7 @@
         <div class="dash-header-right">
           <div class="dash-search-box">
             <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm kiếm nguyên liệu..." class="dash-search-input" />
+            <input type="text" placeholder="Tìm kiếm nguyên liệu..." class="dash-search-input" id="inventorySearchInput" />
           </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
@@ -127,15 +127,12 @@
 
           <div class="dash-actions-bar">
             <div class="dash-filter-group">
-              <select class="dash-select-box">
-                <option>Tất cả danh mục</option>
-                <option>Hạt cà phê</option>
-                <option>Sữa & Chế phẩm</option>
-                <option>Syrup</option>
-                <option>Bao bì</option>
+              <select class="dash-select-box" id="inventoryCategoryFilter">
+                <option value="">Tất cả danh mục</option>
+                <option value="Nguyên liệu">Nguyên liệu</option>
               </select>
             </div>
-            <button class="dash-btn-primary">
+            <button class="dash-btn-primary" id="inventoryAddBtn">
               <i class="fa-solid fa-plus"></i> Nhập Hàng
             </button>
           </div>
@@ -154,166 +151,63 @@
                   <th class="right td-actions">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell">
-                        <i class="fa-solid fa-mug-hot"></i>
-                      </div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Cà phê Yirgacheffe</span>
-                        <span class="dash-product-id">Mã: CB-001</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge coffee">Hạt cà phê</span></td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Còn hàng</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">12.5 kg</td>
-                  <td class="right dash-cost">462,500₫</td>
-                  <td class="right dash-price">5,781,250₫</td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell">
-                        <i class="fa-solid fa-bottle-droplet"></i>
-                      </div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Sữa Tươi Nguyên Kem</span>
-                        <span class="dash-product-id">Mã: DY-024</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge breakfast">Sữa & Chế phẩm</span></td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot low-stock"></div>
-                      <span class="text-warning">Sắp hết</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">2.0 L</td>
-                  <td class="right dash-cost">30,000₫</td>
-                  <td class="right dash-price">60,000₫</td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell">
-                        <i class="fa-solid fa-wine-bottle"></i>
-                      </div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Vanilla Syrup</span>
-                        <span class="dash-product-id">Mã: SY-102</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge pastries">Syrup</span></td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot out-of-stock"></div>
-                      <span class="text-danger">Đã hết hàng</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">0 Chai</td>
-                  <td class="right dash-cost">300,000₫</td>
-                  <td class="right dash-price">0₫</td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="no-border-row">
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell">
-                        <i class="fa-solid fa-box-open"></i>
-                      </div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Ly Giấy (12oz)</span>
-                        <span class="dash-product-id">Mã: PK-500</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge tea">Bao bì</span></td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Còn hàng</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">450 Cái</td>
-                  <td class="right dash-cost">2,000₫</td>
-                  <td class="right dash-price">900,000₫</td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn text-primary"><i class="fa-solid fa-plus"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-              </tbody>
+              <tbody id="inventoryTableBody"></tbody>
             </table>
 
-            <div class="dash-pagination pd-25">
-              <div class="dash-pagination-info">
-                Đang hiển thị <span>1</span> đến <span>4</span> trong số <span>142</span> kết quả
-              </div>
-              <div class="dash-pagination-controls">
-                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
-                <button class="dash-page-btn active">1</button>
-                <button class="dash-page-btn">2</button>
-                <button class="dash-page-btn">3</button>
-                <span class="dash-pagination-dots">...</span>
-                <button class="dash-page-btn">12</button>
-                <button class="dash-page-btn"><i class="fa-solid fa-chevron-right"></i></button>
-              </div>
+             <div class="dash-pagination pd-25">
+               <div class="dash-pagination-info" id="inventoryPaginationInfo">Đang tải dữ liệu...</div>
+               <div class="dash-pagination-controls"></div>
+             </div>
+           </div>
+
+         </div>
+       </div>
+     </main>
+    <div class="staff-modal-backdrop" id="stockInModal">
+      <div class="staff-modal">
+        <div class="staff-modal-header">
+          <h3 class="staff-modal-title">Nhập Hàng Kho</h3>
+          <button class="staff-modal-close" id="btnCloseStockInModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="staff-modal-body">
+          <div class="staff-form-row">
+            <div class="form-group">
+              <label>Nguyên liệu <span style="color:#ef4444">*</span></label>
+              <select class="staff-input" id="stockInIngredientSelect"></select>
+            </div>
+            <div class="form-group">
+              <label>Nhà cung cấp <span style="color:#ef4444">*</span></label>
+              <select class="staff-input" id="stockInSupplierSelect"></select>
             </div>
           </div>
-
+          <div class="staff-form-row">
+            <div class="form-group">
+              <label>Số lượng nhập <span style="color:#ef4444">*</span></label>
+              <input type="number" class="staff-input" id="stockInQuantityInput" min="0.01" step="0.01" placeholder="Ví dụ: 10" />
+            </div>
+            <div class="form-group">
+              <label>Tổng chi phí (₫) <span style="color:#ef4444">*</span></label>
+              <input type="number" class="staff-input" id="stockInTotalCostInput" min="0" step="1000" placeholder="Ví dụ: 2500000" />
+            </div>
+          </div>
+          <div class="staff-form-row">
+            <div class="form-group">
+              <label>Ngày nhập</label>
+              <input type="datetime-local" class="staff-input" id="stockInDateInput" />
+            </div>
+            <div class="form-group">
+              <label>Ghi chú</label>
+              <input type="text" class="staff-input" id="stockInNoteInput" placeholder="Không bắt buộc" />
+            </div>
+          </div>
+        </div>
+        <div class="staff-modal-footer">
+          <button class="dash-btn-secondary" id="btnCancelStockInModal">Huỷ</button>
+          <button class="dash-btn-primary" id="btnSubmitStockIn"><i class="fa-solid fa-floppy-disk"></i> Lưu Phiếu Nhập</button>
         </div>
       </div>
-    </main>
+    </div>
     <script src="Common.js"></script>
-    <script>
-      // Auth guard - block anonymous and Staff
-      const user = window.ensureAuthByRole(['Admin', 'Owner']);
-      if (!user) { /* redirected by guard */ }
-
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebarOverlay = document.getElementById('sidebarOverlay');
-      const sidebar = document.querySelector('.dash-sidebar');
-      function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); }
-      function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); }
-      sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-      sidebarOverlay.addEventListener('click', closeSidebar);
-    </script>
+    <script src="Inventory.js"></script>
   </body>
 </html>

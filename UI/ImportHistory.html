@@ -91,7 +91,7 @@
         <div class="dash-header-right">
           <div class="dash-search-box">
             <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm mã phiếu, nguyên liệu..." class="dash-search-input" />
+            <input type="text" placeholder="Tìm mã phiếu, nhà cung cấp..." class="dash-search-input" id="importSearchInput" />
           </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
@@ -130,29 +130,14 @@
           <!-- Filter bar -->
           <div class="dash-actions-bar">
             <div class="dash-filter-group">
-              <select class="dash-select-box">
-                <option>Tất cả nhà cung cấp</option>
-                <option>Cty TNHH Cà Phê Arabica</option>
-                <option>Sữa Tươi Vinamilk</option>
-                <option>Syrup Monin VN</option>
-                <option>Bao Bì Xanh Sạch</option>
-                <option>NCC Đường & Gia Vị</option>
-                <option>Trà Thái Nguyên</option>
+              <select class="dash-select-box" id="importSupplierFilter">
+                <option value="">Tất cả nhà cung cấp</option>
               </select>
-              <select class="dash-select-box">
-                <option>Tháng 3 / 2026</option>
-                <option>Tháng 2 / 2026</option>
-                <option>Tháng 1 / 2026</option>
-                <option>Tháng 12 / 2025</option>
+              <select class="dash-select-box" id="importMonthFilter">
+                <option value="">Tất cả tháng</option>
               </select>
-              <select class="dash-select-box">
-                <option>Tất cả danh mục</option>
-                <option>Hạt cà phê</option>
-                <option>Sữa & Chế phẩm</option>
-                <option>Syrup</option>
-                <option>Bao bì</option>
-                <option>Đường & Gia vị</option>
-                <option>Trà</option>
+              <select class="dash-select-box" id="importCategoryFilter">
+                <option value="">Tất cả danh mục</option>
               </select>
             </div>
             <button class="dash-btn-secondary">
@@ -177,302 +162,11 @@
                   <th class="right td-actions">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td><span class="dash-product-name">#NK-0048</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">09/03/2026</span>
-                      <span class="dash-product-id">10:30 SA</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Cty TNHH Cà Phê Arabica</span>
-                      <span class="dash-product-id">NCC-001</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell"><i class="fa-solid fa-mug-hot"></i></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Cà phê Yirgacheffe</span>
-                        <span class="dash-product-id">Hạt cà phê</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="right">20 kg</td>
-                  <td class="right dash-cost">462,500₫/kg</td>
-                  <td class="right dash-price">9,250,000₫</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Alex Morgan</span>
-                      <span class="dash-product-id">Quản Trị Viên</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td><span class="dash-product-name">#NK-0047</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">09/03/2026</span>
-                      <span class="dash-product-id">09:15 SA</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Sữa Tươi Vinamilk</span>
-                      <span class="dash-product-id">NCC-002</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell"><i class="fa-solid fa-bottle-droplet"></i></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Sữa Tươi Nguyên Kem</span>
-                        <span class="dash-product-id">Sữa & Chế phẩm</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="right">50 L</td>
-                  <td class="right dash-cost">30,000₫/L</td>
-                  <td class="right dash-price">1,500,000₫</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Nguyễn Thị Lan</span>
-                      <span class="dash-product-id">Quản Lý</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td><span class="dash-product-name">#NK-0046</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">08/03/2026</span>
-                      <span class="dash-product-id">02:45 CH</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Syrup Monin VN</span>
-                      <span class="dash-product-id">NCC-003</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell"><i class="fa-solid fa-wine-bottle"></i></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Vanilla Syrup</span>
-                        <span class="dash-product-id">Syrup</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="right">12 chai</td>
-                  <td class="right dash-cost">300,000₫/chai</td>
-                  <td class="right dash-price">3,600,000₫</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Alex Morgan</span>
-                      <span class="dash-product-id">Quản Trị Viên</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td><span class="dash-product-name">#NK-0045</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">07/03/2026</span>
-                      <span class="dash-product-id">11:00 SA</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Bao Bì Xanh Sạch</span>
-                      <span class="dash-product-id">NCC-004</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell"><i class="fa-solid fa-box"></i></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Ly Giấy 12oz</span>
-                        <span class="dash-product-id">Bao bì</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="right">1,000 cái</td>
-                  <td class="right dash-cost">2,000₫/cái</td>
-                  <td class="right dash-price">2,000,000₫</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Nguyễn Thị Lan</span>
-                      <span class="dash-product-id">Quản Lý</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td><span class="dash-product-name">#NK-0044</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">06/03/2026</span>
-                      <span class="dash-product-id">09:00 SA</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Trà Thái Nguyên</span>
-                      <span class="dash-product-id">NCC-006</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell"><i class="fa-solid fa-leaf"></i></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Trà Oolong Thượng Hạng</span>
-                        <span class="dash-product-id">Trà</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="right">5 kg</td>
-                  <td class="right dash-cost">280,000₫/kg</td>
-                  <td class="right dash-price">1,400,000₫</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Alex Morgan</span>
-                      <span class="dash-product-id">Quản Trị Viên</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td><span class="dash-product-name">#NK-0043</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">05/03/2026</span>
-                      <span class="dash-product-id">03:30 CH</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Cty TNHH Cà Phê Arabica</span>
-                      <span class="dash-product-id">NCC-001</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell"><i class="fa-solid fa-mug-hot"></i></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Cà phê Colombia</span>
-                        <span class="dash-product-id">Hạt cà phê</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="right">15 kg</td>
-                  <td class="right dash-cost">520,000₫/kg</td>
-                  <td class="right dash-price">7,800,000₫</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Nguyễn Thị Lan</span>
-                      <span class="dash-product-id">Quản Lý</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="no-border-row">
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td><span class="dash-product-name">#NK-0042</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">04/03/2026</span>
-                      <span class="dash-product-id">10:00 SA</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">NCC Đường & Gia Vị</span>
-                      <span class="dash-product-id">NCC-005</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img icon-cell"><i class="fa-solid fa-cubes-stacked"></i></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Đường Cát Trắng</span>
-                        <span class="dash-product-id">Đường & Gia vị</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="right">25 kg</td>
-                  <td class="right dash-cost">24,000₫/kg</td>
-                  <td class="right dash-price">600,000₫</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Alex Morgan</span>
-                      <span class="dash-product-id">Quản Trị Viên</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn"><i class="fa-solid fa-print"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-              </tbody>
+              <tbody id="importHistoryTableBody"></tbody>
             </table>
 
             <div class="dash-pagination pd-25">
-              <div class="dash-pagination-info">
-                Đang hiển thị <span>1</span> đến <span>7</span> trong số <span>48</span> phiếu nhập
-              </div>
+              <div class="dash-pagination-info">Đang tải dữ liệu...</div>
               <div class="dash-pagination-controls">
                 <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="dash-page-btn active">1</button>
@@ -490,18 +184,6 @@
     </main>
 
     <script src="Common.js"></script>
-    <script>
-      // Auth guard - block anonymous and Staff
-      const user = window.ensureAuthByRole(['Admin', 'Owner']);
-      if (!user) { /* redirected by guard */ }
-
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebarOverlay = document.getElementById('sidebarOverlay');
-      const sidebar = document.querySelector('.dash-sidebar');
-      function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); }
-      function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); }
-      sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-      sidebarOverlay.addEventListener('click', closeSidebar);
-    </script>
+    <script src="ImportHistory.js"></script>
   </body>
 </html>

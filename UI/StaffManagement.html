@@ -89,7 +89,7 @@
         <div class="dash-header-right">
           <div class="dash-search-box">
             <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm theo tên hoặc mã NV..." class="dash-search-input" />
+            <input type="text" placeholder="Tìm theo tên hoặc mã NV..." class="dash-search-input" id="staffSearchInput" />
           </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
@@ -151,12 +151,11 @@
           <!-- Actions Bar -->
           <div class="dash-actions-bar">
             <div class="dash-order-filter-tabs">
-              <button class="dash-filter-btn active">Tất cả (18)</button>
-              <button class="dash-filter-btn">Đang làm việc (6)</button>
-              <button class="dash-filter-btn">Pha chế (7)</button>
-              <button class="dash-filter-btn">Thu ngân (4)</button>
-              <button class="dash-filter-btn">Phục vụ (5)</button>
-              <button class="dash-filter-btn">Quản lý (2)</button>
+              <button class="dash-filter-btn active" data-role="">Tất cả</button>
+              <button class="dash-filter-btn" data-role="Pha Chế">Pha chế</button>
+              <button class="dash-filter-btn" data-role="Thu Ngân">Thu ngân</button>
+              <button class="dash-filter-btn" data-role="Phục Vụ">Phục vụ</button>
+              <button class="dash-filter-btn" data-role="Quản Lý">Quản lý</button>
             </div>
             <div class="dash-flex-row">
               <button class="dash-btn-secondary">
@@ -183,255 +182,11 @@
                   <th class="right td-actions">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-staff-avatar" style="background-color: #c56517;">NL</div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Nguyễn Thị Lan</span>
-                        <span class="dash-product-id">Mã: NV-001</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge coffee">Quản Lý</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="fw-500" style="color:white;">CA 1 &amp; CA 2</span>
-                      <span class="dash-product-id">06:00 – 17:00</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span style="color:white; font-size:0.85rem;">0912 345 678</span>
-                      <span class="dash-product-id">lan.nv@cafe247.vn</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">12,000,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator justify-center">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Đang làm</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn" title="Chi tiết"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete" title="Xoá"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-staff-avatar" style="background-color: #3b82f6;">TH</div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Trần Văn Hùng</span>
-                        <span class="dash-product-id">Mã: NV-002</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge tea">Pha Chế</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="fw-500" style="color:white;">CA 1</span>
-                      <span class="dash-product-id">06:00 – 12:00</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span style="color:white; font-size:0.85rem;">0987 654 321</span>
-                      <span class="dash-product-id">hung.tv@cafe247.vn</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">8,500,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator justify-center">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Đang làm</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn" title="Chi tiết"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete" title="Xoá"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-staff-avatar" style="background-color: #a855f7;">PL</div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Phạm Thị Linh</span>
-                        <span class="dash-product-id">Mã: NV-003</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge pastries">Thu Ngân</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="fw-500" style="color:white;">CA 2</span>
-                      <span class="dash-product-id">12:00 – 17:00</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span style="color:white; font-size:0.85rem;">0908 111 222</span>
-                      <span class="dash-product-id">linh.pt@cafe247.vn</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">7,500,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator justify-center">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Đang làm</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn" title="Chi tiết"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete" title="Xoá"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-staff-avatar" style="background-color: #22c55e;">DK</div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Đỗ Quang Khải</span>
-                        <span class="dash-product-id">Mã: NV-004</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge breakfast">Phục Vụ</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="fw-500" style="color:white;">CA 3</span>
-                      <span class="dash-product-id">17:00 – 23:00</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span style="color:white; font-size:0.85rem;">0933 444 555</span>
-                      <span class="dash-product-id">khai.dq@cafe247.vn</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">6,500,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator justify-center">
-                      <div class="dash-status-dot warning"></div>
-                      <span class="text-warning">Nghỉ Phép</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn" title="Chi tiết"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete" title="Xoá"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-staff-avatar" style="background-color: #ef4444;">MT</div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Lê Minh Tú</span>
-                        <span class="dash-product-id">Mã: NV-005</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge tea">Pha Chế</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="fw-500" style="color:white;">CA 2</span>
-                      <span class="dash-product-id">12:00 – 17:00</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span style="color:white; font-size:0.85rem;">0977 888 999</span>
-                      <span class="dash-product-id">tu.lm@cafe247.vn</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">8,000,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator justify-center">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Đang làm</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn" title="Chi tiết"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete" title="Xoá"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="no-border-row">
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-staff-avatar" style="background-color: #0ea5e9;">BN</div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Hoàng Bảo Ngọc</span>
-                        <span class="dash-product-id">Mã: NV-006</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge pastries">Thu Ngân</span></td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="fw-500" style="color:white;">CA 1</span>
-                      <span class="dash-product-id">06:00 – 12:00</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span style="color:white; font-size:0.85rem;">0944 222 333</span>
-                      <span class="dash-product-id">ngoc.hb@cafe247.vn</span>
-                    </div>
-                  </td>
-                  <td class="right dash-price">7,500,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator justify-center">
-                      <div class="dash-status-dot out-of-stock"></div>
-                      <span class="text-danger">Đã Nghỉ Việc</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn" title="Chi tiết"><i class="fa-solid fa-eye"></i></button>
-                      <button class="dash-action-btn" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete" title="Xoá"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-              </tbody>
+              <tbody id="staffTableBody"></tbody>
             </table>
 
             <div class="dash-pagination pd-25">
-              <div class="dash-pagination-info">
-                Đang hiển thị <span>1</span> đến <span>6</span> trong số <span>18</span> kết quả
-              </div>
+              <div class="dash-pagination-info">Đang tải dữ liệu...</div>
               <div class="dash-pagination-controls">
                 <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="dash-page-btn active">1</button>
@@ -457,17 +212,17 @@
           <div class="staff-form-row">
             <div class="form-group">
               <label>Họ và Tên <span style="color:#ef4444">*</span></label>
-              <input type="text" class="staff-input" placeholder="Ví dụ: Nguyễn Văn A" />
+              <input type="text" class="staff-input" id="staffNameInput" placeholder="Ví dụ: Nguyễn Văn A" />
             </div>
             <div class="form-group">
               <label>Mã Nhân Viên</label>
-              <input type="text" class="staff-input" placeholder="Tự động tạo" disabled />
+              <input type="text" class="staff-input" id="staffCodeInput" placeholder="Tự động tạo" disabled />
             </div>
           </div>
           <div class="staff-form-row">
             <div class="form-group">
               <label>Chức Vụ <span style="color:#ef4444">*</span></label>
-              <select class="staff-input">
+              <select class="staff-input" id="staffRoleInput">
                 <option value="">-- Chọn chức vụ --</option>
                 <option>Quản Lý</option>
                 <option>Pha Chế</option>
@@ -477,7 +232,7 @@
             </div>
             <div class="form-group">
               <label>Ca Làm Việc <span style="color:#ef4444">*</span></label>
-              <select class="staff-input">
+              <select class="staff-input" id="staffShiftInput">
                 <option value="">-- Chọn ca --</option>
                 <option>CA 1: 06:00 – 12:00</option>
                 <option>CA 2: 12:00 – 17:00</option>
@@ -489,21 +244,21 @@
           <div class="staff-form-row">
             <div class="form-group">
               <label>Số Điện Thoại <span style="color:#ef4444">*</span></label>
-              <input type="tel" class="staff-input" placeholder="09xx xxx xxx" />
+              <input type="tel" class="staff-input" id="staffPhoneInput" placeholder="09xx xxx xxx" />
             </div>
             <div class="form-group">
               <label>Email</label>
-              <input type="email" class="staff-input" placeholder="email@cafe247.vn" />
+              <input type="email" class="staff-input" id="staffEmailInput" placeholder="email@cafe247.vn" />
             </div>
           </div>
           <div class="staff-form-row">
             <div class="form-group">
               <label>Lương / Tháng (₫) <span style="color:#ef4444">*</span></label>
-              <input type="number" class="staff-input" placeholder="Ví dụ: 8000000" />
+              <input type="number" class="staff-input" id="staffSalaryInput" placeholder="Ví dụ: 8000000" />
             </div>
             <div class="form-group">
               <label>Trạng Thái</label>
-              <select class="staff-input">
+              <select class="staff-input" id="staffStatusInput">
                 <option>Đang làm</option>
                 <option>Nghỉ Phép</option>
                 <option>Đã Nghỉ Việc</option>
@@ -513,23 +268,23 @@
           <div class="staff-form-row">
             <div class="form-group" style="flex: 1;">
               <label>Địa Chỉ</label>
-              <input type="text" class="staff-input" placeholder="Số nhà, đường, phường, quận, thành phố" />
+              <input type="text" class="staff-input" id="staffAddressInput" placeholder="Số nhà, đường, phường, quận, thành phố" />
             </div>
           </div>
           <div class="staff-form-row">
             <div class="form-group">
               <label>Ngày Bắt Đầu</label>
-              <input type="date" class="staff-input" />
+              <input type="date" class="staff-input" id="staffStartDateInput" />
             </div>
             <div class="form-group">
               <label>CCCD / CMND</label>
-              <input type="text" class="staff-input" placeholder="12 chữ số" />
+              <input type="text" class="staff-input" id="staffIdentityInput" placeholder="12 chữ số" />
             </div>
           </div>
         </div>
         <div class="staff-modal-footer">
           <button class="dash-btn-secondary" id="btnCancelModal">Huỷ</button>
-          <button class="dash-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+          <button class="dash-btn-primary" id="btnSaveStaff"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
         </div>
       </div>
     </div>
@@ -537,42 +292,6 @@
     <script src="Common.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="RealtimeShiftSync.js"></script>
-    <script>
-      const user = window.ensureAuthByRole(['Admin', 'Owner']);
-      if (!user) { /* redirected by guard */ }
-
-      if (user && user.firstName && user.lastName) {
-        const name = `${user.firstName} ${user.lastName}`;
-        const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
-        const role = window.normalizeRole(user.role);
-        document.querySelector('.dash-user-name').textContent = name;
-        document.querySelector('.dash-user-role').textContent = role === 'Owner' ? 'Chủ Sở Hữu' : 'Quản Trị Viên';
-        document.querySelector('.dash-user-avatar').textContent = initials;
-      }
-
-      // Sidebar toggle
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebarOverlay = document.getElementById('sidebarOverlay');
-      const sidebar = document.querySelector('.dash-sidebar');
-      function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); }
-      function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); }
-      sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-      sidebarOverlay.addEventListener('click', closeSidebar);
-
-      // Filter tabs
-      document.querySelectorAll('.dash-filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.dash-filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-        });
-      });
-
-      // Modal
-      const modal = document.getElementById('staffModal');
-      document.getElementById('btnAddStaff').addEventListener('click', () => modal.classList.add('visible'));
-      document.getElementById('btnCloseModal').addEventListener('click', () => modal.classList.remove('visible'));
-      document.getElementById('btnCancelModal').addEventListener('click', () => modal.classList.remove('visible'));
-      modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('visible'); });
-    </script>
+    <script src="StaffManagement.js"></script>
   </body>
 </html>
