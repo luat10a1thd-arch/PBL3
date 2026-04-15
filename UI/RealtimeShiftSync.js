@@ -9,7 +9,7 @@ function formatVnd(amount) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
 }
 
-async function shiftApiRequest(endpoint, method = 'GET', body = null) {
+async function shiftApiRequest(endpoint, method = 'GET', body = null, allowNotFound = false) {
     const options = {
         method,
         credentials: 'include',
@@ -18,7 +18,13 @@ async function shiftApiRequest(endpoint, method = 'GET', body = null) {
 
     if (body) options.body = JSON.stringify(body);
     const response = await fetch(`${SHIFT_API_BASE}${endpoint}`, options);
-    if (response.status === 401) throw new Error('Unauthorized');
+    if (response.status === 401) {
+        window.showWarningToast?.('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
+        localStorage.removeItem('user');
+        window.location.href = 'LoginPage.html';
+        return null;
+    }
+    if (allowNotFound && response.status === 404) return null;
     if (!response.ok) {
         const error = await response.json().catch(() => ({ message: 'Có lỗi xảy ra' }));
         throw new Error(error.message || `HTTP ${response.status}`);
@@ -56,6 +62,7 @@ function updateStaffRealtime(shifts) {
 async function loadInitialShiftData() {
     try {
         const shifts = await shiftApiRequest('/Shifts');
+        if (!shifts) return;
         const currentUser = getCurrentUserForShift();
         const currentShift = shifts.find(s => s.employeeId === currentUser.id && s.status === 'Open');
         if (currentShift) updateShiftSummary(currentShift);
@@ -67,24 +74,70 @@ async function loadInitialShiftData() {
 
 async function closeCurrentShiftFromUi() {
     try {
-        const current = await shiftApiRequest('/Shifts/current');
-        const expectedText = window.prompt('Nhập số tiền chốt ca (Expected):', `${current.expected || current.opening || 0}`);
-        if (expectedText === null) return;
-        const expectedAmount = Number(expectedText);
+        const current = await shiftApiRequest('/Shifts/current', 'GET', null, true);
+        if (!current) {
+            window.showWarningToast?.('Hiện chưa có ca mở để chốt.');
+            return;
+        }
+        const modalInput = document.getElementById('closeShiftExpectedInput');
+        const expectedRaw = modalInput?.value?.trim();
+        const expectedAmount = expectedRaw
+            ? Number(expectedRaw.replace(/,/g, ''))
+            : Number(current.expected || current.opening || 0);
         if (Number.isNaN(expectedAmount) || expectedAmount < 0) {
-            alert('Số tiền không hợp lệ');
+            window.showWarningToast?.('Số tiền không hợp lệ');
             return;
         }
         await shiftApiRequest('/Shifts/close', 'POST', { shiftId: current.shiftId, expectedAmount });
-        alert('Chốt ca thành công');
+        window.showSuccessToast?.('Chốt ca thành công');
+        if (modalInput) modalInput.value = '';
+        document.getElementById('closeShiftModal')?.classList.remove('visible');
+        const shifts = await shiftApiRequest('/Shifts');
+        if (shifts) {
+            updateShiftSummary({
+                ...current,
+                expected: expectedAmount
+            });
+            updateStaffRealtime(shifts);
+        }
     } catch (error) {
-        alert(`Không thể chốt ca: ${error.message}`);
+        window.showErrorToast?.(`Không thể chốt ca: ${error.message}`);
+    }
+}
+
+async function openCurrentShiftFromUi() {
+    try {
+        const current = await shiftApiRequest('/Shifts/current', 'GET', null, true);
+        if (current) {
+            window.showWarningToast?.('Bạn đang có ca mở, hãy chốt ca trước khi mở ca mới.');
+            return;
+        }
+
+        const openingInput = window.prompt('Nhập số tiền mở ca:', '0');
+        if (openingInput === null) return;
+        const openingAmount = Number(String(openingInput).replace(/,/g, '').trim());
+        if (Number.isNaN(openingAmount) || openingAmount < 0) {
+            window.showWarningToast?.('Số tiền mở ca không hợp lệ');
+            return;
+        }
+
+        await shiftApiRequest('/Shifts/open', 'POST', { openingAmount });
+        window.showSuccessToast?.('Mở ca thành công');
+        const shifts = await shiftApiRequest('/Shifts');
+        if (!shifts) return;
+        const currentUser = getCurrentUserForShift();
+        const opened = shifts.find(s => s.employeeId === currentUser.id && s.status === 'Open');
+        if (opened) updateShiftSummary(opened);
+        updateStaffRealtime(shifts);
+    } catch (error) {
+        window.showErrorToast?.(`Không thể mở ca: ${error.message}`);
     }
 }
 
 function wireCloseShiftButtons() {
     const confirmButton = document.getElementById('btnConfirmCloseShift');
     const fallbackButton = document.getElementById('btnCloseShift');
+    const openButton = document.getElementById('btnOpenShift');
     const buttons = [];
 
     if (confirmButton) {
@@ -99,6 +152,13 @@ function wireCloseShiftButtons() {
             closeCurrentShiftFromUi();
         });
     });
+
+    if (openButton) {
+        openButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCurrentShiftFromUi();
+        });
+    }
 }
 
 async function startShiftHub() {
@@ -112,6 +172,7 @@ async function startShiftHub() {
         updateShiftSummary(shift);
         try {
             const shifts = await shiftApiRequest('/Shifts');
+            if (!shifts) return;
             updateStaffRealtime(shifts);
         } catch {
             // no-op

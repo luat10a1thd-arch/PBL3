@@ -15,6 +15,8 @@ public class Payment
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Price { get; set; }
 
+    public DateTime PaidAt { get; set; }
+
     [ForeignKey("OrderId")]
     public Order Order { get; set; }
 }

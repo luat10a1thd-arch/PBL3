@@ -52,6 +52,7 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<ISupplierService, SupplierService>();
     services.AddScoped<IImportService, ImportService>();
     services.AddScoped<IEmployeeService, EmployeeService>();
+    services.AddScoped<IImageUploadService, CloudinaryImageUploadService>();
 }
 
 var app = builder.Build();

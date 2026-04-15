@@ -11,7 +11,7 @@ function updateUserInfo() {
     const user = window.getCurrentUser();
     if (user.firstName && user.lastName) {
         document.querySelector('.dash-user-name').textContent = `${user.firstName} ${user.lastName}`;
-        document.querySelector('.dash-user-role').textContent = getRoleDisplay(normalizeRole(user.role));
+        document.querySelector('.dash-user-role').textContent = getRoleDisplay(window.normalizeRole(user.role));
         const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
         document.querySelector('.dash-user-avatar').textContent = initials;
     }
@@ -45,7 +45,7 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
         const response = await fetch(`${API_URL}${endpoint}`, options);
         
         if (response.status === 401) {
-            alert('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
+            window.showWarningToast?.('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
             localStorage.removeItem('user');
             window.location.href = 'LoginPage.html';
             return null;
@@ -63,12 +63,160 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
     }
 }
 
+function escapeHtmlAttribute(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function normalizeImageUrl(value) {
+    const url = String(value ?? '').trim();
+    return url || '';
+}
+
+function getCategoryById(categoryId) {
+    return categories.find(c => Number(c.categoryId ?? c.CategoryId) === Number(categoryId));
+}
+
+function resolveCategoryImage(category) {
+    return normalizeImageUrl(category?.imageUrl ?? category?.ImageUrl);
+}
+
+function resolveItemImage(item) {
+    const itemImage = normalizeImageUrl(item?.imageUrl ?? item?.ImageUrl);
+    if (itemImage) return itemImage;
+
+    const nestedCategoryImage = resolveCategoryImage(item?.category ?? item?.Category);
+    if (nestedCategoryImage) return nestedCategoryImage;
+
+    const category = getCategoryById(item?.categoryId ?? item?.CategoryId);
+    return resolveCategoryImage(category);
+}
+
+function renderProductImage(imageUrl, iconClass) {
+    if (imageUrl) {
+        return `<div class="dash-product-img" style="background-image: url('${escapeHtmlAttribute(imageUrl)}'); background-size: cover; background-position: center;"></div>`;
+    }
+    return `
+        <div class="dash-product-img" style="background-color: #e3e3e3;">
+            <i class="fa-solid ${iconClass}" style="color: #999; font-size: 24px;"></i>
+        </div>
+    `;
+}
+
+async function uploadImageFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${API_URL}/upload/image`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+    });
+
+    if (response.status === 401) {
+        localStorage.removeItem('user');
+        window.location.href = 'LoginPage.html';
+        return null;
+    }
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'Tải ảnh thất bại' }));
+        throw new Error(error.message || `HTTP ${response.status}`);
+    }
+
+    const result = await response.json();
+    return normalizeImageUrl(result?.imageUrl);
+}
+
+function renderImageUploadPreview(containerId, imageUrl, iconClass = 'fa-image') {
+    const preview = document.getElementById(containerId);
+    if (!preview) return;
+
+    const normalizedUrl = normalizeImageUrl(imageUrl);
+    if (normalizedUrl) {
+        preview.innerHTML = `<img src="${escapeHtmlAttribute(normalizedUrl)}" alt="preview" class="form-image-preview" />`;
+        return;
+    }
+
+    preview.innerHTML = `
+        <div class="form-image-placeholder">
+            <i class="fa-solid ${iconClass}"></i>
+            <span>Chưa có ảnh</span>
+        </div>
+    `;
+}
+
+function setupImageUploadInput({
+    inputId,
+    hiddenInputSelector,
+    previewId,
+    iconClass = 'fa-image',
+    fallbackResolver = null
+}) {
+    const fileInput = document.getElementById(inputId);
+    const hiddenInput = document.querySelector(hiddenInputSelector);
+    if (!fileInput || !hiddenInput) return;
+
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            const uploadedUrl = await uploadImageFile(file);
+            if (!uploadedUrl) return;
+            hiddenInput.value = uploadedUrl;
+            renderImageUploadPreview(previewId, uploadedUrl, iconClass);
+            showSuccess('Tải ảnh lên thành công');
+        } catch (error) {
+            showError(error.message || 'Không thể tải ảnh lên');
+            if (typeof fallbackResolver === 'function') {
+                renderImageUploadPreview(previewId, fallbackResolver(), iconClass);
+            }
+        } finally {
+            fileInput.value = '';
+        }
+    });
+}
+
 // Global state
 let categories = [];
 let items = [];
 let toppings = [];
 let currentView = 'items'; // 'items', 'categories', 'toppings'
 let currentFilter = 'all';
+
+function normalizeCategoryRecord(category) {
+    return {
+        categoryId: Number(category?.categoryId ?? category?.CategoryId ?? 0),
+        name: String(category?.name ?? category?.Name ?? '').trim(),
+        description: String(category?.description ?? category?.Description ?? '').trim(),
+        imageUrl: normalizeImageUrl(category?.imageUrl ?? category?.ImageUrl)
+    };
+}
+
+function normalizeItemRecord(item) {
+    const normalizedCategory = item?.category ?? item?.Category;
+    return {
+        itemId: Number(item?.itemId ?? item?.ItemId ?? 0),
+        categoryId: Number(item?.categoryId ?? item?.CategoryId ?? normalizedCategory?.categoryId ?? normalizedCategory?.CategoryId ?? 0),
+        name: String(item?.name ?? item?.Name ?? '').trim(),
+        basePrice: Number(item?.basePrice ?? item?.BasePrice ?? 0),
+        imageUrl: normalizeImageUrl(item?.imageUrl ?? item?.ImageUrl),
+        category: normalizedCategory ? normalizeCategoryRecord(normalizedCategory) : null
+    };
+}
+
+function normalizeToppingRecord(topping) {
+    return {
+        toppingId: Number(topping?.toppingId ?? topping?.ToppingId ?? 0),
+        name: String(topping?.name ?? topping?.Name ?? '').trim(),
+        price: Number(topping?.price ?? topping?.Price ?? 0)
+    };
+}
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -106,16 +254,16 @@ async function loadAllData() {
             apiRequest('/toppings')
         ]);
 
-        categories = categoriesData || [];
-        items = itemsData || [];
-        toppings = toppingsData || [];
+        categories = (categoriesData || []).map(normalizeCategoryRecord).filter(c => c.categoryId > 0);
+        items = (itemsData || []).map(normalizeItemRecord).filter(i => i.itemId > 0);
+        toppings = (toppingsData || []).map(normalizeToppingRecord).filter(t => t.toppingId > 0);
 
         updateKPIs();
         populateCategoryFilter();
         hideLoading();
     } catch (error) {
         hideLoading();
-        alert('Không thể tải dữ liệu: ' + error.message);
+        showError('Không thể tải dữ liệu: ' + (error.message || 'Có lỗi xảy ra'));
     }
 }
 
@@ -271,13 +419,13 @@ function renderItemsTable(searchTerm = '') {
 
     // Filter by category
     if (currentFilter !== 'all') {
-        filteredItems = filteredItems.filter(item => item.categoryId == currentFilter);
+        filteredItems = filteredItems.filter(item => Number(item.categoryId) === Number(currentFilter));
     }
 
     // Filter by search term
     if (searchTerm) {
         filteredItems = filteredItems.filter(item => 
-            item.name.toLowerCase().includes(searchTerm.toLowerCase())
+            String(item.name || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
     }
 
@@ -287,11 +435,9 @@ function renderItemsTable(searchTerm = '') {
             <td class="td-checkbox"><input type="checkbox" /></td>
             <td>
                 <div class="dash-product-cell">
-                    <div class="dash-product-img" style="background-color: #e3e3e3;">
-                        <i class="fa-solid fa-utensils" style="color: #999; font-size: 24px;"></i>
-                    </div>
+                    ${renderProductImage(resolveItemImage(item), 'fa-utensils')}
                     <div class="dash-product-info">
-                        <span class="dash-product-name">${item.name}</span>
+                        <span class="dash-product-name">${item.name || 'Món chưa đặt tên'}</span>
                         <span class="dash-product-id">ID: #${item.itemId}</span>
                     </div>
                 </div>
@@ -327,23 +473,21 @@ function renderCategoriesTable(searchTerm = '') {
 
     if (searchTerm) {
         filteredCategories = filteredCategories.filter(cat => 
-            cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+            String(cat.name || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
     }
 
     const tbody = document.querySelector('.dash-table tbody');
     tbody.innerHTML = filteredCategories.map(cat => {
-        const itemCount = items.filter(i => i.categoryId === cat.categoryId).length;
+        const itemCount = items.filter(i => Number(i.categoryId) === Number(cat.categoryId)).length;
         return `
         <tr>
             <td class="td-checkbox"><input type="checkbox" /></td>
             <td colspan="2">
                 <div class="dash-product-cell">
-                    <div class="dash-product-img" style="background-color: #e3e3e3;">
-                        <i class="fa-solid fa-list" style="color: #999; font-size: 24px;"></i>
-                    </div>
+                    ${renderProductImage(resolveCategoryImage(cat), 'fa-list')}
                     <div class="dash-product-info">
-                        <span class="dash-product-name">${cat.name}</span>
+                        <span class="dash-product-name">${cat.name || 'Danh mục chưa đặt tên'}</span>
                         <span class="dash-product-id">${cat.description || 'Không có mô tả'}</span>
                     </div>
                 </div>
@@ -380,7 +524,7 @@ function renderToppingsTable(searchTerm = '') {
 
     if (searchTerm) {
         filteredToppings = filteredToppings.filter(top => 
-            top.name.toLowerCase().includes(searchTerm.toLowerCase())
+            String(top.name || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
     }
 
@@ -425,7 +569,7 @@ function renderToppingsTable(searchTerm = '') {
 
 // Helper functions
 function getCategoryName(categoryId) {
-    const category = categories.find(c => c.categoryId === categoryId);
+    const category = categories.find(c => Number(c.categoryId) === Number(categoryId));
     return category ? category.name : 'N/A';
 }
 
@@ -445,6 +589,7 @@ function updatePagination(totalItems) {
 function showItemModal(itemId = null) {
     const item = itemId ? items.find(i => i.itemId === itemId) : null;
     const title = item ? '<i class="fa-solid fa-pen"></i> Chỉnh Sửa Món' : '<i class="fa-solid fa-plus"></i> Thêm Món Mới';
+    const initialImageUrl = resolveItemImage(item);
     
     const categoriesOptions = categories.map(cat => 
         `<option value="${cat.categoryId}" ${item && item.categoryId === cat.categoryId ? 'selected' : ''}>
@@ -469,6 +614,13 @@ function showItemModal(itemId = null) {
                 <label>Giá bán <span>*</span></label>
                 <input type="number" name="basePrice" class="form-control" value="${item?.basePrice || ''}" min="0" step="1000" placeholder="0" required>
             </div>
+            <div class="form-group">
+                <label>Ảnh món</label>
+                <input type="hidden" name="imageUrl" value="${escapeHtmlAttribute(initialImageUrl)}">
+                <input type="file" id="itemImageFile" class="form-control" accept="image/*">
+                <small class="form-hint">Nếu không tải ảnh, hệ thống sẽ tự lấy ảnh của danh mục.</small>
+                <div id="itemImagePreview" class="form-image-preview-box"></div>
+            </div>
             <div class="form-actions">
                 <button type="button" class="btn-secondary" onclick="closeModal()">
                     <i class="fa-solid fa-times"></i> Hủy
@@ -480,13 +632,38 @@ function showItemModal(itemId = null) {
         </form>
     `);
 
+    const categorySelect = document.querySelector('#itemForm select[name="categoryId"]');
+    const itemImageUrlInput = document.querySelector('#itemForm input[name="imageUrl"]');
+    const resolveCategoryFallbackImage = () => {
+        const selectedCategoryId = Number(categorySelect?.value || 0);
+        const selectedCategory = getCategoryById(selectedCategoryId);
+        return resolveCategoryImage(selectedCategory);
+    };
+
+    renderImageUploadPreview('itemImagePreview', initialImageUrl || resolveCategoryFallbackImage(), 'fa-utensils');
+    setupImageUploadInput({
+        inputId: 'itemImageFile',
+        hiddenInputSelector: '#itemForm input[name="imageUrl"]',
+        previewId: 'itemImagePreview',
+        iconClass: 'fa-utensils',
+        fallbackResolver: resolveCategoryFallbackImage
+    });
+
+    if (categorySelect) {
+        categorySelect.addEventListener('change', () => {
+            if (!itemImageUrlInput || normalizeImageUrl(itemImageUrlInput.value)) return;
+            renderImageUploadPreview('itemImagePreview', resolveCategoryFallbackImage(), 'fa-utensils');
+        });
+    }
+
     document.getElementById('itemForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = {
             name: formData.get('name'),
             categoryId: parseInt(formData.get('categoryId')),
-            basePrice: parseFloat(formData.get('basePrice'))
+            basePrice: parseFloat(formData.get('basePrice')),
+            imageUrl: normalizeImageUrl(formData.get('imageUrl'))
         };
 
         try {
@@ -509,6 +686,7 @@ function showItemModal(itemId = null) {
 function showCategoryModal(categoryId = null) {
     const category = categoryId ? categories.find(c => c.categoryId === categoryId) : null;
     const title = category ? '<i class="fa-solid fa-pen"></i> Chỉnh Sửa Danh Mục' : '<i class="fa-solid fa-plus"></i> Thêm Danh Mục Mới';
+    const initialImageUrl = resolveCategoryImage(category);
 
     showModal(title, `
         <form id="categoryForm">
@@ -519,6 +697,13 @@ function showCategoryModal(categoryId = null) {
             <div class="form-group">
                 <label>Mô tả</label>
                 <textarea name="description" class="form-control" rows="3" placeholder="Nhập mô tả (không bắt buộc)...">${category?.description || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Ảnh danh mục</label>
+                <input type="hidden" name="imageUrl" value="${escapeHtmlAttribute(initialImageUrl)}">
+                <input type="file" id="categoryImageFile" class="form-control" accept="image/*">
+                <small class="form-hint">Ảnh này sẽ được dùng mặc định cho món chưa có ảnh riêng.</small>
+                <div id="categoryImagePreview" class="form-image-preview-box"></div>
             </div>
             <div class="form-actions">
                 <button type="button" class="btn-secondary" onclick="closeModal()">
@@ -531,12 +716,21 @@ function showCategoryModal(categoryId = null) {
         </form>
     `);
 
+    renderImageUploadPreview('categoryImagePreview', initialImageUrl, 'fa-list');
+    setupImageUploadInput({
+        inputId: 'categoryImageFile',
+        hiddenInputSelector: '#categoryForm input[name="imageUrl"]',
+        previewId: 'categoryImagePreview',
+        iconClass: 'fa-list'
+    });
+
     document.getElementById('categoryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = {
             name: formData.get('name'),
-            description: formData.get('description')
+            description: formData.get('description'),
+            imageUrl: normalizeImageUrl(formData.get('imageUrl'))
         };
 
         try {
@@ -684,38 +878,19 @@ function editTopping(toppingId) {
 
 // Notification functions
 function showSuccess(message) {
-    showToast(message, 'success');
+    if (window.showSuccessToast) {
+        window.showSuccessToast(message);
+        return;
+    }
+    window.showToast?.(message, 'success');
 }
 
 function showError(message) {
-    showToast(message, 'error');
-}
-
-function showToast(message, type = 'info') {
-    const icon = type === 'success' ? 'fa-check-circle' : 
-                 type === 'error' ? 'fa-exclamation-circle' : 
-                 'fa-info-circle';
-    
-    const bgColor = type === 'success' ? 'var(--color-success)' : 
-                    type === 'error' ? 'var(--color-danger)' : 
-                    'var(--color-info)';
-    
-    const toast = document.createElement('div');
-    toast.className = 'custom-toast';
-    toast.innerHTML = `
-        <i class="fa-solid ${icon}"></i>
-        <span>${message}</span>
-    `;
-    toast.style.background = `linear-gradient(135deg, ${bgColor}, ${bgColor}dd)`;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => toast.classList.add('show'), 10);
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    if (window.showErrorToast) {
+        window.showErrorToast(message);
+        return;
+    }
+    window.showToast?.(message, 'error');
 }
 
 function showConfirm(message, detail = '') {

@@ -17,6 +17,8 @@ public class Order
     [Column(TypeName = "decimal(18,2)")]
     public decimal Total { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     [ForeignKey("TableId")]
     public Table Table { get; set; }
 

@@ -32,6 +32,8 @@ public class OrderService : IOrderService
 
     public Order CreateOrder(int tableId, int employeeId)
     {
+        tableId = EnsureTableForOrder(tableId);
+
         // Kiểm tra xem bàn đã có đơn hàng chưa
         var existingOrder = GetActiveOrderForTable(tableId);
         if (existingOrder != null) 
@@ -41,7 +43,8 @@ public class OrderService : IOrderService
         {
             TableId = tableId,
             EmployeeId = employeeId,
-            Total = 0
+            Total = 0,
+            CreatedAt = DateTime.UtcNow
         };
 
         _context.Orders.Add(order);
@@ -51,6 +54,28 @@ public class OrderService : IOrderService
 
         _context.SaveChanges();
         return order;
+    }
+
+    private int EnsureTableForOrder(int requestedTableId)
+    {
+        var requested = _context.Tables.Find(requestedTableId);
+        if (requested != null)
+            return requested.TableId;
+
+        var fallback = _context.Tables.OrderBy(t => t.TableId).FirstOrDefault();
+        if (fallback != null)
+            return fallback.TableId;
+
+        var defaultTable = new Table
+        {
+            TableNumber = 1,
+            Capacity = 4,
+            Status = "Available"
+        };
+
+        _context.Tables.Add(defaultTable);
+        _context.SaveChanges();
+        return defaultTable.TableId;
     }
 
     public Order GetActiveOrderForTable(int tableId)
@@ -64,6 +89,8 @@ public class OrderService : IOrderService
 
     public void AddItemToOrder(int orderId, int itemId, int quantity)
     {
+        if (quantity <= 0) throw new AppException("Số lượng phải lớn hơn 0");
+
         var order = _context.Orders.Find(orderId);
         if (order == null) throw new KeyNotFoundException("Order không tồn tại");
 
@@ -109,7 +136,8 @@ public class OrderService : IOrderService
         {
             OrderId = orderId,
             Method = paymentMethod,
-            Price = order.Total
+            Price = order.Total,
+            PaidAt = DateTime.UtcNow
         };
 
         _context.Payments.Add(payment);

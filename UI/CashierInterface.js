@@ -13,6 +13,7 @@ let currentOrder = {
 let menuItems = [];
 let categories = [];
 let currentCategory = 'all';
+let availableTables = [];
 
 function normalizeCategoryValue(value) {
     if (value === null || value === undefined) return 'all';
@@ -20,6 +21,26 @@ function normalizeCategoryValue(value) {
     if (raw === '' || raw.toLowerCase() === 'all') return 'all';
     const parsed = Number(raw);
     return Number.isNaN(parsed) ? 'all' : parsed;
+}
+
+function normalizeImageUrl(value) {
+    const url = String(value ?? '').trim();
+    return url || '';
+}
+
+function getCategoryImage(categoryId) {
+    const category = categories.find(c => Number(c.categoryId ?? c.CategoryId) === Number(categoryId));
+    return normalizeImageUrl(category?.imageUrl ?? category?.ImageUrl);
+}
+
+function resolveItemImage(item) {
+    const itemImage = normalizeImageUrl(item?.imageUrl ?? item?.ImageUrl);
+    if (itemImage) return itemImage;
+
+    const nestedCategoryImage = normalizeImageUrl(item?.category?.imageUrl ?? item?.category?.ImageUrl ?? item?.Category?.imageUrl ?? item?.Category?.ImageUrl);
+    if (nestedCategoryImage) return nestedCategoryImage;
+
+    return getCategoryImage(item?.categoryId ?? item?.CategoryId);
 }
 
 // Check authentication
@@ -58,7 +79,7 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
         const response = await fetch(`${API_URL}${endpoint}`, options);
         
         if (response.status === 401) {
-            alert('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
+            window.showWarningToast?.('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
             localStorage.removeItem('user');
             window.location.href = 'LoginPage.html';
             return null;
@@ -100,6 +121,8 @@ async function loadMenuData() {
 
         categories = categoriesData || [];
         menuItems = itemsData || [];
+        availableTables = await apiRequest('/tables') || [];
+        ensureDefaultTable();
 
         renderCategoryTabs();
         renderMenuItems();
@@ -109,6 +132,20 @@ async function loadMenuData() {
         console.error('Error loading menu:', error);
         showError('Không thể tải thực đơn: ' + error.message);
     }
+}
+
+function ensureDefaultTable() {
+    if (currentOrder.tableId && Number(currentOrder.tableId) > 0) {
+        return;
+    }
+
+    const firstTable = (availableTables || [])[0];
+    if (!firstTable) {
+        currentOrder.tableId = null;
+        return;
+    }
+
+    currentOrder.tableId = Number(firstTable.tableId ?? firstTable.TableId ?? null);
 }
 
 // Render category tabs
@@ -198,6 +235,7 @@ function renderMenuItems() {
             const itemId = Number(item.itemId ?? item.ItemId ?? 0);
             const itemName = String(item.name ?? item.Name ?? '').trim() || 'Món chưa đặt tên';
             const itemPrice = Number(item.basePrice ?? item.BasePrice ?? 0);
+            const itemImage = resolveItemImage(item);
             
             // Create card
             const card = document.createElement('div');
@@ -207,8 +245,19 @@ function renderMenuItems() {
             // Create image section
             const imgDiv = document.createElement('div');
             imgDiv.className = 'cashier-item-img';
-            // Force aspect ratio with !important
-            imgDiv.setAttribute('style', 'background-color: #e3e3e3 !important; width: 100% !important; aspect-ratio: 4/3 !important; position: relative !important; background-size: cover !important; background-position: center !important;');
+            imgDiv.style.width = '100%';
+            imgDiv.style.aspectRatio = '4/3';
+            imgDiv.style.position = 'relative';
+            imgDiv.style.backgroundSize = 'cover';
+            imgDiv.style.backgroundPosition = 'center';
+            if (itemImage) {
+                imgDiv.style.backgroundImage = `url("${itemImage}")`;
+            } else {
+                imgDiv.style.backgroundColor = '#e3e3e3';
+            }
+            if (!itemImage) {
+                imgDiv.innerHTML = '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#999;"><i class="fa-solid fa-utensils" style="font-size:24px;"></i></div>';
+            }
             
             const overlay = document.createElement('div');
             overlay.className = 'cashier-item-overlay';
@@ -432,6 +481,12 @@ function updateOrderHeader() {
 async function processPayment() {
     if (currentOrder.items.length === 0) {
         showError('Chưa có món nào trong đơn hàng');
+        return;
+    }
+
+    ensureDefaultTable();
+    if (!currentOrder.tableId) {
+        showError('Không tìm thấy bàn phục vụ. Vui lòng tạo dữ liệu bàn trước khi thanh toán.');
         return;
     }
     

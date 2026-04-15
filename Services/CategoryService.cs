@@ -42,6 +42,7 @@ public class CategoryService : ICategoryService
         if (_context.Categories.Any(c => c.Name == category.Name))
             throw new AppException($"Category '{category.Name}' already exists");
 
+        category.ImageUrl = NormalizeImageUrl(category.ImageUrl);
         _context.Categories.Add(category);
         _context.SaveChanges();
     }
@@ -58,6 +59,7 @@ public class CategoryService : ICategoryService
 
         existingCategory.Name = category.Name;
         existingCategory.Description = category.Description;
+        existingCategory.ImageUrl = NormalizeImageUrl(category.ImageUrl);
 
         _context.Categories.Update(existingCategory);
         _context.SaveChanges();
@@ -72,5 +74,13 @@ public class CategoryService : ICategoryService
 
         _context.Categories.Remove(category);
         _context.SaveChanges();
+    }
+
+    private static string NormalizeImageUrl(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return value.Trim();
     }
 }

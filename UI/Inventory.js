@@ -50,6 +50,7 @@ async function inventoryApiRequest(endpoint, method = 'GET', body = null) {
 
     const response = await fetch(`${INVENTORY_API_URL}${endpoint}`, options);
     if (response.status === 401) {
+        window.showWarningToast?.('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
         localStorage.removeItem('user');
         window.location.href = 'LoginPage.html';
         return null;
@@ -192,6 +193,63 @@ function fillStockInSelectors() {
     }
 }
 
+async function ensureStockInMasterData() {
+    if (inventoryState.ingredients.length > 0 && inventoryState.suppliers.length > 0) {
+        return true;
+    }
+
+    try {
+        let createdDefaults = false;
+        if (inventoryState.suppliers.length === 0) {
+            try {
+                await inventoryApiRequest('/suppliers', 'POST', {
+                    Name: 'Nhà cung cấp mặc định',
+                    ContactInfo: '0900000000',
+                    Address: 'Địa chỉ mặc định'
+                });
+                createdDefaults = true;
+            } catch {
+                // Supplier có thể đã tồn tại bởi người dùng khác, sẽ đồng bộ lại ở bước fetch.
+            }
+        }
+
+        if (inventoryState.ingredients.length === 0) {
+            try {
+                await inventoryApiRequest('/ingredients', 'POST', {
+                    Name: 'Hạt cà phê mặc định',
+                    UoM: 'kg',
+                    StockQty: 0
+                });
+                createdDefaults = true;
+            } catch {
+                // Ingredient có thể đã tồn tại bởi người dùng khác, sẽ đồng bộ lại ở bước fetch.
+            }
+        }
+
+        const [ingredients, suppliers] = await Promise.all([
+            inventoryApiRequest('/ingredients'),
+            inventoryApiRequest('/suppliers')
+        ]);
+
+        if (!ingredients || !suppliers) return false;
+
+        inventoryState.ingredients = ingredients;
+        inventoryState.suppliers = suppliers;
+        redrawInventory();
+
+        const ready = inventoryState.ingredients.length > 0 && inventoryState.suppliers.length > 0;
+        if (ready && createdDefaults) {
+            window.showSuccessToast?.('Đã khởi tạo dữ liệu mặc định để nhập hàng');
+        } else if (!ready) {
+            window.showErrorToast?.('Thiếu dữ liệu nguyên liệu hoặc nhà cung cấp để nhập hàng');
+        }
+        return ready;
+    } catch (error) {
+        window.showErrorToast?.(error.message || 'Không thể khởi tạo dữ liệu mặc định');
+        return false;
+    }
+}
+
 function setupStockInModal() {
     const modal = document.getElementById('stockInModal');
     const openBtn = document.getElementById('inventoryAddBtn');
@@ -209,12 +267,12 @@ function setupStockInModal() {
     }
 
     const closeModal = () => modal.classList.remove('visible');
-    const openModal = (preferredIngredientId = null) => {
-        if (!inventoryState.ingredients.length || !inventoryState.suppliers.length) {
-            alert('Thiếu dữ liệu nguyên liệu hoặc nhà cung cấp để nhập hàng');
+    const openModal = async (preferredIngredientId = null) => {
+        const ready = await ensureStockInMasterData();
+        if (!ready) {
+            window.showWarningToast?.('Vui lòng tạo nguyên liệu và nhà cung cấp trước khi nhập hàng');
             return;
         }
-
         fillStockInSelectors();
         dateInput.value = new Date().toISOString().slice(0, 16);
         quantityInput.value = '';
@@ -227,7 +285,7 @@ function setupStockInModal() {
         modal.classList.add('visible');
     };
 
-    openBtn.addEventListener('click', openModal);
+    openBtn.addEventListener('click', () => { openModal(); });
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
@@ -250,19 +308,22 @@ function setupStockInModal() {
             const supplierId = Number(supplierSelect.value);
             const quantity = Number(quantityInput.value);
             const totalCost = Number(totalCostInput.value);
-            const importDate = dateInput.value ? new Date(dateInput.value).toISOString() : null;
+            const parsedImportDate = dateInput.value ? new Date(dateInput.value) : null;
+            const importDate = parsedImportDate && !Number.isNaN(parsedImportDate.getTime())
+                ? parsedImportDate.toISOString()
+                : null;
 
-            if (!ingredientId || !supplierId || !quantity || quantity <= 0) {
-                alert('Vui lòng nhập đầy đủ thông tin hợp lệ');
+            if (!ingredientId || !supplierId || !Number.isFinite(quantity) || quantity <= 0) {
+                window.showWarningToast?.('Vui lòng nhập đầy đủ thông tin hợp lệ');
                 return;
             }
 
             const result = await inventoryApiRequest('/imports/stock-in', 'POST', {
-                supplierId,
-                ingredientId,
-                quantity,
-                totalCost: Number.isNaN(totalCost) ? 0 : totalCost,
-                importDate
+                SupplierId: supplierId,
+                IngredientId: ingredientId,
+                Quantity: quantity,
+                TotalCost: Number.isNaN(totalCost) ? 0 : totalCost,
+                ImportDate: importDate
             });
 
             if (!result) return;
@@ -276,9 +337,9 @@ function setupStockInModal() {
             closeModal();
             quantityInput.value = '';
             totalCostInput.value = '';
-            alert('Nhập hàng thành công');
+            window.showSuccessToast?.('Nhập hàng thành công');
         } catch (error) {
-            alert(error.message || 'Nhập hàng thất bại');
+            window.showErrorToast?.(error.message || 'Nhập hàng thất bại');
         }
     });
 }
@@ -328,6 +389,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         wireCategoryFilter();
         setupStockInModal();
     } catch (error) {
-        alert(error.message || 'Không thể tải dữ liệu kho hàng');
+        window.showErrorToast?.(error.message || 'Không thể tải dữ liệu kho hàng');
     }
 });

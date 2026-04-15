@@ -46,9 +46,9 @@
           <i class="fa-solid fa-users dash-nav-icon"></i>
           <span class="dash-nav-text">Nhân Viên</span>
         </a>
-        <a href="CashierInterface.html" class="dash-nav-item">
-          <i class="fa-solid fa-cash-register dash-nav-icon"></i>
-          <span class="dash-nav-text">Thu Ngân</span>
+        <a href="SupplierManagement.html" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
         <a href="MonthlyReport.html" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
@@ -137,9 +137,19 @@
               <button class="dash-btn-secondary">
                 <i class="fa-solid fa-print"></i> In Báo Cáo
               </button>
-              <button class="dash-btn-primary" id="btnConfirmCloseShift">
-                <i class="fa-solid fa-lock"></i> Chốt Ca Ngay
+              <button class="dash-btn-secondary" id="btnOpenShiftAction">
+                <i class="fa-solid fa-lock-open"></i> Mở Ca
               </button>
+              <button class="dash-btn-primary" id="btnCloseShiftAction">
+                <i class="fa-solid fa-lock"></i> Chốt Ca
+              </button>
+            </div>
+          </div>
+
+          <div class="dash-table-card" style="padding:16px 20px;margin-bottom:16px;">
+            <div style="display:flex;align-items:flex-start;gap:10px;color:var(--dash-text-muted);font-size:.88rem;">
+              <i class="fa-solid fa-circle-info" style="color:var(--primary-color);margin-top:2px;"></i>
+              <span><strong style="color:white;">Hướng dẫn:</strong> Bấm <em>Mở Ca</em> để nhập tiền đầu ca. Khi kết thúc ca, bấm <em>Chốt Ca</em> và nhập số tiền thực tế cuối ca để hệ thống tính chênh lệch.</span>
             </div>
           </div>
 
@@ -300,20 +310,6 @@
       </div>
     </main>
     <script src="Common.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
-    <script src="RealtimeShiftSync.js"></script>
-    <script>
-      // Auth guard - cashier/close shift: Staff, Admin, Owner
-      const user = window.ensureAuthByRole(['Staff', 'Admin', 'Owner']);
-      if (!user) { /* redirected by guard */ }
-
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebarOverlay = document.getElementById('sidebarOverlay');
-      const sidebar = document.querySelector('.dash-sidebar');
-      function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); }
-      function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); }
-      sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-      sidebarOverlay.addEventListener('click', closeSidebar);
-    </script>
+    <script src="ShiftClosingReport.js"></script>
   </body>
 </html>
