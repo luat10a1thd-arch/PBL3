@@ -31,7 +31,7 @@ public class ImportsController : ControllerBase
         return Ok(import);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
     public async Task<IActionResult> Create(Import import)
     {
@@ -39,7 +39,7 @@ public class ImportsController : ControllerBase
         return Ok(created);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Import import)
     {
@@ -47,7 +47,7 @@ public class ImportsController : ControllerBase
         return Ok(updated);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -55,7 +55,7 @@ public class ImportsController : ControllerBase
         return Ok(new { message = "Xóa phiếu nhập thành công" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost("stock-in")]
     public async Task<IActionResult> StockIn([FromBody] StockInRequest request)
     {

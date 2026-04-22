@@ -23,8 +23,8 @@ async function monthlyApiRequest(endpoint) {
 
     if (response.status === 401) {
         window.showWarningToast?.('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
-        localStorage.removeItem('user');
-        window.location.href = 'LoginPage.html';
+        sessionStorage.removeItem('user');
+        window.location.href = '/app/login';
         return null;
     }
 
@@ -49,17 +49,7 @@ function setupSidebar() {
 }
 
 function hydrateUserProfile(user) {
-    if (!user?.firstName || !user?.lastName) return;
-    const name = `${user.firstName} ${user.lastName}`;
-    const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
-    const role = window.normalizeRole(user.role);
-
-    const nameNode = document.querySelector('.dash-user-name');
-    const roleNode = document.querySelector('.dash-user-role');
-    const avatarNode = document.querySelector('.dash-user-avatar');
-    if (nameNode) nameNode.textContent = name;
-    if (roleNode) roleNode.textContent = role === 'Owner' ? 'Chủ Sở Hữu' : 'Quản Trị Viên';
-    if (avatarNode) avatarNode.textContent = initials;
+    window.hydrateAdminUserProfile?.(user);
 }
 
 function initializeMonthYearSelectors() {
@@ -297,7 +287,7 @@ async function loadMonthlyData() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const user = window.ensureAuthByRole(['Admin', 'Owner']);
+        const user = window.ensureAuthByRole(['Manager']);
         if (!user) return;
 
         hydrateUserProfile(user);
@@ -314,3 +304,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.showErrorToast?.(error.message || 'Không thể tải báo cáo tháng');
     }
 });
+

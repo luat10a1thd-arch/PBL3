@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <base href="/app/">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <title>Mã Giảm Giá - Cafe 24/7</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="admin-dashboard dash-bg-wrapper">
+    <div class="dash-bg-overlay"></div>
+    <div class="dash-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="dash-sidebar">
+      <div class="dash-logo-wrap">
+        <i class="fa-solid fa-mug-saucer dash-logo-icon"></i>
+        <div class="dash-logo-text-wrap">
+          <h1 class="dash-logo-title">CAFE 24/7</h1>
+          <p class="dash-logo-subtitle">Bảng Quản Trị</p>
+        </div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="/app/dashboard" class="dash-nav-item">
+          <i class="fa-solid fa-chart-line dash-nav-icon"></i>
+          <span class="dash-nav-text">Tổng Quan</span>
+        </a>
+        <a href="/app/orders" class="dash-nav-item">
+          <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
+          <span class="dash-nav-text">Đơn Hàng</span>
+        </a>
+        <a href="/app/menu" class="dash-nav-item">
+          <i class="fa-solid fa-utensils dash-nav-icon"></i>
+          <span class="dash-nav-text">Thực Đơn</span>
+        </a>
+        <a href="/app/inventory" class="dash-nav-item">
+          <i class="fa-solid fa-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Kho Hàng</span>
+        </a>
+        <a href="/app/imports" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Lịch Sử Nhập</span>
+        </a>
+        <a href="/app/staff" class="dash-nav-item">
+          <i class="fa-solid fa-users dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhân Viên</span>
+        </a>
+        <a href="/app/suppliers" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhà Cung Cấp</span>
+        </a>
+        <a href="/app/reports" class="dash-nav-item">
+          <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
+          <span class="dash-nav-text">Báo Cáo Tháng</span>
+        </a>
+      </nav>
+
+      <div class="dash-bottom-actions">
+        <a href="/app/shift-report" class="dash-nav-item">
+          <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
+          <span class="dash-nav-text">Chốt Ca</span>
+        </a>
+        <a href="#" class="dash-nav-item dash-settings-link">
+          <i class="fa-solid fa-gear dash-nav-icon"></i>
+          <span class="dash-nav-text">Cài Đặt</span>
+        </a>
+        <div class="dash-user-profile">
+          <div class="dash-user-avatar">--</div>
+          <div class="dash-user-info">
+            <span class="dash-user-name">Đang tải...</span>
+            <span class="dash-user-role">Quản Lý</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <header class="dash-header">
+        <div class="dash-header-left">
+          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <h2 class="dash-page-title">Mã Giảm Giá</h2>
+          <div class="dash-shift-badge">
+            <div class="dash-shift-dot"></div>
+            <span class="dash-shift-text">Quản lý khuyến mãi tại quầy</span>
+          </div>
+        </div>
+
+        <div class="dash-header-right">
+          <div class="dash-search-box">
+            <i class="fa-solid fa-search dash-search-icon"></i>
+            <input type="text" placeholder="Tìm mã giảm giá..." class="dash-search-input" id="voucherSearchInput" />
+          </div>
+          <button class="dash-notification-btn">
+            <i class="fa-solid fa-bell"></i>
+            <span class="dash-notification-dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="dash-content-area">
+        <div class="dash-content-container">
+          <div class="dash-kpi-grid">
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Tổng Mã</h3>
+              <p class="dash-kpi-value">0</p>
+            </div>
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Còn Hạn</h3>
+              <p class="dash-kpi-value text-success">0</p>
+            </div>
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Hết Hạn</h3>
+              <p class="dash-kpi-value text-danger">0</p>
+            </div>
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Giảm TB</h3>
+              <p class="dash-kpi-value">0₫</p>
+            </div>
+          </div>
+
+          <div class="dash-actions-bar">
+            <div class="dash-filter-group">
+              <select class="dash-select-box" id="voucherStatusFilter">
+                <option value="">Tất cả trạng thái</option>
+                <option value="active">Còn hạn</option>
+                <option value="expired">Hết hạn</option>
+              </select>
+            </div>
+            <button class="dash-btn-primary" id="btnAddVoucher">
+              <i class="fa-solid fa-plus"></i> Thêm Mã
+            </button>
+          </div>
+
+          <div class="dash-table-card no-padding">
+            <table class="dash-table no-margin">
+              <thead>
+                <tr>
+                  <th class="td-checkbox"><input type="checkbox" /></th>
+                  <th>Mã</th>
+                  <th class="right">Giá Trị Giảm</th>
+                  <th>Hạn Sử Dụng</th>
+                  <th>Trạng Thái</th>
+                  <th class="right td-actions">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="voucherTableBody"></tbody>
+            </table>
+            <div class="dash-pagination pd-25">
+              <div class="dash-pagination-info" id="voucherPaginationInfo">Đang tải dữ liệu...</div>
+              <div class="dash-pagination-controls">
+                <button class="dash-page-btn active">1</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="Common.js?v=20260420a"></script>
+    <script src="VoucherManagement.js?v=20260420b"></script>
+  </body>
+</html>

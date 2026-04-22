@@ -37,4 +37,6 @@ public class DataContext : DbContext
     public DbSet<Voucher> Vouchers { get; set; }
     public DbSet<CustomerVoucher> CustomerVouchers { get; set; }
     public DbSet<Expense> Expenses { get; set; }
+    public DbSet<SystemConfig> SystemConfigs { get; set; }
+    public DbSet<SystemActivityLog> SystemActivityLogs { get; set; }
 }

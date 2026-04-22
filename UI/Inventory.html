@@ -1,12 +1,22 @@
 <!doctype html>
 <html lang="vi">
   <head>
+    <base href="/app/">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
     <title>Quản Lý Kho Hàng - Cafe 24/7</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="admin-dashboard dash-bg-wrapper">
     <div class="dash-bg-overlay"></div>
@@ -22,42 +32,42 @@
       </div>
 
       <nav class="dash-nav">
-        <a href="AdminDashboard.html" class="dash-nav-item">
+        <a href="/app/dashboard" class="dash-nav-item">
           <i class="fa-solid fa-chart-line dash-nav-icon"></i>
           <span class="dash-nav-text">Tổng Quan</span>
         </a>
-        <a href="Orders.html" class="dash-nav-item">
+        <a href="/app/orders" class="dash-nav-item">
           <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
           <span class="dash-nav-text">Đơn Hàng</span>
         </a>
-        <a href="AdminMenuManagement.html" class="dash-nav-item">
+        <a href="/app/menu" class="dash-nav-item">
           <i class="fa-solid fa-utensils dash-nav-icon"></i>
           <span class="dash-nav-text">Thực Đơn</span>
         </a>
-        <a href="Inventory.html" class="dash-nav-item active">
+        <a href="/app/inventory" class="dash-nav-item active">
           <i class="fa-solid fa-box dash-nav-icon"></i>
           <span class="dash-nav-text">Kho Hàng</span>
         </a>
-        <a href="ImportHistory.html" class="dash-nav-item">
+        <a href="/app/imports" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Lịch Sử Nhập</span>
         </a>
-        <a href="StaffManagement.html" class="dash-nav-item">
+        <a href="/app/staff" class="dash-nav-item">
           <i class="fa-solid fa-users dash-nav-icon"></i>
           <span class="dash-nav-text">Nhân Viên</span>
         </a>
-        <a href="SupplierManagement.html" class="dash-nav-item">
+        <a href="/app/suppliers" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
-        <a href="MonthlyReport.html" class="dash-nav-item">
+        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
       </nav>
 
       <div class="dash-bottom-actions">
-        <a href="ShiftClosingReport.html" class="dash-nav-item">
+        <a href="/app/shift-report" class="dash-nav-item">
           <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
           <span class="dash-nav-text">Chốt Ca</span>
         </a>
@@ -69,7 +79,7 @@
           <div class="dash-user-avatar">AM</div>
           <div class="dash-user-info">
             <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Trị Viên</span>
+            <span class="dash-user-role">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -78,20 +88,31 @@
     <main class="dash-main">
       <header class="dash-header">
         <div class="dash-header-left">
-          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+          <button
+            class="dash-hamburger"
+            id="sidebarToggle"
+            aria-label="Mở menu"
+          >
             <i class="fa-solid fa-bars"></i>
           </button>
           <h2 class="dash-page-title">Kho Hàng</h2>
           <div class="dash-shift-badge">
             <div class="dash-shift-dot"></div>
-            <span class="dash-shift-text">CA 2: 12:00 - 17:00</span>
+            <span class="dash-shift-text" id="inventoryShiftText"
+              >Đang cập nhật ca...</span
+            >
           </div>
         </div>
-        
+
         <div class="dash-header-right">
           <div class="dash-search-box">
             <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm kiếm nguyên liệu..." class="dash-search-input" id="inventorySearchInput" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm nguyên liệu..."
+              class="dash-search-input"
+              id="inventorySearchInput"
+            />
           </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
@@ -102,13 +123,12 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
-          
           <div class="dash-kpi-grid">
             <div class="dash-card">
               <h3 class="dash-kpi-title">Tổng Loại Nguyên Liệu</h3>
               <p class="dash-kpi-value">142</p>
             </div>
-            
+
             <div class="dash-card">
               <h3 class="dash-kpi-title text-warning">Cảnh Báo Sắp Hết</h3>
               <p class="dash-kpi-value text-warning">8</p>
@@ -120,7 +140,7 @@
             </div>
 
             <div class="dash-card">
-              <h3 class="dash-kpi-title">Tổng Giá Trị Kho</h3>
+              <h3 class="dash-kpi-title">Tổng Số Lượng Tồn</h3>
               <p class="dash-kpi-value">311,250,000₫</p>
             </div>
           </div>
@@ -132,8 +152,8 @@
                 <option value="Nguyên liệu">Nguyên liệu</option>
               </select>
             </div>
-            <button class="dash-btn-primary" id="inventoryAddBtn">
-              <i class="fa-solid fa-plus"></i> Nhập Hàng
+            <button class="dash-btn-secondary" id="ingredientAddBtn">
+              <i class="fa-solid fa-flask"></i> Thêm Nguyên Liệu
             </button>
           </div>
 
@@ -143,71 +163,207 @@
                 <tr>
                   <th class="td-checkbox"><input type="checkbox" /></th>
                   <th>Tên Nguyên Liệu</th>
-                  <th>Danh Mục</th>
+                  <th>Đơn Vị</th>
                   <th>Trạng Thái</th>
                   <th class="right">Số Lượng</th>
-                  <th class="right">Đơn Giá</th>
-                  <th class="right">Tổng Giá Trị</th>
                   <th class="right td-actions">Thao Tác</th>
                 </tr>
               </thead>
               <tbody id="inventoryTableBody"></tbody>
             </table>
 
-             <div class="dash-pagination pd-25">
-               <div class="dash-pagination-info" id="inventoryPaginationInfo">Đang tải dữ liệu...</div>
-               <div class="dash-pagination-controls"></div>
-             </div>
-           </div>
-
-         </div>
-       </div>
-     </main>
+            <div class="dash-pagination pd-25">
+              <div class="dash-pagination-info" id="inventoryPaginationInfo">
+                Đang tải dữ liệu...
+              </div>
+              <div class="dash-pagination-controls"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
     <div class="staff-modal-backdrop" id="stockInModal">
       <div class="staff-modal">
         <div class="staff-modal-header">
           <h3 class="staff-modal-title">Nhập Hàng Kho</h3>
-          <button class="staff-modal-close" id="btnCloseStockInModal"><i class="fa-solid fa-xmark"></i></button>
+          <button class="staff-modal-close" id="btnCloseStockInModal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
         <div class="staff-modal-body">
           <div class="staff-form-row">
             <div class="form-group">
-              <label>Nguyên liệu <span style="color:#ef4444">*</span></label>
+              <label>Nguyên liệu <span style="color: #ef4444">*</span></label>
               <select class="staff-input" id="stockInIngredientSelect"></select>
+              <button
+                type="button"
+                class="dash-btn-secondary"
+                id="stockInOpenIngredientModalBtn"
+                style="margin-top: 8px"
+              >
+                <i class="fa-solid fa-flask"></i> Thêm nguyên liệu mới
+              </button>
             </div>
             <div class="form-group">
-              <label>Nhà cung cấp <span style="color:#ef4444">*</span></label>
+              <label>Nhà cung cấp <span style="color: #ef4444">*</span></label>
               <select class="staff-input" id="stockInSupplierSelect"></select>
+            </div>
+          </div>
+          <div
+            class="staff-form-row"
+            id="stockInQuickIngredientRow"
+            style="display: none"
+          >
+            <div class="form-group">
+              <label
+                >Tên nguyên liệu mới
+                <span style="color: #ef4444">*</span></label
+              >
+              <input
+                type="text"
+                class="staff-input"
+                id="stockInQuickIngredientNameInput"
+                placeholder="Ví dụ: Bột matcha"
+              />
+            </div>
+            <div class="form-group">
+              <label
+                >Đơn vị tính mới <span style="color: #ef4444">*</span></label
+              >
+              <input
+                type="text"
+                class="staff-input"
+                id="stockInQuickIngredientUomInput"
+                placeholder="Ví dụ: kg, gói..."
+              />
             </div>
           </div>
           <div class="staff-form-row">
             <div class="form-group">
-              <label>Số lượng nhập <span style="color:#ef4444">*</span></label>
-              <input type="number" class="staff-input" id="stockInQuantityInput" min="0.01" step="0.01" placeholder="Ví dụ: 10" />
+              <label>Số lượng nhập <span style="color: #ef4444">*</span></label>
+              <input
+                type="number"
+                class="staff-input"
+                id="stockInQuantityInput"
+                min="0.01"
+                step="0.01"
+                placeholder="Ví dụ: 10"
+              />
             </div>
             <div class="form-group">
-              <label>Tổng chi phí (₫) <span style="color:#ef4444">*</span></label>
-              <input type="number" class="staff-input" id="stockInTotalCostInput" min="0" step="1000" placeholder="Ví dụ: 2500000" />
+              <label
+                >Đơn giá nhập (₫) <span style="color: #ef4444">*</span></label
+              >
+              <input
+                type="number"
+                class="staff-input"
+                id="stockInUnitPriceInput"
+                min="0"
+                step="100"
+                placeholder="Ví dụ: 250000"
+              />
+              <p
+                style="
+                  margin: 8px 0 0;
+                  color: var(--dash-text-muted);
+                  font-size: 0.85rem;
+                "
+              >
+                Tổng tiền tự tính:
+                <strong id="stockInAutoTotalCost" style="color: #fff"
+                  >0₫</strong
+                >
+              </p>
             </div>
           </div>
           <div class="staff-form-row">
             <div class="form-group">
               <label>Ngày nhập</label>
-              <input type="datetime-local" class="staff-input" id="stockInDateInput" />
+              <input
+                type="datetime-local"
+                class="staff-input"
+                id="stockInDateInput"
+              />
             </div>
             <div class="form-group">
               <label>Ghi chú</label>
-              <input type="text" class="staff-input" id="stockInNoteInput" placeholder="Không bắt buộc" />
+              <input
+                type="text"
+                class="staff-input"
+                id="stockInNoteInput"
+                placeholder="Không bắt buộc"
+              />
             </div>
           </div>
         </div>
         <div class="staff-modal-footer">
-          <button class="dash-btn-secondary" id="btnCancelStockInModal">Huỷ</button>
-          <button class="dash-btn-primary" id="btnSubmitStockIn"><i class="fa-solid fa-floppy-disk"></i> Lưu Phiếu Nhập</button>
+          <button class="dash-btn-secondary" id="btnCancelStockInModal">
+            Huỷ
+          </button>
+          <button class="dash-btn-primary" id="btnSubmitStockIn">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu Phiếu Nhập
+          </button>
         </div>
       </div>
     </div>
-    <script src="Common.js"></script>
-    <script src="Inventory.js"></script>
+    <div class="staff-modal-backdrop" id="ingredientModal">
+      <div class="staff-modal">
+        <div class="staff-modal-header">
+          <h3 class="staff-modal-title" id="ingredientModalTitle">
+            Thêm Nguyên Liệu
+          </h3>
+          <button class="staff-modal-close" id="btnCloseIngredientModal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="staff-modal-body">
+          <div class="staff-form-row">
+            <div class="form-group">
+              <label
+                >Tên nguyên liệu <span style="color: #ef4444">*</span></label
+              >
+              <input
+                type="text"
+                class="staff-input"
+                id="ingredientNameInput"
+                placeholder="Ví dụ: Hạt Arabica"
+              />
+            </div>
+            <div class="form-group">
+              <label>Đơn vị tính <span style="color: #ef4444">*</span></label>
+              <input
+                type="text"
+                class="staff-input"
+                id="ingredientUoMInput"
+                placeholder="Ví dụ: kg, chai, hộp..."
+              />
+            </div>
+          </div>
+          <div class="staff-form-row">
+            <div class="form-group">
+              <label>Tồn kho ban đầu</label>
+              <input
+                type="number"
+                class="staff-input"
+                id="ingredientInitialQtyInput"
+                min="0"
+                step="0.01"
+                value="0"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="staff-modal-footer">
+          <button class="dash-btn-secondary" id="btnCancelIngredientModal">
+            Huỷ
+          </button>
+          <button class="dash-btn-primary" id="btnSubmitIngredient">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu Nguyên Liệu
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="Common.js?v=20260420a"></script>
+    <script src="Inventory.js?v=20260420b"></script>
   </body>
 </html>

@@ -148,13 +148,24 @@ namespace WebApi.Migrations.SqlServerMigrations
                     b.Property<DateTime>("ImportDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalCost")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("ImportId");
+
+                    b.HasIndex("IngredientId");
 
                     b.HasIndex("SupplierId");
 
@@ -358,6 +369,9 @@ namespace WebApi.Migrations.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShiftId"), 1L, 1);
 
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
@@ -394,6 +408,115 @@ namespace WebApi.Migrations.SqlServerMigrations
                     b.HasKey("SupplierId");
 
                     b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("WebApi.Entities.SystemActivityLog", b =>
+                {
+                    b.Property<int>("ActivityLogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ActivityLogId"), 1L, 1);
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("ActorDisplayName")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<int?>("ActorUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<string>("MetadataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Severity")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("TargetAudience")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("ActivityLogId");
+
+                    b.ToTable("SystemActivityLogs");
+                });
+
+            modelBuilder.Entity("WebApi.Entities.SystemConfig", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("AllowManualShiftOpen")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CloseTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CloudinaryApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CloudinaryApiSecret")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CloudinaryCloudName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CloudinaryFolder")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EnableRealtimeSync")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MinPasswordLength")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OpenTime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SessionTimeoutMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoreAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StoreEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StoreName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StorePhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimeZoneId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("VatRatePercent")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemConfigs");
                 });
 
             modelBuilder.Entity("WebApi.Entities.Table", b =>
@@ -474,6 +597,9 @@ namespace WebApi.Migrations.SqlServerMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VoucherId"), 1L, 1);
 
+                    b.Property<int?>("ApplicableCategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
@@ -484,6 +610,8 @@ namespace WebApi.Migrations.SqlServerMigrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("VoucherId");
+
+                    b.HasIndex("ApplicableCategoryId");
 
                     b.ToTable("Vouchers");
                 });
@@ -509,11 +637,17 @@ namespace WebApi.Migrations.SqlServerMigrations
 
             modelBuilder.Entity("WebApi.Entities.Import", b =>
                 {
+                    b.HasOne("WebApi.Entities.Ingredient", "Ingredient")
+                        .WithMany()
+                        .HasForeignKey("IngredientId");
+
                     b.HasOne("WebApi.Entities.Supplier", "Supplier")
                         .WithMany()
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Ingredient");
 
                     b.Navigation("Supplier");
                 });
@@ -625,6 +759,15 @@ namespace WebApi.Migrations.SqlServerMigrations
                         .IsRequired();
 
                     b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("WebApi.Entities.Voucher", b =>
+                {
+                    b.HasOne("WebApi.Entities.Category", "ApplicableCategory")
+                        .WithMany()
+                        .HasForeignKey("ApplicableCategoryId");
+
+                    b.Navigation("ApplicableCategory");
                 });
 
             modelBuilder.Entity("WebApi.Entities.Order", b =>

@@ -38,7 +38,7 @@ public class ItemsController : ControllerBase
         return Ok(items);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
     public IActionResult Create(Item model)
     {
@@ -46,7 +46,7 @@ public class ItemsController : ControllerBase
         return Ok(new { message = "Item created successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
     public IActionResult Update(int id, Item model)
     {
@@ -54,7 +54,7 @@ public class ItemsController : ControllerBase
         return Ok(new { message = "Item updated successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {

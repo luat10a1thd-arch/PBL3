@@ -14,11 +14,13 @@ public class OrdersController : ControllerBase
 {
     private IOrderService _orderService;
     private readonly DataContext _context;
+    private readonly ISystemActivityLogService _systemActivityLogService;
 
-    public OrdersController(IOrderService orderService, DataContext context)
+    public OrdersController(IOrderService orderService, DataContext context, ISystemActivityLogService systemActivityLogService)
     {
         _orderService = orderService;
         _context = context;
+        _systemActivityLogService = systemActivityLogService;
     }
 
     [HttpPost("create")]
@@ -47,12 +49,12 @@ public class OrdersController : ControllerBase
     [HttpPost("checkout/{orderId}")]
     public IActionResult Checkout(int orderId, [FromBody] CheckoutRequest request)
     {
-        _orderService.Checkout(orderId, request.PaymentMethod);
+        _orderService.Checkout(orderId, request.PaymentMethod, request.FinalAmount);
         return Ok(new { message = "Thanh toán thành công" });
     }
 
     [HttpPost("create-and-checkout")]
-    public IActionResult CreateAndCheckout([FromBody] CreateAndCheckoutRequest request)
+    public async Task<IActionResult> CreateAndCheckout([FromBody] CreateAndCheckoutRequest request)
     {
         if (request == null || request.Items == null || request.Items.Count == 0)
             throw new AppException("Đơn hàng phải có ít nhất một món");
@@ -68,8 +70,24 @@ public class OrdersController : ControllerBase
             _orderService.AddItemToOrder(order.OrderId, item.ItemId, item.Quantity);
         }
         
+        var subtotal = order.Total;
+        var vatAmount = subtotal * 0.08m;
+        var discountAmount = Math.Max(0, request.DiscountAmount);
+        var finalAmount = Math.Max(0, subtotal + vatAmount - discountAmount);
+
         // Checkout
-        _orderService.Checkout(order.OrderId, request.PaymentMethod);
+        _orderService.Checkout(order.OrderId, request.PaymentMethod, finalAmount);
+
+        await _systemActivityLogService.Write(new SystemActivityLogWriteRequest
+        {
+            ActorUserId = user.Id,
+            ActorDisplayName = $"{user.FirstName} {user.LastName}".Trim(),
+            ActionType = "ORDER_CREATED",
+            Severity = "Info",
+            Description = $"Tạo và thanh toán đơn #{order.OrderId} với tổng tiền {finalAmount:N0} VND",
+            TargetAudience = "Owner",
+            MetadataJson = $"{{\"orderId\":{order.OrderId},\"employeeId\":{user.Id},\"paymentMethod\":\"{request.PaymentMethod}\"}}"
+        });
         
         return Ok(new { 
             message = "Đơn hàng đã được tạo và thanh toán thành công",
@@ -77,7 +95,56 @@ public class OrdersController : ControllerBase
         });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Staff, Role.Manager)]
+    [HttpGet("cashier-summary")]
+    public IActionResult GetCashierSummary()
+    {
+        var user = (User)HttpContext.Items["User"];
+        var timeZone = ResolveBusinessTimeZone();
+        var nowLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+        var localToday = nowLocal.Date;
+        var localTomorrow = localToday.AddDays(1);
+
+        var paidRows = _context.Payments
+            .AsNoTracking()
+            .Join(
+                _context.Orders.AsNoTracking(),
+                payment => payment.OrderId,
+                order => order.OrderId,
+                (payment, order) => new { payment, order })
+            .Where(x => x.order.EmployeeId == user.Id)
+            .ToList();
+
+        paidRows = paidRows
+            .Where(x =>
+            {
+                var paidAtUtc = DateTime.SpecifyKind(x.payment.PaidAt, DateTimeKind.Utc);
+                var paidAtLocal = TimeZoneInfo.ConvertTimeFromUtc(paidAtUtc, timeZone);
+                return paidAtLocal >= localToday && paidAtLocal < localTomorrow;
+            })
+            .ToList();
+
+        var cashTotal = paidRows
+            .Where(x => string.Equals(x.payment.Method, "cash", StringComparison.OrdinalIgnoreCase))
+            .Sum(x => x.payment.Price);
+        var transferTotal = paidRows
+            .Where(x =>
+                string.Equals(x.payment.Method, "transfer", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(x.payment.Method, "qr", StringComparison.OrdinalIgnoreCase))
+            .Sum(x => x.payment.Price);
+        var totalRevenue = paidRows.Sum(x => x.payment.Price);
+
+        return Ok(new CashierSummaryDto
+        {
+            CashTotal = cashTotal,
+            TransferTotal = transferTotal,
+            CancelledTotal = 0,
+            TotalRevenue = totalRevenue,
+            CompletedOrders = paidRows.Count
+        });
+    }
+
+    [Authorize(Role.Manager)]
     [HttpGet("admin-overview")]
     public IActionResult GetAdminOverview()
     {
@@ -93,8 +160,6 @@ public class OrdersController : ControllerBase
         var paymentByOrder = payments
             .GroupBy(p => p.OrderId)
             .ToDictionary(g => g.Key, g => g.OrderByDescending(x => x.PaymentId).First());
-
-        var tables = _context.Tables.AsNoTracking().ToDictionary(t => t.TableId, t => t.TableNumber);
 
         var recentOrders = _context.Orders
             .AsNoTracking()
@@ -117,7 +182,7 @@ public class OrdersController : ControllerBase
                     OrderId = o.OrderId,
                     Total = paymentByOrder.TryGetValue(o.OrderId, out var payment) ? payment.Price : o.Total,
                     PaymentMethod = paymentByOrder.TryGetValue(o.OrderId, out var p) ? p.Method : "unknown",
-                    TableLabel = tables.TryGetValue(o.TableId, out var tableNumber) ? $"Bàn {tableNumber}" : $"Bàn #{o.TableId}",
+                    TableLabel = "Tại quầy",
                     ItemSummary = items.Count > 0 ? string.Join(", ", items) : "Không có món"
                 };
             })
@@ -138,7 +203,7 @@ public class OrdersController : ControllerBase
         var openShiftStaff = _context.Shifts
             .AsNoTracking()
             .Include(s => s.Employee)
-            .Where(s => s.Expected == 0)
+            .Where(s => s.ClosedAt == null)
             .OrderByDescending(s => s.ShiftId)
             .Take(5)
             .Select(s => new AdminOpenShiftDto
@@ -186,7 +251,7 @@ public class OrdersController : ControllerBase
         });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpGet("admin-list")]
     public IActionResult GetAdminOrderList()
     {
@@ -224,7 +289,7 @@ public class OrdersController : ControllerBase
                 CreatedAt = o.CreatedAt,
                 PaidAt = hasPayment ? payment!.PaidAt : null,
                 DateTime = when == default ? DateTime.Now : when,
-                TableLabel = o.Table != null ? $"Bàn {o.Table.TableNumber}" : $"Bàn #{o.TableId}",
+                TableLabel = "Tại quầy",
                 ItemSummary = items.Count > 0 ? string.Join(", ", items) : "Không có món",
                 Total = hasPayment ? payment!.Price : o.Total,
                 PaymentMethod = hasPayment ? payment!.Method : "pending",
@@ -246,7 +311,7 @@ public class OrdersController : ControllerBase
         });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpGet("monthly-report")]
     public IActionResult GetMonthlyReport([FromQuery] int? month, [FromQuery] int? year)
     {
@@ -351,16 +416,47 @@ public class OrdersController : ControllerBase
             PaymentMethodSummary = paymentMethodSummary
         });
     }
+
+    private TimeZoneInfo ResolveBusinessTimeZone()
+    {
+        var configured = _context.SystemConfigs.AsNoTracking().OrderBy(x => x.Id).Select(x => x.TimeZoneId).FirstOrDefault();
+        var candidates = new[]
+        {
+            configured,
+            "Asia/Ho_Chi_Minh",
+            "SE Asia Standard Time"
+        };
+
+        foreach (var value in candidates)
+        {
+            if (string.IsNullOrWhiteSpace(value)) continue;
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(value.Trim());
+            }
+            catch
+            {
+                // continue fallback list
+            }
+        }
+
+        return TimeZoneInfo.Local;
+    }
 }
 
 // Request Models (Có thể tách ra file riêng nếu muốn)
 public class CreateOrderRequest { public int TableId { get; set; } }
 public class AddToOrderRequest { public int OrderId { get; set; } public int ItemId { get; set; } public int Quantity { get; set; } }
-public class CheckoutRequest { public string PaymentMethod { get; set; } }
+public class CheckoutRequest
+{
+    public string PaymentMethod { get; set; }
+    public decimal? FinalAmount { get; set; }
+}
 public class CreateAndCheckoutRequest 
 { 
     public int TableId { get; set; }
     public string PaymentMethod { get; set; }
+    public decimal DiscountAmount { get; set; }
     public List<OrderItemRequest> Items { get; set; }
 }
 public class OrderItemRequest
@@ -465,4 +561,13 @@ public class MonthlyPaymentMethodSummaryDto
     public string Method { get; set; } = string.Empty;
     public int Count { get; set; }
     public decimal Total { get; set; }
+}
+
+public class CashierSummaryDto
+{
+    public decimal CashTotal { get; set; }
+    public decimal TransferTotal { get; set; }
+    public decimal CancelledTotal { get; set; }
+    public decimal TotalRevenue { get; set; }
+    public int CompletedOrders { get; set; }
 }

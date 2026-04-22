@@ -31,7 +31,7 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
     public IActionResult Create(Category model)
     {
@@ -39,7 +39,7 @@ public class CategoriesController : ControllerBase
         return Ok(new { message = "Category created successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
     public IActionResult Update(int id, Category model)
     {
@@ -47,7 +47,7 @@ public class CategoriesController : ControllerBase
         return Ok(new { message = "Category updated successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {

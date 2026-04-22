@@ -17,7 +17,7 @@ public class UploadController : ControllerBase
         _imageUploadService = imageUploadService;
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost("image")]
     public async Task<IActionResult> UploadImage([FromForm] IFormFile file)
     {

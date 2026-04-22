@@ -11,10 +11,12 @@ using WebApi.Services;
 public class IngredientsController : ControllerBase
 {
     private readonly IIngredientService _ingredientService;
+    private readonly ISystemActivityLogService _systemActivityLogService;
 
-    public IngredientsController(IIngredientService ingredientService)
+    public IngredientsController(IIngredientService ingredientService, ISystemActivityLogService systemActivityLogService)
     {
         _ingredientService = ingredientService;
+        _systemActivityLogService = systemActivityLogService;
     }
 
     [HttpGet]
@@ -34,7 +36,7 @@ public class IngredientsController : ControllerBase
         return Ok(ingredient);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
     public async Task<IActionResult> Create(Ingredient ingredient)
     {
@@ -42,7 +44,7 @@ public class IngredientsController : ControllerBase
         return Ok(created);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Ingredient ingredient)
     {
@@ -50,7 +52,7 @@ public class IngredientsController : ControllerBase
         return Ok(updated);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -58,7 +60,7 @@ public class IngredientsController : ControllerBase
         return Ok(new { message = "Xóa nguyên liệu thành công" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPatch("{id}/stock")]
     public async Task<IActionResult> UpdateStock(int id, [FromBody] UpdateStockRequest request)
     {
@@ -72,9 +74,37 @@ public class IngredientsController : ControllerBase
         var ingredients = await _ingredientService.GetLowStock(threshold ?? 10);
         return Ok(ingredients);
     }
+
+    [Authorize(Role.Staff, Role.Manager)]
+    [HttpPost("{id}/consume")]
+    public async Task<IActionResult> Consume(int id, [FromBody] ConsumeIngredientRequest request)
+    {
+        var user = (User)HttpContext.Items["User"];
+        var quantity = request?.Quantity ?? 0;
+        var updated = await _ingredientService.ConsumeStock(id, quantity);
+
+        await _systemActivityLogService.Write(new SystemActivityLogWriteRequest
+        {
+            ActorUserId = user.Id,
+            ActorDisplayName = $"{user.FirstName} {user.LastName}".Trim(),
+            ActionType = "INGREDIENT_CONSUMED",
+            Severity = "Warning",
+            Description = $"Xuất kho nguyên liệu #{id} số lượng {quantity:N2}",
+            TargetAudience = "Owner",
+            MetadataJson = $"{{\"ingredientId\":{id},\"quantity\":{quantity},\"note\":\"{(request?.Note ?? string.Empty).Replace("\"", "\\\"")}\"}}"
+        });
+
+        return Ok(updated);
+    }
 }
 
 public class UpdateStockRequest
 {
     public decimal Quantity { get; set; }
+}
+
+public class ConsumeIngredientRequest
+{
+    public decimal Quantity { get; set; }
+    public string? Note { get; set; }
 }

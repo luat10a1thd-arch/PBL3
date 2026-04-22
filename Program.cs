@@ -52,7 +52,10 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<ISupplierService, SupplierService>();
     services.AddScoped<IImportService, ImportService>();
     services.AddScoped<IEmployeeService, EmployeeService>();
+    services.AddScoped<IVoucherService, VoucherService>();
     services.AddScoped<IImageUploadService, CloudinaryImageUploadService>();
+    services.AddScoped<ISystemConfigService, SystemConfigService>();
+    services.AddScoped<ISystemActivityLogService, SystemActivityLogService>();
 }
 
 var app = builder.Build();
@@ -76,11 +79,25 @@ using (var scope = app.Services.CreateScope())
     // global error handler
     app.UseMiddleware<ErrorHandlerMiddleware>();
 
-    // serve static UI files at /UI/*
+    // serve static UI files at /UI/*  (backward compat)
     app.UseStaticFiles(new StaticFileOptions
     {
         FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "UI")),
         RequestPath = "/UI"
+    });
+
+    // serve assets at "/" (for pages served directly at root)
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "UI")),
+        RequestPath = ""
+    });
+
+    // serve assets at "/app" so pages under /app/* can load style.css, Common.js via relative path
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "UI")),
+        RequestPath = "/app"
     });
 
     // custom jwt auth middleware
@@ -88,6 +105,30 @@ using (var scope = app.Services.CreateScope())
 
     app.MapControllers();
     app.MapHub<ShiftHub>("/hubs/shifts");
+
+    // ── Clean URL routes ──────────────────────────────────────────────────
+    var uiRoot = Path.Combine(app.Environment.ContentRootPath, "UI");
+    IResult ServeUi(string file) =>
+        Results.File(Path.Combine(uiRoot, file), "text/html");
+
+    // ── Page routes under /app/* (no conflict with /Orders, /Shifts API routes) ─
+    app.MapGet("/",                      () => Results.Redirect("/app/login"));
+    app.MapGet("/app/login",             () => ServeUi("LoginPage.html"));
+    app.MapGet("/app/dashboard",         () => ServeUi("AdminDashboard.html"));
+    app.MapGet("/app/menu",              () => ServeUi("AdminMenuManagement.html"));
+    app.MapGet("/app/settings",          () => ServeUi("AdminSettings.html"));
+    app.MapGet("/app/orders",            () => ServeUi("Orders.html"));
+    app.MapGet("/app/inventory",         () => ServeUi("Inventory.html"));
+    app.MapGet("/app/imports",           () => ServeUi("ImportHistory.html"));
+    app.MapGet("/app/staff",             () => ServeUi("StaffManagement.html"));
+    app.MapGet("/app/suppliers",         () => ServeUi("SupplierManagement.html"));
+    app.MapGet("/app/vouchers",          () => ServeUi("VoucherManagement.html"));
+    app.MapGet("/app/reports",           () => ServeUi("MonthlyReport.html"));
+    app.MapGet("/app/shift-report",      () => ServeUi("ShiftClosingReport.html"));
+    app.MapGet("/app/logs",              () => ServeUi("SystemLogs.html"));
+    app.MapGet("/app/cashier",           () => ServeUi("CashierInterface.html"));
+    app.MapGet("/app/cashier/shift",     () => ServeUi("CashierShiftReport.html"));
+    app.MapGet("/app/cashier/inventory", () => ServeUi("StaffInventoryUsage.html"));
 }
 
 app.Run("http://localhost:4000");

@@ -2,12 +2,14 @@ namespace WebApi.Entities;
 
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public enum Role
 {
-    Admin,
-    Owner,
-    Staff
+    Manager = 0,
+    Admin = 1,
+    Owner = Admin, // backward compatibility for legacy data
+    Staff = 2,
 
 }
 
@@ -22,6 +24,9 @@ public class User
 
     [JsonIgnore]
     public string PasswordHash { get; set; }
+
+    [NotMapped]
+    public int? LastSeenActivityLogId { get; set; }
 
     public List<Shift> Shift { get; set; }
 }

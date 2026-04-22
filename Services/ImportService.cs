@@ -27,6 +27,7 @@ public class ImportService : IImportService
     {
         var query = _context.Imports
             .Include(i => i.Supplier)
+            .Include(i => i.Ingredient)
             .AsQueryable();
 
         if (supplierId.HasValue)
@@ -66,6 +67,9 @@ public class ImportService : IImportService
         if (import.ImportDate == default)
             import.ImportDate = DateTime.Now;
 
+        if (import.Quantity > 0 && import.UnitPrice >= 0)
+            import.TotalCost = import.Quantity * import.UnitPrice;
+
         _context.Imports.Add(import);
         await _context.SaveChangesAsync();
 
@@ -81,7 +85,12 @@ public class ImportService : IImportService
         await ValidateImportInput(import);
 
         existingImport.SupplierId = import.SupplierId;
-        existingImport.TotalCost = import.TotalCost;
+        existingImport.IngredientId = import.IngredientId;
+        existingImport.Quantity = import.Quantity;
+        existingImport.UnitPrice = import.UnitPrice;
+        existingImport.TotalCost = import.Quantity > 0 && import.UnitPrice >= 0
+            ? import.Quantity * import.UnitPrice
+            : import.TotalCost;
         existingImport.ImportDate = import.ImportDate == default
             ? existingImport.ImportDate
             : import.ImportDate;
@@ -104,6 +113,9 @@ public class ImportService : IImportService
         if (request.Quantity <= 0)
             throw new AppException("Số lượng nhập phải lớn hơn 0");
 
+        if (request.UnitPrice < 0)
+            throw new AppException("Đơn giá không thể âm");
+
         if (request.TotalCost < 0)
             throw new AppException("Tổng chi phí không thể âm");
 
@@ -123,7 +135,10 @@ public class ImportService : IImportService
             var import = new Import
             {
                 SupplierId = request.SupplierId,
-                TotalCost = request.TotalCost,
+                IngredientId = request.IngredientId,
+                Quantity = request.Quantity,
+                UnitPrice = request.UnitPrice,
+                TotalCost = request.Quantity * request.UnitPrice,
                 ImportDate = request.ImportDate ?? DateTime.Now
             };
 
@@ -163,8 +178,20 @@ public class ImportService : IImportService
         if (!await _context.Suppliers.AnyAsync(s => s.SupplierId == import.SupplierId))
             throw new AppException("Nhà cung cấp không tồn tại");
 
+        if (import.IngredientId.HasValue && import.IngredientId.Value > 0)
+        {
+            if (!await _context.Ingredients.AnyAsync(i => i.IngredientId == import.IngredientId.Value))
+                throw new AppException("Nguyên liệu không tồn tại");
+        }
+
         if (import.TotalCost < 0)
             throw new AppException("Tổng chi phí không thể âm");
+
+        if (import.Quantity < 0)
+            throw new AppException("Số lượng không thể âm");
+
+        if (import.UnitPrice < 0)
+            throw new AppException("Đơn giá không thể âm");
     }
 }
 
@@ -173,6 +200,7 @@ public class StockInRequest
     public int SupplierId { get; set; }
     public int IngredientId { get; set; }
     public decimal Quantity { get; set; }
+    public decimal UnitPrice { get; set; }
     public decimal TotalCost { get; set; }
     public DateTime? ImportDate { get; set; }
 }

@@ -1,12 +1,22 @@
 <!doctype html>
 <html lang="vi">
   <head>
+    <base href="/app/">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
     <title>Lịch Sử Nhập Kho - Cafe 24/7</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="admin-dashboard dash-bg-wrapper">
     <div class="dash-bg-overlay"></div>
@@ -22,42 +32,42 @@
       </div>
 
       <nav class="dash-nav">
-        <a href="AdminDashboard.html" class="dash-nav-item">
+        <a href="/app/dashboard" class="dash-nav-item">
           <i class="fa-solid fa-chart-line dash-nav-icon"></i>
           <span class="dash-nav-text">Tổng Quan</span>
         </a>
-        <a href="Orders.html" class="dash-nav-item">
+        <a href="/app/orders" class="dash-nav-item">
           <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
           <span class="dash-nav-text">Đơn Hàng</span>
         </a>
-        <a href="AdminMenuManagement.html" class="dash-nav-item">
+        <a href="/app/menu" class="dash-nav-item">
           <i class="fa-solid fa-utensils dash-nav-icon"></i>
           <span class="dash-nav-text">Thực Đơn</span>
         </a>
-        <a href="Inventory.html" class="dash-nav-item">
+        <a href="/app/inventory" class="dash-nav-item">
           <i class="fa-solid fa-box dash-nav-icon"></i>
           <span class="dash-nav-text">Kho Hàng</span>
         </a>
-        <a href="ImportHistory.html" class="dash-nav-item active">
+        <a href="/app/imports" class="dash-nav-item active">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Lịch Sử Nhập</span>
         </a>
-        <a href="StaffManagement.html" class="dash-nav-item">
+        <a href="/app/staff" class="dash-nav-item">
           <i class="fa-solid fa-users dash-nav-icon"></i>
           <span class="dash-nav-text">Nhân Viên</span>
         </a>
-        <a href="SupplierManagement.html" class="dash-nav-item">
+        <a href="/app/suppliers" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
-        <a href="MonthlyReport.html" class="dash-nav-item">
+        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
       </nav>
 
       <div class="dash-bottom-actions">
-        <a href="ShiftClosingReport.html" class="dash-nav-item">
+        <a href="/app/shift-report" class="dash-nav-item">
           <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
           <span class="dash-nav-text">Chốt Ca</span>
         </a>
@@ -69,7 +79,7 @@
           <div class="dash-user-avatar">AM</div>
           <div class="dash-user-info">
             <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Trị Viên</span>
+            <span class="dash-user-role">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -78,20 +88,31 @@
     <main class="dash-main">
       <header class="dash-header">
         <div class="dash-header-left">
-          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+          <button
+            class="dash-hamburger"
+            id="sidebarToggle"
+            aria-label="Mở menu"
+          >
             <i class="fa-solid fa-bars"></i>
           </button>
           <h2 class="dash-page-title">Lịch Sử Nhập Kho</h2>
           <div class="dash-shift-badge">
             <div class="dash-shift-dot"></div>
-            <span class="dash-shift-text">CA 2: 12:00 - 17:00</span>
+            <span class="dash-shift-text" id="importHistoryShiftText"
+              >Đang cập nhật ca...</span
+            >
           </div>
         </div>
 
         <div class="dash-header-right">
           <div class="dash-search-box">
             <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm mã phiếu, nhà cung cấp..." class="dash-search-input" id="importSearchInput" />
+            <input
+              type="text"
+              placeholder="Tìm mã phiếu, nhà cung cấp..."
+              class="dash-search-input"
+              id="importSearchInput"
+            />
           </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
@@ -102,7 +123,6 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
-
           <!-- KPI cards -->
           <div class="dash-kpi-grid">
             <div class="dash-card">
@@ -111,9 +131,13 @@
               <p class="dash-kpi-sub">Tháng 3 / 2026</p>
             </div>
             <div class="dash-card">
-              <h3 class="dash-kpi-title text-warning">Tổng Chi Phí Tháng Này</h3>
+              <h3 class="dash-kpi-title text-warning">
+                Tổng Chi Phí Tháng Này
+              </h3>
               <p class="dash-kpi-value text-warning">286,400,000₫</p>
-              <p class="dash-kpi-sub"><i class="fa-solid fa-arrow-up"></i> +8% vs tháng trước</p>
+              <p class="dash-kpi-sub">
+                <i class="fa-solid fa-arrow-up"></i> +8% vs tháng trước
+              </p>
             </div>
             <div class="dash-card">
               <h3 class="dash-kpi-title">Số Nhà Cung Cấp</h3>
@@ -122,7 +146,7 @@
             </div>
             <div class="dash-card">
               <h3 class="dash-kpi-title">Lần Nhập Gần Nhất</h3>
-              <p class="dash-kpi-value" style="font-size:1.4rem;">09/03/2026</p>
+              <p class="dash-kpi-value" style="font-size: 1.4rem">09/03/2026</p>
               <p class="dash-kpi-sub">Hôm nay · 10:30 SA</p>
             </div>
           </div>
@@ -168,22 +192,25 @@
             <div class="dash-pagination pd-25">
               <div class="dash-pagination-info">Đang tải dữ liệu...</div>
               <div class="dash-pagination-controls">
-                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="dash-page-btn" disabled>
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
                 <button class="dash-page-btn active">1</button>
                 <button class="dash-page-btn">2</button>
                 <button class="dash-page-btn">3</button>
                 <span class="dash-pagination-dots">...</span>
                 <button class="dash-page-btn">7</button>
-                <button class="dash-page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <button class="dash-page-btn">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </main>
 
-    <script src="Common.js"></script>
-    <script src="ImportHistory.js"></script>
+    <script src="Common.js?v=20260420a"></script>
+    <script src="ImportHistory.js?v=20260420b"></script>
   </body>
 </html>

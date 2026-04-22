@@ -7,17 +7,67 @@ let importState = {
     searchKeyword: ''
 };
 
-function formatDateTime(value) {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return { date: '-', time: '-' };
+function getShiftLabelByNow() {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 12) return 'CA 1: 06:00 - 12:00';
+    if (hour >= 12 && hour < 17) return 'CA 2: 12:00 - 17:00';
+    if (hour >= 17 && hour < 23) return 'CA 3: 17:00 - 23:00';
+    return 'Ngoài giờ ca';
+}
+
+function updateShiftBadgeText() {
+    const node = document.getElementById('importHistoryShiftText');
+    if (!node) return;
+    node.textContent = getShiftLabelByNow();
+}
+
+function toLocalParts(dateValue) {
+    const d = new Date(dateValue);
+    if (Number.isNaN(d.getTime())) return null;
     return {
-        date: date.toLocaleDateString('vi-VN'),
-        time: date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+        year: d.getFullYear(),
+        month: d.getMonth() + 1,
+        day: d.getDate(),
+        hour: String(d.getHours()).padStart(2, '0'),
+        minute: String(d.getMinutes()).padStart(2, '0')
+    };
+}
+
+function formatDateTime(value) {
+    const date = toLocalParts(value);
+    if (!date) return { date: '-', time: '-' };
+    return {
+        date: `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`,
+        time: `${date.hour}:${date.minute}`
     };
 }
 
 function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+}
+
+function resolveImportPricing(importRow) {
+    const totalCost = Number(importRow?.totalCost ?? 0);
+    let quantity = Number(importRow?.quantity ?? 0);
+    let unitPrice = Number(importRow?.unitPrice ?? 0);
+
+    if ((!Number.isFinite(quantity) || quantity <= 0) && totalCost > 0) {
+        quantity = 1;
+    }
+
+    if ((!Number.isFinite(unitPrice) || unitPrice <= 0) && totalCost > 0) {
+        unitPrice = quantity > 0 ? (totalCost / quantity) : totalCost;
+    }
+
+    const computedTotal = Number.isFinite(quantity) && Number.isFinite(unitPrice)
+        ? (quantity * unitPrice)
+        : totalCost;
+
+    return {
+        quantity: Number.isFinite(quantity) ? quantity : 0,
+        unitPrice: Number.isFinite(unitPrice) ? unitPrice : 0,
+        total: computedTotal > 0 ? computedTotal : totalCost
+    };
 }
 
 async function importApiRequest(endpoint, method = 'GET', body = null) {
@@ -30,8 +80,8 @@ async function importApiRequest(endpoint, method = 'GET', body = null) {
 
     const response = await fetch(`${IMPORT_API_URL}${endpoint}`, options);
     if (response.status === 401) {
-        localStorage.removeItem('user');
-        window.location.href = 'LoginPage.html';
+        sessionStorage.removeItem('user');
+        window.location.href = '/app/login';
         return null;
     }
     if (!response.ok) {
@@ -45,20 +95,24 @@ function updateImportKpis(imports, suppliers) {
     const kpis = document.querySelectorAll('.dash-kpi-value');
     if (kpis.length < 4) return;
 
-    const now = new Date();
+    const now = toLocalParts(new Date());
+    if (!now) return;
+    const nowMonth = now.month;
+    const nowYear = now.year;
     const monthImports = imports.filter(i => {
-        const d = new Date(i.importDate);
-        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        const d = toLocalParts(i.importDate);
+        if (!d) return false;
+        return d.month === nowMonth && d.year === nowYear;
     });
 
     const totalCost = monthImports.reduce((sum, i) => sum + Number(i.totalCost ?? 0), 0);
     const latest = imports[0];
-    const latestDate = latest ? new Date(latest.importDate) : null;
+    const latestDate = latest ? toLocalParts(latest.importDate) : null;
 
     kpis[0].textContent = String(monthImports.length);
     kpis[1].textContent = formatCurrency(totalCost);
     kpis[2].textContent = String((suppliers || []).length);
-    kpis[3].textContent = latestDate ? latestDate.toLocaleDateString('vi-VN') : '-';
+    kpis[3].textContent = latestDate ? `${latestDate.year}-${String(latestDate.month).padStart(2, '0')}-${String(latestDate.day).padStart(2, '0')}` : '-';
 }
 
 function filterByMonth(imports, monthValue) {
@@ -67,8 +121,9 @@ function filterByMonth(imports, monthValue) {
     if (!yyyy || !mm) return imports;
 
     return imports.filter(i => {
-        const d = new Date(i.importDate);
-        return d.getFullYear() === yyyy && (d.getMonth() + 1) === mm;
+        const d = toLocalParts(i.importDate);
+        if (!d) return false;
+        return d.year === yyyy && d.month === mm;
     });
 }
 
@@ -108,8 +163,10 @@ function renderImportRows(imports) {
     tbody.innerHTML = imports.map(i => {
         const importId = Number(i.importId ?? 0);
         const supplierName = i.supplier?.name || `NCC-${i.supplierId ?? '-'}`;
+        const ingredientName = i.ingredient?.name || 'Không rõ';
+        const ingredientUom = i.ingredient?.uoM || '-';
         const dt = formatDateTime(i.importDate);
-        const totalCost = Number(i.totalCost ?? 0);
+        const pricing = resolveImportPricing(i);
 
         return `
             <tr>
@@ -131,14 +188,14 @@ function renderImportRows(imports) {
                     <div class="dash-product-cell">
                         <div class="dash-product-img icon-cell"><i class="fa-solid fa-boxes-stacked"></i></div>
                         <div class="dash-product-info">
-                            <span class="dash-product-name">Phiếu nhập tổng hợp</span>
-                            <span class="dash-product-id">Từ hệ thống</span>
+                            <span class="dash-product-name">${ingredientName}</span>
+                            <span class="dash-product-id">${ingredientUom}</span>
                         </div>
                     </div>
                 </td>
-                <td class="right">-</td>
-                <td class="right dash-cost">-</td>
-                <td class="right dash-price">${formatCurrency(totalCost)}</td>
+                <td class="right">${pricing.quantity}</td>
+                <td class="right dash-cost">${formatCurrency(pricing.unitPrice)}</td>
+                <td class="right dash-price">${formatCurrency(pricing.total)}</td>
                 <td>
                     <div class="dash-flex-col">
                         <span class="dash-product-name">Hệ thống</span>
@@ -171,10 +228,10 @@ function fillMonthFilter(imports) {
 
     const unique = new Map();
     imports.forEach(i => {
-        const d = new Date(i.importDate);
-        if (Number.isNaN(d.getTime())) return;
-        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-        const label = `Tháng ${d.getMonth() + 1} / ${d.getFullYear()}`;
+        const d = toLocalParts(i.importDate);
+        if (!d) return;
+        const key = `${d.year}-${String(d.month).padStart(2, '0')}`;
+        const label = `Tháng ${d.month} / ${d.year}`;
         unique.set(key, label);
     });
 
@@ -209,6 +266,24 @@ function redrawImports() {
     updatePaginationInfo(filtered.length);
 }
 
+function exportImportHistoryToCsv(rows) {
+    const exportRows = (rows || []).map(i => {
+        const dt = formatDateTime(i.importDate);
+        const pricing = resolveImportPricing(i);
+        return {
+            MaPhieu: `NK-${String(i.importId ?? '').padStart(4, '0')}`,
+            NgayNhap: `${dt.date} ${dt.time}`,
+            NhaCungCap: i.supplier?.name || '',
+            NguyenLieu: i.ingredient?.name || '',
+            DonVi: i.ingredient?.uoM || '',
+            SoLuong: pricing.quantity,
+            DonGia: pricing.unitPrice,
+            ThanhTien: pricing.total
+        };
+    });
+    window.exportRowsToCsv?.(exportRows, 'lich-su-nhap-hang.csv');
+}
+
 function setupSidebar() {
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -223,20 +298,11 @@ function setupSidebar() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const user = window.ensureAuthByRole(['Admin', 'Owner']);
+        const user = window.ensureAuthByRole(['Manager']);
         if (!user) return;
 
-        if (user.firstName && user.lastName) {
-            const name = `${user.firstName} ${user.lastName}`;
-            const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
-            const role = window.normalizeRole(user.role);
-            const nameNode = document.querySelector('.dash-user-name');
-            const roleNode = document.querySelector('.dash-user-role');
-            const avatarNode = document.querySelector('.dash-user-avatar');
-            if (nameNode) nameNode.textContent = name;
-            if (roleNode) roleNode.textContent = role === 'Owner' ? 'Chủ Sở Hữu' : 'Quản Trị Viên';
-            if (avatarNode) avatarNode.textContent = initials;
-        }
+        window.hydrateAdminUserProfile?.(user);
+        updateShiftBadgeText();
 
         setupSidebar();
 
@@ -278,7 +344,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 redrawImports();
             });
         }
+
+        const exportBtn = Array.from(document.querySelectorAll('button')).find(b => (b.textContent || '').includes('Xuất Excel'));
+        if (exportBtn) {
+            exportBtn.dataset.customExport = '1';
+            exportBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                exportImportHistoryToCsv(getFilteredImports());
+            });
+        }
     } catch (error) {
-        alert(error.message || 'Không thể tải lịch sử nhập hàng');
+        window.showErrorToast?.(error.message || 'Không thể tải lịch sử nhập hàng');
     }
 });
+

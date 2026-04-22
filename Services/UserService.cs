@@ -59,12 +59,22 @@ public class UserService : IUserService
 
     public void Register(RegisterRequest model)
     {
+        if (string.IsNullOrWhiteSpace(model.Username))
+            throw new AppException("Username không được để trống");
+
+        if (string.IsNullOrWhiteSpace(model.Password))
+            throw new AppException("Mật khẩu không được để trống");
+
+        var normalizedUsername = model.Username.Trim();
+
         // validate
-        if (_context.Users.Any(x => x.Username == model.Username))
-            throw new AppException("Username '" + model.Username + "' is already taken");
+        if (_context.Users.Any(x => x.Username == normalizedUsername))
+            throw new AppException("Username '" + normalizedUsername + "' is already taken");
 
         // map model to new user object
         var user = _mapper.Map<User>(model);
+        user.Username = normalizedUsername;
+        user.Role = NormalizeAccountRole(model.Role);
 
         // hash password
         user.PasswordHash = BCrypt.HashPassword(model.Password);
@@ -78,6 +88,12 @@ public class UserService : IUserService
     public void Update(int id, UpdateRequest model)
     {
         var user = getUser(id);
+
+        if (!string.IsNullOrWhiteSpace(model.Role))
+            model.Role = NormalizeAccountRole(model.Role).ToString();
+
+        if (!string.IsNullOrWhiteSpace(model.Username))
+            model.Username = model.Username.Trim();
 
         // validate
         if (model.Username != user.Username && _context.Users.Any(x => x.Username == model.Username))
@@ -107,5 +123,21 @@ public class UserService : IUserService
         var user = _context.Users.Find(id);
         if (user == null) throw new KeyNotFoundException("User not found");
         return user;
+    }
+
+    private static Role NormalizeAccountRole(string roleText)
+    {
+        var text = (roleText ?? string.Empty).Trim().ToLowerInvariant();
+
+        if (text is "admin" or "owner")
+            return Role.Admin;
+
+        if (text is "manager" or "quản lí" or "quan li" or "quản lý" or "quan ly" or "chủ quán" or "chu quan")
+            return Role.Manager;
+
+        if (text is "staff" or "nhân viên" or "nhan vien")
+            return Role.Staff;
+
+        throw new AppException("Chức vụ chỉ hỗ trợ: Admin, Quản lí hoặc Nhân viên");
     }
 }

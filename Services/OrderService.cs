@@ -16,28 +16,21 @@ public interface IOrderService
     void AddItemToOrder(int orderId, int itemId, int quantity);
     
     // Thanh toán đơn hàng
-    void Checkout(int orderId, string paymentMethod);
+    void Checkout(int orderId, string paymentMethod, decimal? finalAmount = null);
 }
 
 public class OrderService : IOrderService
 {
     private DataContext _context;
-    private ITableService _tableService;
 
-    public OrderService(DataContext context, ITableService tableService)
+    public OrderService(DataContext context)
     {
         _context = context;
-        _tableService = tableService;
     }
 
     public Order CreateOrder(int tableId, int employeeId)
     {
         tableId = EnsureTableForOrder(tableId);
-
-        // Kiểm tra xem bàn đã có đơn hàng chưa
-        var existingOrder = GetActiveOrderForTable(tableId);
-        if (existingOrder != null) 
-            throw new AppException("Bàn này đã có đơn hàng đang hoạt động.");
 
         var order = new Order
         {
@@ -48,10 +41,6 @@ public class OrderService : IOrderService
         };
 
         _context.Orders.Add(order);
-        
-        // Cập nhật trạng thái bàn thành "Đang phục vụ"
-        _tableService.UpdateStatus(tableId, "Occupied");
-
         _context.SaveChanges();
         return order;
     }
@@ -126,25 +115,23 @@ public class OrderService : IOrderService
         _context.SaveChanges();
     }
 
-    public void Checkout(int orderId, string paymentMethod)
+    public void Checkout(int orderId, string paymentMethod, decimal? finalAmount = null)
     {
         var order = _context.Orders.Find(orderId);
         if (order == null) throw new KeyNotFoundException("Order không tồn tại");
+
+        var finalPrice = finalAmount.HasValue ? Math.Max(0, finalAmount.Value) : order.Total;
 
         // Tạo hóa đơn thanh toán
         var payment = new Payment
         {
             OrderId = orderId,
             Method = paymentMethod,
-            Price = order.Total,
+            Price = finalPrice,
             PaidAt = DateTime.UtcNow
         };
 
         _context.Payments.Add(payment);
-
-        // Trả bàn về trạng thái trống
-        _tableService.UpdateStatus(order.TableId, "Available");
-
         _context.SaveChanges();
     }
 }

@@ -12,6 +12,7 @@ public interface IIngredientService
     Task<Ingredient> Update(int id, Ingredient ingredient);
     Task Delete(int id);
     Task<Ingredient> UpdateStock(int id, decimal quantity);
+    Task<Ingredient> ConsumeStock(int id, decimal quantity);
     Task<List<Ingredient>> GetLowStock(decimal threshold = 10);
 }
 
@@ -101,6 +102,23 @@ public class IngredientService : IIngredientService
         if (ingredient.StockQty < 0)
             throw new AppException("Số lượng tồn kho không thể âm");
 
+        await _context.SaveChangesAsync();
+        return ingredient;
+    }
+
+    public async Task<Ingredient> ConsumeStock(int id, decimal quantity)
+    {
+        if (quantity <= 0)
+            throw new AppException("Số lượng sử dụng phải lớn hơn 0");
+
+        var ingredient = await _context.Ingredients.FindAsync(id);
+        if (ingredient == null)
+            throw new KeyNotFoundException("Không tìm thấy nguyên liệu");
+
+        if (ingredient.StockQty < quantity)
+            throw new AppException("Tồn kho không đủ để xuất kho");
+
+        ingredient.StockQty -= quantity;
         await _context.SaveChangesAsync();
         return ingredient;
     }

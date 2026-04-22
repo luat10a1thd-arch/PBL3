@@ -31,7 +31,7 @@ public class EmployeesController : ControllerBase
         return Ok(employee);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
     public async Task<IActionResult> Create(Employee employee)
     {
@@ -39,7 +39,7 @@ public class EmployeesController : ControllerBase
         return Ok(created);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Employee employee)
     {
@@ -47,7 +47,7 @@ public class EmployeesController : ControllerBase
         return Ok(updated);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

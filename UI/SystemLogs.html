@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <base href="/app/">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <title>Nhật Ký Hệ Thống - Cafe 24/7</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="admin-dashboard dash-bg-wrapper">
+    <div class="dash-bg-overlay"></div>
+    <div class="dash-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="dash-sidebar">
+      <div class="dash-logo-wrap">
+        <i class="fa-solid fa-mug-saucer dash-logo-icon"></i>
+        <div class="dash-logo-text-wrap">
+          <h1 class="dash-logo-title">CAFE 24/7</h1>
+          <p class="dash-logo-subtitle">Bảng Quản Trị</p>
+        </div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="/app/dashboard" class="dash-nav-item">
+          <i class="fa-solid fa-chart-line dash-nav-icon"></i>
+          <span class="dash-nav-text">Tổng Quan</span>
+        </a>
+        <a href="/app/orders" class="dash-nav-item">
+          <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
+          <span class="dash-nav-text">Đơn Hàng</span>
+        </a>
+        <a href="/app/menu" class="dash-nav-item">
+          <i class="fa-solid fa-utensils dash-nav-icon"></i>
+          <span class="dash-nav-text">Thực Đơn</span>
+        </a>
+        <a href="/app/inventory" class="dash-nav-item">
+          <i class="fa-solid fa-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Kho Hàng</span>
+        </a>
+        <a href="/app/staff" class="dash-nav-item">
+          <i class="fa-solid fa-users dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhân Viên</span>
+        </a>
+        <a href="/app/logs" class="dash-nav-item active">
+          <i class="fa-solid fa-clipboard-list dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhật Ký Hệ Thống</span>
+        </a>
+      </nav>
+
+      <div class="dash-bottom-actions">
+        <a href="#" class="dash-nav-item dash-settings-link">
+          <i class="fa-solid fa-gear dash-nav-icon"></i>
+          <span class="dash-nav-text">Cài Đặt</span>
+        </a>
+        <div class="dash-user-profile">
+          <div class="dash-user-avatar" id="txtCurrentUserAvatar">AM</div>
+          <div class="dash-user-info">
+            <span class="dash-user-name" id="txtCurrentUserName">User</span>
+            <span class="dash-user-role" id="txtCurrentUserRole">Admin</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <header class="dash-header">
+        <div class="dash-header-left">
+          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h2 class="dash-page-title">Nhật Ký Hệ Thống</h2>
+            <p class="dash-page-subtitle">Theo dõi các hành động nhạy cảm từ các tài khoản quản lý & nhân viên</p>
+          </div>
+        </div>
+        <div class="dash-header-right">
+          <button class="dash-btn-primary" id="btnRefreshLogs">
+            <i class="fa-solid fa-rotate-right"></i> Làm Mới
+          </button>
+        </div>
+      </header>
+
+      <div class="dash-content-area">
+        <div class="dash-content-container">
+
+          <!-- Lọc Nâng Cao -->
+          <div class="dash-card mb-20" style="padding: 15px 25px;">
+             <form id="filterLogsForm" style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+               <div class="form-group" style="margin-bottom: 0;">
+                 <label>Tìm kiếm (Từ khoá, Tên...)</label>
+                 <input type="text" id="logKeyword" class="staff-input" placeholder="Từ khoá..." style="width: 200px;" />
+               </div>
+               <div class="form-group" style="margin-bottom: 0;">
+                 <label>Loại Hành Động</label>
+                 <select id="logActionType" class="staff-input" style="width: 150px;">
+                    <option value="">Tất cả</option>
+                    <option value="USER_REGISTER">Thêm User</option>
+                    <option value="SHIFT_OPENED">Mở Ca</option>
+                    <option value="INGREDIENT_REDUCED">Trừ Kho</option>
+                 </select>
+               </div>
+               <div class="form-group" style="margin-bottom: 0;">
+                 <label>Mức Độ</label>
+                 <select id="logSeverity" class="staff-input" style="width: 150px;">
+                    <option value="">Tất cả</option>
+                    <option value="Info">Info</option>
+                    <option value="Warning">Warning</option>
+                    <option value="Critical">Critical</option>
+                 </select>
+               </div>
+               <div class="form-group" style="margin-bottom: 0;">
+                 <label>Từ Ngày</label>
+                 <input type="date" id="logFromDate" class="staff-input" style="width: 150px;"/>
+               </div>
+               <div class="form-group" style="margin-bottom: 0;">
+                 <label>Đến Ngày</label>
+                 <input type="date" id="logToDate" class="staff-input" style="width: 150px;"/>
+               </div>
+               <div style="flex: 1; text-align: right;">
+                 <button type="submit" class="dash-btn-primary"><i class="fa-solid fa-search"></i> Lọc</button>
+               </div>
+             </form>
+          </div>
+
+          <!-- Logs Table -->
+          <div class="dash-table-card no-padding">
+            <table class="dash-table no-margin">
+              <thead>
+                <tr>
+                  <th>Thời Gian</th>
+                  <th>Hành Động</th>
+                  <th>Tài Khoản</th>
+                  <th>Chi Tiết</th>
+                  <th>Mức Độ</th>
+                </tr>
+              </thead>
+              <tbody id="logsTableBody">
+                 <tr>
+                    <td colspan="5" style="text-align: center; padding: 25px;">Đang tải...</td>
+                 </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <script src="Common.js?v=20260420a"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="SystemLogs.js"></script>
+  </body>
+</html>

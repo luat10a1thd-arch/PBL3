@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput.value.trim();
 
         if (!username || !password) {
-            alert('Vui lòng nhập đầy đủ tài khoản và mật khẩu!');
+            window.showWarningToast?.('Vui lòng nhập đầy đủ tài khoản và mật khẩu!');
             return;
         }
 
@@ -31,11 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Đăng nhập thành công
-                alert('Đăng nhập thành công!');
+                window.showSuccessToast?.('Đăng nhập thành công');
                 
                 // Chỉ lưu thông tin user để hiển thị UI, token được lưu bằng HttpOnly cookie
-                localStorage.setItem('user', JSON.stringify(data));
+                sessionStorage.setItem('user', JSON.stringify(data));
 
                 // Điều hướng dựa theo role
                 if (typeof window.redirectToRoleHome === 'function') {
@@ -43,22 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     const normalizedRole = typeof window.normalizeRole === 'function' ? window.normalizeRole(data?.role) : '';
                     if (normalizedRole === 'Staff') {
-                        window.location.href = 'CashierInterface.html';
-                    } else if (normalizedRole === 'Admin' || normalizedRole === 'Owner') {
-                        window.location.href = 'AdminDashboard.html';
+                        window.location.href = '/app/cashier';
+                    } else if (normalizedRole === 'Manager' || normalizedRole === 'Admin') {
+                        window.location.href = '/app/dashboard';
                     } else {
-                        localStorage.removeItem('user');
-                        alert('Role không hợp lệ. Vui lòng đăng nhập lại.');
-                        window.location.href = 'LoginPage.html';
+                        sessionStorage.removeItem('user');
+                        window.showErrorToast?.('Role không hợp lệ. Vui lòng đăng nhập lại.');
+                        window.location.href = '/app/login';
                     }
                 }
             } else {
-                // Đăng nhập thất bại
-                alert(data.message || 'Tài khoản hoặc mật khẩu không chính xác!');
+                window.showErrorToast?.(data.message || 'Tài khoản hoặc mật khẩu không chính xác!');
             }
         } catch (error) {
             console.error('Lỗi khi đăng nhập:', error);
-            alert('Lỗi kết nối đến server. Vui lòng thử lại sau!');
+            window.showErrorToast?.('Lỗi kết nối đến server. Vui lòng thử lại sau!');
         }
     });
 
@@ -69,3 +67,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="vi">
   <head>
+    <base href="/app/">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>Quản Lý Thực Đơn - Cafe 24/7</title>
@@ -23,42 +24,42 @@
       </div>
 
       <nav class="dash-nav">
-        <a href="AdminDashboard.html" class="dash-nav-item">
+        <a href="/app/dashboard" class="dash-nav-item">
           <i class="fa-solid fa-chart-line dash-nav-icon"></i>
           <span class="dash-nav-text">Tổng Quan</span>
         </a>
-        <a href="Orders.html" class="dash-nav-item">
+        <a href="/app/orders" class="dash-nav-item">
           <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
           <span class="dash-nav-text">Đơn Hàng</span>
         </a>
-        <a href="AdminMenuManagement.html" class="dash-nav-item active">
+        <a href="/app/menu" class="dash-nav-item active">
           <i class="fa-solid fa-utensils dash-nav-icon"></i>
           <span class="dash-nav-text">Thực Đơn</span>
         </a>
-        <a href="Inventory.html" class="dash-nav-item">
+        <a href="/app/inventory" class="dash-nav-item">
           <i class="fa-solid fa-box dash-nav-icon"></i>
           <span class="dash-nav-text">Kho Hàng</span>
         </a>
-        <a href="ImportHistory.html" class="dash-nav-item">
+        <a href="/app/imports" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Lịch Sử Nhập</span>
         </a>
-        <a href="StaffManagement.html" class="dash-nav-item">
+        <a href="/app/staff" class="dash-nav-item">
           <i class="fa-solid fa-users dash-nav-icon"></i>
           <span class="dash-nav-text">Nhân Viên</span>
         </a>
-        <a href="SupplierManagement.html" class="dash-nav-item">
+        <a href="/app/suppliers" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
-        <a href="MonthlyReport.html" class="dash-nav-item">
+        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
       </nav>
 
       <div class="dash-bottom-actions">
-        <a href="ShiftClosingReport.html" class="dash-nav-item">
+        <a href="/app/shift-report" class="dash-nav-item">
           <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
           <span class="dash-nav-text">Chốt Ca</span>
         </a>
@@ -70,7 +71,7 @@
           <div class="dash-user-avatar">AM</div>
           <div class="dash-user-info">
             <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Trị Viên</span>
+            <span class="dash-user-role">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -150,9 +151,14 @@
                 <option>Ăn sáng</option>
               </select>
             </div>
-            <button class="dash-btn-primary">
-              <i class="fa-solid fa-plus"></i> Thêm Món Mới
-            </button>
+            <div style="display: flex; gap: 10px;">
+              <button class="dash-btn-secondary text-danger" id="btnBulkDelete" style="display:none;">
+                <i class="fa-solid fa-trash"></i> Xóa Đã Chọn
+              </button>
+              <button class="dash-btn-primary">
+                <i class="fa-solid fa-plus"></i> Thêm Món Mới
+              </button>
+            </div>
           </div>
 
           <div class="dash-table-card no-padding">
@@ -163,7 +169,7 @@
             <table class="dash-table no-margin">
               <thead>
                 <tr>
-                  <th class="td-checkbox"><input type="checkbox" /></th>
+                  <th class="td-checkbox"></th>
                   <th>Chi Tiết Món</th>
                   <th>Danh Mục</th>
                   <th class="right">Giá Vốn</th>
@@ -278,8 +284,8 @@
         </div>
       </div>
     </main>
-    <script src="Common.js"></script>
-    <script src="AdminMenuManagement.js"></script>
+    <script src="Common.js?v=20260420a"></script>
+    <script src="AdminMenuManagement.js?v=20260420a"></script>
     <script>
       const sidebarToggle = document.getElementById('sidebarToggle');
       const sidebarOverlay = document.getElementById('sidebarOverlay');

@@ -1,102 +1,142 @@
-const SHIFT_REPORT_API_URL = window.location.protocol === 'file:' ? 'http://localhost:4000' : '';
+const SHIFT_REPORT_API_URL =
+  window.location.protocol === "file:" ? "http://localhost:4000" : "";
 
 const shiftReportState = {
-    shifts: [],
-    statusFilter: 'all'
+  shifts: [],
+  statusFilter: "all",
 };
 
 function formatVnd(amount) {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(amount || 0);
 }
 
-async function shiftReportApiRequest(endpoint, method = 'GET', body = null, allowNotFound = false) {
-    const options = {
-        method,
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' }
-    };
-    if (body) options.body = JSON.stringify(body);
+async function shiftReportApiRequest(
+  endpoint,
+  method = "GET",
+  body = null,
+  allowNotFound = false,
+) {
+  const userStr = sessionStorage.getItem("user");
+  const userId = userStr ? JSON.parse(userStr).id : "";
+  const options = {
+    method,
+    credentials: "include",
+    headers: { 
+        "Content-Type": "application/json",
+        "X-UI-User-Id": userId ? String(userId) : ""
+    },
+  };
+  if (body) options.body = JSON.stringify(body);
 
-    const response = await fetch(`${SHIFT_REPORT_API_URL}${endpoint}`, options);
-    if (response.status === 401) {
-        window.showWarningToast?.('Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.');
-        localStorage.removeItem('user');
-        window.location.href = 'LoginPage.html';
-        return null;
-    }
-    if (allowNotFound && response.status === 404) return null;
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({ message: 'Có lỗi xảy ra' }));
-        throw new Error(error.message || `HTTP ${response.status}`);
-    }
-    return response.json();
+  const response = await fetch(`${SHIFT_REPORT_API_URL}${endpoint}`, options);
+  if (response.status === 401) {
+    window.showWarningToast?.(
+      "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.",
+    );
+    sessionStorage.removeItem("user");
+    window.location.href = "/app/login";
+    return null;
+  }
+  if (allowNotFound && response.status === 404) return null;
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ message: "Có lỗi xảy ra" }));
+    throw new Error(error.message || `HTTP ${response.status}`);
+  }
+  return response.json();
 }
 
 function setupSidebar() {
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const sidebar = document.querySelector('.dash-sidebar');
-    if (!sidebarToggle || !sidebarOverlay || !sidebar) return;
+  const sidebarToggle = document.getElementById("sidebarToggle");
+  const sidebarOverlay = document.getElementById("sidebarOverlay");
+  const sidebar = document.querySelector(".dash-sidebar");
+  if (!sidebarToggle || !sidebarOverlay || !sidebar) return;
 
-    const openSidebar = () => { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); };
-    const closeSidebar = () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); };
-    sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-    sidebarOverlay.addEventListener('click', closeSidebar);
+  const openSidebar = () => {
+    sidebar.classList.add("open");
+    sidebarOverlay.classList.add("visible");
+  };
+  const closeSidebar = () => {
+    sidebar.classList.remove("open");
+    sidebarOverlay.classList.remove("visible");
+  };
+  sidebarToggle.addEventListener("click", () =>
+    sidebar.classList.contains("open") ? closeSidebar() : openSidebar(),
+  );
+  sidebarOverlay.addEventListener("click", closeSidebar);
 }
 
 function hydrateUserProfile(user) {
-    if (!user?.firstName || !user?.lastName) return;
-    const name = `${user.firstName} ${user.lastName}`;
-    const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
-    const role = window.normalizeRole(user.role);
+  window.hydrateAdminUserProfile?.(user);
+}
 
-    const nameNode = document.querySelector('.dash-user-name');
-    const roleNode = document.querySelector('.dash-user-role');
-    const avatarNode = document.querySelector('.dash-user-avatar');
-    if (nameNode) nameNode.textContent = name;
-    if (roleNode) roleNode.textContent = role === 'Owner' ? 'Chủ Sở Hữu' : role === 'Staff' ? 'Nhân Viên' : 'Quản Trị Viên';
-    if (avatarNode) avatarNode.textContent = initials;
+function isShiftClosed(shift) {
+  const status = String(shift?.status || "").toLowerCase();
+  if (status === "closed") return true;
+  if (status === "open") return false;
+  return Number(shift?.expected || 0) > 0;
 }
 
 function getFilteredShifts() {
-    if (shiftReportState.statusFilter === 'all') return shiftReportState.shifts;
-    return shiftReportState.shifts.filter(s => (s.status || '').toLowerCase() === shiftReportState.statusFilter);
+  if (shiftReportState.statusFilter === "all") return shiftReportState.shifts;
+  if (shiftReportState.statusFilter === "open") {
+    return shiftReportState.shifts.filter((s) => !isShiftClosed(s));
+  }
+  if (shiftReportState.statusFilter === "closed") {
+    return shiftReportState.shifts.filter((s) => isShiftClosed(s));
+  }
+  return shiftReportState.shifts;
 }
 
 function updateKpis(shifts) {
-    const titleNodes = document.querySelectorAll('.dash-kpi-grid .dash-kpi-title');
-    const valueNodes = document.querySelectorAll('.dash-kpi-grid .dash-kpi-value');
+  const titleNodes = document.querySelectorAll(
+    ".dash-kpi-grid .dash-kpi-title",
+  );
+  const valueNodes = document.querySelectorAll(
+    ".dash-kpi-grid .dash-kpi-value",
+  );
 
-    const openShifts = shifts.filter(s => s.status === 'Open');
-    const closedShifts = shifts.filter(s => s.status === 'Closed');
-    const openingTotal = shifts.reduce((sum, s) => sum + Number(s.opening || 0), 0);
-    const expectedTotal = closedShifts.reduce((sum, s) => sum + Number(s.expected || 0), 0);
+  const openShifts = shifts.filter((s) => !isShiftClosed(s));
+  const closedShifts = shifts.filter((s) => isShiftClosed(s));
+  const openingTotal = shifts.reduce(
+    (sum, s) => sum + Number(s.opening || 0),
+    0,
+  );
+  const expectedTotal = closedShifts.reduce(
+    (sum, s) => sum + Number(s.expected || 0),
+    0,
+  );
 
-    if (titleNodes[0]) titleNodes[0].textContent = 'Ca Đang Mở';
-    if (titleNodes[1]) titleNodes[1].textContent = 'Ca Đã Chốt';
-    if (titleNodes[2]) titleNodes[2].textContent = 'Tổng Tiền Mở Ca';
-    if (titleNodes[3]) titleNodes[3].textContent = 'Tổng Tiền Chốt Ca';
+  if (titleNodes[0]) titleNodes[0].textContent = "Ca Đang Mở";
+  if (titleNodes[1]) titleNodes[1].textContent = "Ca Đã Chốt";
+  if (titleNodes[2]) titleNodes[2].textContent = "Tổng Tiền Mở Ca";
+  if (titleNodes[3]) titleNodes[3].textContent = "Tổng Tiền Chốt Ca";
 
-    if (valueNodes[0]) valueNodes[0].textContent = String(openShifts.length);
-    if (valueNodes[1]) valueNodes[1].textContent = String(closedShifts.length);
-    if (valueNodes[2]) valueNodes[2].textContent = formatVnd(openingTotal);
-    if (valueNodes[3]) valueNodes[3].textContent = formatVnd(expectedTotal);
+  if (valueNodes[0]) valueNodes[0].textContent = String(openShifts.length);
+  if (valueNodes[1]) valueNodes[1].textContent = String(closedShifts.length);
+  if (valueNodes[2]) valueNodes[2].textContent = formatVnd(openingTotal);
+  if (valueNodes[3]) valueNodes[3].textContent = formatVnd(expectedTotal);
 
-    const badge = document.querySelector('.dash-shift-text');
-    if (badge) {
-        badge.textContent = openShifts.length > 0
-            ? `${openShifts.length} ca đang mở`
-            : 'Không có ca đang mở';
-    }
+  const badge = document.querySelector(".dash-shift-text");
+  if (badge) {
+    badge.textContent =
+      openShifts.length > 0
+        ? `${openShifts.length} ca đang mở`
+        : "Không có ca đang mở";
+  }
 }
 
 function renderShiftTable(shifts) {
-    const table = document.querySelector('.dash-table.no-margin');
-    if (!table) return;
+  const table = document.querySelector(".dash-table.no-margin");
+  if (!table) return;
 
-    const headRow = table.querySelector('thead tr');
-    if (headRow) {
-        headRow.innerHTML = `
+  const headRow = table.querySelector("thead tr");
+  if (headRow) {
+    headRow.innerHTML = `
           <th>Mã Ca</th>
           <th>Nhân Viên</th>
           <th>Trạng Thái</th>
@@ -104,28 +144,30 @@ function renderShiftTable(shifts) {
           <th class="right">Tiền Chốt Ca</th>
           <th class="right">Chênh Lệch</th>
           <th class="right td-actions">Thao Tác</th>`;
-    }
+  }
 
-    const tbody = table.querySelector('tbody');
-    if (!tbody) return;
+  const tbody = table.querySelector("tbody");
+  if (!tbody) return;
 
-    if (!shifts.length) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--dash-text-muted)">Không có ca làm việc phù hợp</td></tr>';
-        return;
-    }
+  if (!shifts.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--dash-text-muted)">Không có ca làm việc phù hợp</td></tr>';
+    return;
+  }
 
-    tbody.innerHTML = shifts.map((shift, index) => {
-        const isClosed = shift.status === 'Closed';
-        const expected = Number(shift.expected || 0);
-        const opening = Number(shift.opening || 0);
-        const diff = expected - opening;
-        const statusClass = isClosed ? 'in-stock' : 'low-stock';
-        const statusTextClass = isClosed ? 'text-success' : 'text-warning';
-        const statusText = isClosed ? 'Đã Chốt' : 'Đang Mở';
+  tbody.innerHTML = shifts
+    .map((shift, index) => {
+      const isClosed = isShiftClosed(shift);
+      const expected = Number(shift.expected || 0);
+      const opening = Number(shift.opening || 0);
+      const diff = expected - opening;
+      const statusClass = isClosed ? "in-stock" : "low-stock";
+      const statusTextClass = isClosed ? "text-success" : "text-warning";
+      const statusText = isClosed ? "Đã Chốt" : "Đang Mở";
 
-        return `
-            <tr${index === shifts.length - 1 ? ' class="no-border-row"' : ''}>
-              <td><span class="dash-product-name">#CA-${String(shift.shiftId).padStart(4, '0')}</span></td>
+      return `
+            <tr${index === shifts.length - 1 ? ' class="no-border-row"' : ""}>
+              <td><span class="dash-product-name">#CA-${String(shift.shiftId).padStart(4, "0")}</span></td>
               <td>
                 <div class="dash-flex-col">
                   <span class="dash-product-name">${shift.employeeName || `NV #${shift.employeeId}`}</span>
@@ -140,44 +182,45 @@ function renderShiftTable(shifts) {
               </td>
               <td class="right dash-cost">${formatVnd(opening)}</td>
               <td class="right dash-price">${formatVnd(expected)}</td>
-              <td class="right ${diff >= 0 ? 'text-success' : 'text-danger'}">${formatVnd(diff)}</td>
+              <td class="right ${diff >= 0 ? "text-success" : "text-danger"}">${formatVnd(diff)}</td>
               <td class="right td-actions">
                 <button class="dash-action-btn" title="Xem chi tiết ca"><i class="fa-solid fa-eye"></i></button>
               </td>
             </tr>`;
-    }).join('');
+    })
+    .join("");
 }
 
 function updatePaginationInfo(total) {
-    const info = document.querySelector('.dash-pagination-info');
-    if (!info) return;
-    if (!total) {
-        info.textContent = 'Không có dữ liệu ca làm việc';
-        return;
-    }
-    info.textContent = `Đang hiển thị 1 đến ${total} trong số ${total} ca làm việc`;
+  const info = document.querySelector(".dash-pagination-info");
+  if (!info) return;
+  if (!total) {
+    info.textContent = "Không có dữ liệu ca làm việc";
+    return;
+  }
+  info.textContent = `Đang hiển thị 1 đến ${total} trong số ${total} ca làm việc`;
 }
 
 function setupStatusFilter() {
-    const select = document.querySelector('.dash-actions-bar .dash-select-box');
-    if (!select) return;
-    select.innerHTML = `
+  const select = document.querySelector(".dash-actions-bar .dash-select-box");
+  if (!select) return;
+  select.innerHTML = `
       <option value="all">Tất cả trạng thái</option>
       <option value="open">Đang mở</option>
       <option value="closed">Đã chốt</option>`;
-    select.value = shiftReportState.statusFilter;
-    select.addEventListener('change', () => {
-        shiftReportState.statusFilter = select.value;
-        const filtered = getFilteredShifts();
-        renderShiftTable(filtered);
-        updatePaginationInfo(filtered.length);
-    });
+  select.value = shiftReportState.statusFilter;
+  select.addEventListener("change", () => {
+    shiftReportState.statusFilter = select.value;
+    const filtered = getFilteredShifts();
+    renderShiftTable(filtered);
+    updatePaginationInfo(filtered.length);
+  });
 }
 
 function showAmountModal({ title, message, defaultValue, confirmText }) {
-    return new Promise((resolve) => {
-        const modalId = `shiftAmountModal-${Date.now()}`;
-        const markup = `
+  return new Promise((resolve) => {
+    const modalId = `shiftAmountModal-${Date.now()}`;
+    const markup = `
             <div class="staff-modal-backdrop visible" id="${modalId}">
                 <div class="staff-modal" style="max-width:460px;">
                     <div class="staff-modal-header">
@@ -197,118 +240,158 @@ function showAmountModal({ title, message, defaultValue, confirmText }) {
                     </div>
                 </div>
             </div>`;
-        document.body.insertAdjacentHTML('beforeend', markup);
-        const modal = document.getElementById(modalId);
-        const amountInput = document.getElementById(`${modalId}-amount`);
-        const close = (value) => {
-            modal?.remove();
-            resolve(value);
-        };
+    document.body.insertAdjacentHTML("beforeend", markup);
+    const modal = document.getElementById(modalId);
+    const amountInput = document.getElementById(`${modalId}-amount`);
+    const close = (value) => {
+      modal?.remove();
+      resolve(value);
+    };
 
-        modal?.addEventListener('click', (e) => {
-            const action = e.target?.closest?.('[data-action]')?.getAttribute('data-action');
-            if (e.target === modal || action === 'cancel') {
-                close(null);
-                return;
-            }
-            if (action === 'confirm') {
-                const value = Number(amountInput?.value ?? '');
-                if (Number.isNaN(value) || value < 0) {
-                    window.showWarningToast?.('Số tiền không hợp lệ');
-                    return;
-                }
-                close(value);
-            }
-        });
-
-        setTimeout(() => amountInput?.focus(), 20);
+    modal?.addEventListener("click", (e) => {
+      const action = e.target
+        ?.closest?.("[data-action]")
+        ?.getAttribute("data-action");
+      if (e.target === modal || action === "cancel") {
+        close(null);
+        return;
+      }
+      if (action === "confirm") {
+        const value = Number(amountInput?.value ?? "");
+        if (Number.isNaN(value) || value < 0) {
+          window.showWarningToast?.("Số tiền không hợp lệ");
+          return;
+        }
+        close(value);
+      }
     });
+
+    setTimeout(() => amountInput?.focus(), 20);
+  });
 }
 
 async function openNewShift() {
-    const openingAmount = await showAmountModal({
-        title: '<i class="fa-solid fa-lock-open" style="margin-right:8px;color:var(--primary-color);"></i>Mở Ca',
-        message: 'Nhập số tiền đầu ca để bắt đầu ca làm việc mới.',
-        defaultValue: 0,
-        confirmText: '<i class="fa-solid fa-play"></i> Bắt Đầu'
-    });
-    if (openingAmount === null) return;
+  const openingAmount = await showAmountModal({
+    title:
+      '<i class="fa-solid fa-lock-open" style="margin-right:8px;color:var(--primary-color);"></i>Mở Ca',
+    message: "Nhập số tiền đầu ca để bắt đầu ca làm việc mới.",
+    defaultValue: 0,
+    confirmText: '<i class="fa-solid fa-play"></i> Bắt Đầu',
+  });
+  if (openingAmount === null) return;
 
-    await shiftReportApiRequest('/shifts/open', 'POST', { openingAmount });
-    window.showSuccessToast?.('Mở ca thành công');
-    await loadShiftData();
+  await shiftReportApiRequest("/shifts/open", "POST", { openingAmount });
+  window.showSuccessToast?.("Mở ca thành công");
+  await loadShiftData();
 }
 
 async function closeCurrentShift() {
-    const current = await shiftReportApiRequest('/shifts/current', 'GET', null, true);
-    if (!current) {
-        window.showWarningToast?.('Bạn không có ca đang mở để chốt.');
-        return;
-    }
+  const current = await shiftReportApiRequest(
+    "/shifts/current",
+    "GET",
+    null,
+    true,
+  );
+  if (!current) {
+    window.showWarningToast?.("Bạn không có ca đang mở để chốt.");
+    return;
+  }
 
-    const expectedAmount = await showAmountModal({
-        title: '<i class="fa-solid fa-lock" style="margin-right:8px;color:var(--primary-color);"></i>Chốt Ca',
-        message: `Nhập số tiền thực tế cuối ca cho Shift #${current.shiftId}.`,
-        defaultValue: Number(current.expected || current.opening || 0),
-        confirmText: '<i class="fa-solid fa-check"></i> Xác Nhận Chốt'
-    });
-    if (expectedAmount === null) return;
+  const expectedAmount = await showAmountModal({
+    title:
+      '<i class="fa-solid fa-lock" style="margin-right:8px;color:var(--primary-color);"></i>Chốt Ca',
+    message: `Nhập số tiền thực tế cuối ca cho Shift #${current.shiftId}.`,
+    defaultValue: Number(current.expected || current.opening || 0),
+    confirmText: '<i class="fa-solid fa-check"></i> Xác Nhận Chốt',
+  });
+  if (expectedAmount === null) return;
 
-    await shiftReportApiRequest('/shifts/close', 'POST', {
-        shiftId: current.shiftId,
-        expectedAmount
-    });
+  await shiftReportApiRequest("/shifts/close", "POST", {
+    shiftId: current.shiftId,
+    expectedAmount,
+  });
 
-    window.showSuccessToast?.('Chốt ca thành công');
-    await loadShiftData();
+  window.showSuccessToast?.("Chốt ca thành công");
+  await loadShiftData();
 }
 
 async function loadShiftData() {
-    const shifts = await shiftReportApiRequest('/shifts');
-    if (!shifts) return;
-    shiftReportState.shifts = shifts;
+  const shifts = await shiftReportApiRequest("/shifts");
+  if (!shifts) return;
+  shiftReportState.shifts = shifts;
 
-    updateKpis(shifts);
-    const filtered = getFilteredShifts();
-    renderShiftTable(filtered);
-    updatePaginationInfo(filtered.length);
+  updateKpis(shifts);
+  const filtered = getFilteredShifts();
+  renderShiftTable(filtered);
+  updatePaginationInfo(filtered.length);
 
-    const title = document.querySelector('.dash-page-title');
-    if (title) title.textContent = `Báo Cáo Chốt Ca (${shifts.length} ca)`;
+  const title = document.querySelector(".dash-page-title");
+  if (title) title.textContent = `Báo Cáo Chốt Ca (${shifts.length} ca)`;
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const user = window.ensureAuthByRole(['Staff', 'Admin', 'Owner']);
-        if (!user) return;
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const user = window.ensureAuthByRole(["Staff", "Manager"]);
+    if (!user) return;
 
-        hydrateUserProfile(user);
-        setupSidebar();
-        setupStatusFilter();
+    hydrateUserProfile(user);
+    setupSidebar();
+    setupStatusFilter();
 
-        const openButton = document.getElementById('btnOpenShiftAction');
-        const closeButton = document.getElementById('btnCloseShiftAction');
-        if (openButton) {
-            openButton.addEventListener('click', async () => {
-                try {
-                    await openNewShift();
-                } catch (error) {
-                    window.showErrorToast?.(error.message || 'Không thể mở ca');
-                }
-            });
+    const openButton = document.getElementById("btnOpenShiftAction");
+    const closeButton = document.getElementById("btnCloseShiftAction");
+    const printButton = document.getElementById("btnPrintShiftReportAction");
+    if (openButton) {
+      openButton.addEventListener("click", async () => {
+        try {
+          await openNewShift();
+        } catch (error) {
+          window.showErrorToast?.(error.message || "Không thể mở ca");
         }
-        if (closeButton) {
-            closeButton.addEventListener('click', async () => {
-                try {
-                    await closeCurrentShift();
-                } catch (error) {
-                    window.showErrorToast?.(error.message || 'Không thể chốt ca');
-                }
-            });
-        }
-
-        await loadShiftData();
-    } catch (error) {
-        window.showErrorToast?.(error.message || 'Không thể tải báo cáo chốt ca');
+      });
     }
+    if (closeButton) {
+      closeButton.addEventListener("click", async () => {
+        try {
+          await closeCurrentShift();
+        } catch (error) {
+          window.showErrorToast?.(error.message || "Không thể chốt ca");
+        }
+      });
+    }
+    if (printButton) {
+      printButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.print();
+      });
+    }
+
+    await loadShiftData();
+    initRealtimeShiftRefresh();
+  } catch (error) {
+    window.showErrorToast?.(error.message || "Không thể tải báo cáo chốt ca");
+  }
 });
+
+async function initRealtimeShiftRefresh() {
+  if (!window.signalR) return;
+  const hubUrl = `${SHIFT_REPORT_API_URL}/hubs/shifts`;
+  const connection = new window.signalR.HubConnectionBuilder()
+    .withUrl(hubUrl, { withCredentials: true })
+    .withAutomaticReconnect()
+    .build();
+
+  connection.on("ShiftUpdated", async () => {
+    try {
+      await loadShiftData();
+    } catch {
+      // no-op
+    }
+  });
+
+  try {
+    await connection.start();
+  } catch {
+    // no-op
+  }
+}

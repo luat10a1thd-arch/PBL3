@@ -14,4 +14,9 @@ public class Voucher
     public decimal DiscountAmount { get; set; }
     
     public DateTime ExpiryDate { get; set; }
+
+    public int? ApplicableCategoryId { get; set; }
+
+    [ForeignKey("ApplicableCategoryId")]
+    public Category? ApplicableCategory { get; set; }
 }

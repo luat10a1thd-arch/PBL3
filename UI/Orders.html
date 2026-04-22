@@ -1,12 +1,22 @@
 <!doctype html>
 <html lang="vi">
   <head>
+    <base href="/app/">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
     <title>Quản Lý Đơn Hàng - Cafe 24/7</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="admin-dashboard dash-bg-wrapper">
     <div class="dash-bg-overlay"></div>
@@ -22,42 +32,42 @@
       </div>
 
       <nav class="dash-nav">
-        <a href="AdminDashboard.html" class="dash-nav-item">
+        <a href="/app/dashboard" class="dash-nav-item">
           <i class="fa-solid fa-chart-line dash-nav-icon"></i>
           <span class="dash-nav-text">Tổng Quan</span>
         </a>
-        <a href="Orders.html" class="dash-nav-item active">
+        <a href="/app/orders" class="dash-nav-item active">
           <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
           <span class="dash-nav-text">Đơn Hàng</span>
         </a>
-        <a href="AdminMenuManagement.html" class="dash-nav-item">
+        <a href="/app/menu" class="dash-nav-item">
           <i class="fa-solid fa-utensils dash-nav-icon"></i>
           <span class="dash-nav-text">Thực Đơn</span>
         </a>
-        <a href="Inventory.html" class="dash-nav-item">
+        <a href="/app/inventory" class="dash-nav-item">
           <i class="fa-solid fa-box dash-nav-icon"></i>
           <span class="dash-nav-text">Kho Hàng</span>
         </a>
-        <a href="ImportHistory.html" class="dash-nav-item">
+        <a href="/app/imports" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Lịch Sử Nhập</span>
         </a>
-        <a href="StaffManagement.html" class="dash-nav-item">
+        <a href="/app/staff" class="dash-nav-item">
           <i class="fa-solid fa-users dash-nav-icon"></i>
           <span class="dash-nav-text">Nhân Viên</span>
         </a>
-        <a href="SupplierManagement.html" class="dash-nav-item">
+        <a href="/app/suppliers" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
-        <a href="MonthlyReport.html" class="dash-nav-item">
+        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
       </nav>
 
       <div class="dash-bottom-actions">
-        <a href="ShiftClosingReport.html" class="dash-nav-item">
+        <a href="/app/shift-report" class="dash-nav-item">
           <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
           <span class="dash-nav-text">Chốt Ca</span>
         </a>
@@ -69,7 +79,7 @@
           <div class="dash-user-avatar">AM</div>
           <div class="dash-user-info">
             <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Trị Viên</span>
+            <span class="dash-user-role">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -78,20 +88,22 @@
     <main class="dash-main">
       <header class="dash-header">
         <div class="dash-header-left">
-          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+          <button
+            class="dash-hamburger"
+            id="sidebarToggle"
+            aria-label="Mở menu"
+          >
             <i class="fa-solid fa-bars"></i>
           </button>
           <div>
             <h2 class="dash-page-title">Danh Sách Đơn Hàng</h2>
-            <p class="dash-page-subtitle">Quản lý và theo dõi trạng thái tất cả các đơn hàng</p>
+            <p class="dash-page-subtitle">
+              Quản lý và theo dõi trạng thái tất cả các đơn hàng
+            </p>
           </div>
         </div>
-        
+
         <div class="dash-header-right">
-          <div class="dash-search-box">
-            <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm bằng mã đơn, bàn, món..." class="dash-search-input" id="ordersSearchInput" />
-          </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
             <span class="dash-notification-dot"></span>
@@ -101,7 +113,6 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
-          
           <div class="dash-kpi-grid">
             <div class="dash-card">
               <div class="dash-kpi-header">
@@ -116,7 +127,7 @@
                 <span>Tăng 12% so với hôm qua</span>
               </div>
             </div>
-            
+
             <div class="dash-card">
               <div class="dash-kpi-header">
                 <div class="dash-kpi-icon-wrap warning">
@@ -144,29 +155,48 @@
                 </div>
               </div>
               <h3 class="dash-kpi-title out-of-stock-text">Tổng Đơn</h3>
-              <p class="dash-kpi-value out-of-stock-text" id="ordersTotalValue">0</p>
+              <p class="dash-kpi-value out-of-stock-text" id="ordersTotalValue">
+                0
+              </p>
             </div>
           </div>
 
           <div class="dash-actions-bar">
-            <div class="dash-order-filter-tabs">
-              <button class="dash-filter-btn active" data-status="all" id="ordersFilterAll">
-                Tất cả đơn (0)
-              </button>
-              <button class="dash-filter-btn" data-status="open" id="ordersFilterOpen">
-                Chờ xử lý (0)
-              </button>
-              <button class="dash-filter-btn" data-status="completed" id="ordersFilterCompleted">
-                Hoàn thành (0)
-              </button>
+            <div class="dash-filter-group">
+              <div class="dash-search-box">
+                <i class="fa-solid fa-search dash-search-icon"></i>
+                <input
+                  type="text"
+                  placeholder="Tìm bằng mã đơn, món..."
+                  class="dash-search-input"
+                  id="ordersSearchInput"
+                />
+              </div>
+              <div class="dash-order-filter-tabs">
+                <button
+                  class="dash-filter-btn active"
+                  data-status="all"
+                  id="ordersFilterAll"
+                >
+                  Tất cả đơn (0)
+                </button>
+                <button
+                  class="dash-filter-btn"
+                  data-status="open"
+                  id="ordersFilterOpen"
+                >
+                  Chờ xử lý (0)
+                </button>
+                <button
+                  class="dash-filter-btn"
+                  data-status="completed"
+                  id="ordersFilterCompleted"
+                >
+                  Hoàn thành (0)
+                </button>
+              </div>
             </div>
-            
-             <div class="dash-flex-row">
-               <button class="dash-btn-secondary">
-                 <i class="fa-solid fa-filter"></i> Lọc Nâng Cao
-               </button>
-             </div>
-           </div>
+          </div>
 
           <div class="dash-table-card no-padding">
             <table class="dash-table no-margin">
@@ -188,19 +218,24 @@
             </table>
 
             <div class="dash-pagination pd-25">
-              <div class="dash-pagination-info" id="ordersPaginationInfo">Đang tải dữ liệu...</div>
+              <div class="dash-pagination-info" id="ordersPaginationInfo">
+                Đang tải dữ liệu...
+              </div>
               <div class="dash-pagination-controls">
-                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="dash-page-btn" disabled>
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
                 <button class="dash-page-btn active">1</button>
-                <button class="dash-page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <button class="dash-page-btn">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </main>
-    <script src="Common.js"></script>
-    <script src="Orders.js"></script>
+    <script src="Common.js?v=20260420a"></script>
+    <script src="Orders.js?v=20260420b"></script>
   </body>
 </html>
