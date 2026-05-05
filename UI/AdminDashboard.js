@@ -17,10 +17,26 @@ function getPaymentMethodLabel(method) {
   return "Khác";
 }
 
-function getRelativeOrderText(index) {
-  if (index === 0) return "Vừa xong";
-  if (index === 1) return "Ít phút trước";
-  return `${(index + 1) * 5} phút trước`;
+function getRelativeOrderText(order) {
+  // Use actual timestamp from the order if available
+  const orderTime = order?.createdAt || order?.orderDate || order?.completedAt;
+  if (!orderTime) return "Vừa xong";
+  
+  const orderDate = new Date(orderTime);
+  if (Number.isNaN(orderDate.getTime())) return "Vừa xong";
+  
+  const now = new Date();
+  const diffMs = now - orderDate;
+  const diffMin = Math.floor(diffMs / 60000);
+  
+  if (diffMin < 1) return "Vừa xong";
+  if (diffMin < 60) return `${diffMin} phút trước`;
+  
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return `${diffHour} giờ trước`;
+  
+  const diffDay = Math.floor(diffHour / 24);
+  return `${diffDay} ngày trước`;
 }
 
 async function dashboardApiRequest(endpoint) {
@@ -150,7 +166,7 @@ function renderRecentOrders(recentOrders) {
           </div>
           <div class="dash-order-right">
             <p class="dash-order-price">${formatCurrencyVnd(order.total)}</p>
-            <p class="dash-order-time">${getPaymentMethodLabel(order.paymentMethod)} • ${getRelativeOrderText(index)}</p>
+            <p class="dash-order-time">${getPaymentMethodLabel(order.paymentMethod)} • ${getRelativeOrderText(order)}</p>
           </div>
         </div>`,
     )

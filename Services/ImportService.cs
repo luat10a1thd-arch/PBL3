@@ -65,7 +65,7 @@ public class ImportService : IImportService
         await ValidateImportInput(import);
 
         if (import.ImportDate == default)
-            import.ImportDate = DateTime.Now;
+            import.ImportDate = BusinessTimeHelper.GetNow(_context);
 
         if (import.Quantity > 0 && import.UnitPrice >= 0)
             import.TotalCost = import.Quantity * import.UnitPrice;
@@ -139,7 +139,7 @@ public class ImportService : IImportService
                 Quantity = request.Quantity,
                 UnitPrice = request.UnitPrice,
                 TotalCost = request.Quantity * request.UnitPrice,
-                ImportDate = request.ImportDate ?? DateTime.Now
+                ImportDate = request.ImportDate ?? BusinessTimeHelper.GetNow(_context)
             };
 
             _context.Imports.Add(import);

@@ -50,7 +50,7 @@ public class ShiftService : IShiftService
         if (shift.EmployeeId != employeeId) throw new AppException("Bạn chỉ có thể chốt ca của chính mình");
 
         shift.Expected = expectedAmount;
-        shift.ClosedAt = DateTime.UtcNow;
+        shift.ClosedAt = BusinessTimeHelper.GetNow(_context);
         _context.Shifts.Update(shift);
         _context.SaveChanges();
 

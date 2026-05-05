@@ -63,22 +63,39 @@ function renderRows() {
   const rows = getFilteredIngredients();
   if (!rows.length) {
     tbody.innerHTML =
-      '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--dash-text-muted)">Không có nguyên liệu phù hợp</td></tr>';
+      '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--dash-text-muted)">Không có nguyên liệu phù hợp</td></tr>';
     return;
   }
 
   tbody.innerHTML = rows
     .map(
-      (x) => `
+      (x) => {
+        const stockQty = Number(x.stockQty || 0);
+        const threshold = Number(x.reorderLevel || x.threshold || 10);
+        let statusDot, statusText, statusTextClass;
+        if (stockQty <= 0) {
+          statusDot = "out-of-stock"; statusText = "Hết hàng"; statusTextClass = "out-of-stock-text";
+        } else if (stockQty <= threshold) {
+          statusDot = "low-stock"; statusText = "Sắp hết"; statusTextClass = "low-stock-text";
+        } else {
+          statusDot = "in-stock"; statusText = "Đủ hàng"; statusTextClass = "";
+        }
+        return `
         <tr data-id="${x.ingredientId}">
             <td><span class="dash-product-name">${x.name || "-"}</span></td>
             <td><span class="dash-category-badge coffee">${x.uoM || "-"}</span></td>
-            <td class="right dash-price">${formatQuantity(x.stockQty)}</td>
+            <td class="right dash-price">${formatQuantity(stockQty)}</td>
+            <td>
+                <div class="dash-status-indicator">
+                    <div class="dash-status-dot ${statusDot}"></div>
+                    <span class="${statusTextClass}">${statusText}</span>
+                </div>
+            </td>
             <td class="right td-actions">
                 <button class="dash-action-btn" data-action="consume" title="Xuất kho"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
             </td>
-        </tr>
-    `,
+        </tr>`;
+      },
     )
     .join("");
 }

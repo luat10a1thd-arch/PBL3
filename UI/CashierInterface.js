@@ -730,53 +730,83 @@ function printReceipt(order = currentOrder) {
   const discount = Math.min(order.voucherDiscount || 0, subtotal + vat);
   const total = subtotal + vat - discount;
 
-  const receipt = `
-=================================
-       CAFE 24/7 - HÓA ĐƠN
-=================================
-Phục vụ: Tại quầy
-    Thời gian: ${formatLocalDateTime(new Date())}
----------------------------------
-|Món                 |SL |Đơn giá    |T.Tiền     |
------------------------------------------------
-${order.items
-  .map((item) => {
-    const name = String(item.name || "").slice(0, 20).padEnd(20, " ");
-    const qty = String(item.quantity || 0).padStart(2, " ");
-    const unit = Number(item.price || 0).toLocaleString("vi-VN").padStart(10, " ");
-    const lineTotal = Number((item.price || 0) * (item.quantity || 0))
-      .toLocaleString("vi-VN")
-      .padStart(11, " ");
-    return `|${name}|${qty} |${unit} |${lineTotal} |`;
-  })
-  .join("\n")}
-
----------------------------------
-Tạm tính:        ${formatCurrency(subtotal)}
-VAT (8%):        ${formatCurrency(vat)}
-Giảm giá:        -${formatCurrency(discount)}
----------------------------------
-TỔNG CỘNG:       ${formatCurrency(total)}
-=================================
-Phương thức: ${getPaymentMethodName(order.paymentMethod)}
-=================================
-   CẢM ƠN QUÝ KHÁCH!
-=================================
-    `;
+  const receiptHTML = `
+    <style>
+      body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; margin: 0; padding: 15px; color: #000; }
+      .header { text-align: center; margin-bottom: 15px; }
+      .header h2 { margin: 0; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; }
+      .header p { margin: 5px 0; font-size: 12px; color: #555; }
+      .divider { border-top: 1px dashed #000; margin: 15px 0; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+      th, td { text-align: left; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #eee; }
+      th.right, td.right { text-align: right; }
+      th.center, td.center { text-align: center; }
+      th { font-weight: bold; border-bottom: 1px dashed #000; }
+      .totals { width: 100%; margin-top: 10px; }
+      .totals td { padding: 6px 0; border: none; font-size: 13px; }
+      .totals .grand-total td { font-weight: bold; font-size: 16px; border-top: 1px dashed #000; padding-top: 10px; }
+      .footer { text-align: center; margin-top: 25px; font-size: 14px; font-weight: bold; }
+    </style>
+    <div class="header">
+      <h2>CAFE 24/7 - HÓA ĐƠN</h2>
+      <p>Phục vụ: Tại quầy</p>
+      <p>Thời gian: ${formatLocalDateTime(new Date())}</p>
+    </div>
+    <div class="divider"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Món</th>
+          <th class="center">SL</th>
+          <th class="right">Đơn giá</th>
+          <th class="right">T.Tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${order.items.map(item => `
+          <tr>
+            <td>${item.name}</td>
+            <td class="center">${item.quantity}</td>
+            <td class="right">${Number(item.price || 0).toLocaleString("vi-VN")}</td>
+            <td class="right">${Number((item.price || 0) * (item.quantity || 0)).toLocaleString("vi-VN")}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+    <div class="divider"></div>
+    <table class="totals">
+      <tr>
+        <td>Tạm tính:</td>
+        <td class="right">${formatCurrency(subtotal)}</td>
+      </tr>
+      <tr>
+        <td>VAT (8%):</td>
+        <td class="right">${formatCurrency(vat)}</td>
+      </tr>
+      <tr>
+        <td>Giảm giá:</td>
+        <td class="right">-${formatCurrency(discount)}</td>
+      </tr>
+      <tr class="grand-total">
+        <td>TỔNG CỘNG:</td>
+        <td class="right">${formatCurrency(total)}</td>
+      </tr>
+    </table>
+    <div class="divider"></div>
+    <p style="font-size: 13px; margin: 5px 0;">Phương thức: <b>${getPaymentMethodName(order.paymentMethod)}</b></p>
+    <div class="footer">
+      CẢM ƠN QUÝ KHÁCH!
+    </div>
+  `;
 
   // Create print window
-  const printWindow = window.open("", "", "width=300,height=500");
+  const printWindow = window.open("", "", "width=400,height=600");
   if (!printWindow) {
     showError(
       "Không mở được cửa sổ in. Vui lòng cho phép popup trên trình duyệt.",
     );
     return;
   }
-
-  const escapedReceipt = receipt
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
 
   const printAndClose = () => {
     printWindow.focus();
@@ -785,11 +815,7 @@ Phương thức: ${getPaymentMethodName(order.paymentMethod)}
   };
 
   printWindow.document.write("<html><head><title>Hóa Đơn</title></head><body>");
-  printWindow.document.write(
-    '<pre style="font-family: monospace; font-size: 12px;">' +
-      escapedReceipt +
-      "</pre>",
-  );
+  printWindow.document.write(receiptHTML);
   printWindow.document.write("</body></html>");
   printWindow.document.close();
   setTimeout(printAndClose, 250);

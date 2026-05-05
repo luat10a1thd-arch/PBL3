@@ -44,7 +44,7 @@
           <i class="fa-solid fa-utensils dash-nav-icon"></i>
           <span class="dash-nav-text">Thực Đơn</span>
         </a>
-        <a href="/app/inventory" class="dash-nav-item active">
+        <a href="/app/inventory" class="dash-nav-item">
           <i class="fa-solid fa-box dash-nav-icon"></i>
           <span class="dash-nav-text">Kho Hàng</span>
         </a>
@@ -60,7 +60,10 @@
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
-        <a href="/app/reports" class="dash-nav-item">
+        <a href="/app/vouchers" class="dash-nav-item">
+          <i class="fa-solid fa-ticket dash-nav-icon"></i>
+          <span class="dash-nav-text">Mã Giảm Giá</span>
+        </a>        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
@@ -158,7 +161,7 @@
           </div>
 
           <div class="dash-table-card no-padding">
-            <table class="dash-table no-margin">
+            <table class="dash-table no-margin" id="inventoryTable">
               <thead>
                 <tr>
                   <th class="td-checkbox"><input type="checkbox" /></th>
@@ -367,3 +370,4 @@
     <script src="Inventory.js?v=20260420b"></script>
   </body>
 </html>
+

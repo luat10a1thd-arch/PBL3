@@ -37,7 +37,7 @@ public class OrderService : IOrderService
             TableId = tableId,
             EmployeeId = employeeId,
             Total = 0,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = BusinessTimeHelper.GetNow(_context)
         };
 
         _context.Orders.Add(order);
@@ -128,7 +128,7 @@ public class OrderService : IOrderService
             OrderId = orderId,
             Method = paymentMethod,
             Price = finalPrice,
-            PaidAt = DateTime.UtcNow
+            PaidAt = BusinessTimeHelper.GetNow(_context)
         };
 
         _context.Payments.Add(payment);

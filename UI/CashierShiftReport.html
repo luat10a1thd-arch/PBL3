@@ -39,7 +39,7 @@
           <i class="fa-solid fa-cash-register"></i>
           <span>Bán Hàng</span>
         </a>
-        <a href="/app/cashier/shift" class="cashier-topbar-tab active">
+        <a href="/app/cashier/shift" class="cashier-topbar-tab">
           <i class="fa-solid fa-file-invoice-dollar"></i>
           <span>Chốt Ca</span>
         </a>
@@ -67,40 +67,19 @@
     <!-- Report content -->
     <div class="cashier-body">
       <div class="cashier-report-area">
+
         <!-- Page title -->
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-          "
-        >
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
           <div>
-            <h2
-              style="
-                margin: 0;
-                font-size: 1.2rem;
-                font-weight: 700;
-                color: white;
-              "
-            >
+            <h2 style="margin:0;font-size:1.2rem;font-weight:700;color:white;">
               Báo Cáo Ca Làm Việc
             </h2>
-            <p
-              id="cashierReportSubtitle"
-              style="
-                margin: 4px 0 0;
-                font-size: 0.83rem;
-                color: var(--dash-text-muted);
-              "
-            >
+            <p id="cashierReportSubtitle"
+               style="margin:4px 0 0;font-size:0.83rem;color:var(--dash-text-muted);">
               Đang tải dữ liệu ca làm việc...
             </p>
           </div>
-          <div style="display: flex; gap: 10px">
+          <div style="display:flex;gap:10px;">
             <button class="dash-btn-secondary" id="btnOpenShift">
               <i class="fa-solid fa-lock-open"></i> Mở Ca
             </button>
@@ -113,19 +92,10 @@
           </div>
         </div>
 
-        <div
-          class="dash-table-card"
-          style="margin-bottom: 16px; padding: 14px 16px"
-        >
-          <p
-            style="
-              margin: 0;
-              font-size: 0.9rem;
-              color: var(--dash-text-muted);
-              line-height: 1.5;
-            "
-          >
-            <strong style="color: white">Hướng dẫn:</strong> bấm
+        <!-- Instruction banner -->
+        <div class="dash-table-card" style="margin-bottom:16px;padding:14px 16px;">
+          <p style="margin:0;font-size:0.9rem;color:var(--dash-text-muted);line-height:1.5;">
+            <strong style="color:white;">Hướng dẫn:</strong> bấm
             <strong>Mở Ca</strong> khi bắt đầu làm việc, sau đó vào tab
             <strong>Bán Hàng</strong> để thao tác. Cuối ca quay lại đây, bấm
             <strong>Chốt Ca Ngay</strong> và nhập số tiền thực tế để hoàn tất.
@@ -133,67 +103,72 @@
         </div>
 
         <!-- KPI cards -->
-        <div class="dash-kpi-grid" style="margin-bottom: 20px">
+        <div class="dash-kpi-grid" style="margin-bottom:20px;">
           <div class="dash-card">
             <h3 class="dash-kpi-title">
-              <i
-                class="fa-solid fa-money-bill-wave"
-                style="margin-right: 6px; color: var(--color-success)"
-              ></i
-              >Tiền Mặt
+              <i class="fa-solid fa-money-bill-wave" style="margin-right:6px;color:var(--color-success);"></i>
+              Tiền Mặt
             </h3>
             <p class="dash-kpi-value text-success" id="cashierKpiCash">0₫</p>
             <p class="dash-kpi-sub" id="cashierKpiCashCount">0 giao dịch</p>
           </div>
           <div class="dash-card">
             <h3 class="dash-kpi-title">
-              <i
-                class="fa-solid fa-building-columns"
-                style="margin-right: 6px; color: var(--color-info)"
-              ></i
-              >Chuyển Khoản
+              <i class="fa-solid fa-building-columns" style="margin-right:6px;color:var(--color-info);"></i>
+              Chuyển Khoản
             </h3>
-            <p
-              class="dash-kpi-value"
-              style="color: var(--color-info)"
-              id="cashierKpiTransfer"
-            >
-              0₫
-            </p>
+            <p class="dash-kpi-value" style="color:var(--color-info);" id="cashierKpiTransfer">0₫</p>
             <p class="dash-kpi-sub" id="cashierKpiTransferCount">0 giao dịch</p>
           </div>
           <div class="dash-card">
             <h3 class="dash-kpi-title">
-              <i
-                class="fa-solid fa-ban"
-                style="margin-right: 6px; color: var(--color-danger)"
-              ></i
-              >Đơn Đã Huỷ
+              <i class="fa-solid fa-ban" style="margin-right:6px;color:var(--color-danger);"></i>
+              Đơn Đã Huỷ
             </h3>
-            <p class="dash-kpi-value text-danger" id="cashierKpiCancelled">
-              0₫
-            </p>
+            <p class="dash-kpi-value text-danger" id="cashierKpiCancelled">0₫</p>
             <p class="dash-kpi-sub" id="cashierKpiCancelledCount">0 đơn huỷ</p>
           </div>
           <div class="dash-card">
             <h3 class="dash-kpi-title">
-              <i
-                class="fa-solid fa-circle-check"
-                style="margin-right: 6px; color: var(--primary-color)"
-              ></i
-              >Tổng Doanh Thu Ca
+              <i class="fa-solid fa-circle-check" style="margin-right:6px;color:var(--primary-color);"></i>
+              Tổng Doanh Thu Ca
             </h3>
             <p class="dash-kpi-value text-primary" id="cashierKpiRevenue">0₫</p>
-            <p class="dash-kpi-sub" id="cashierKpiCompleted">
-              0 đơn hoàn thành
-            </p>
+            <p class="dash-kpi-sub" id="cashierKpiCompleted">0 đơn hoàn thành</p>
           </div>
         </div>
 
+        <!-- ══ THỐNG KÊ: Theo buổi + theo nhân viên ══ -->
+        <div class="shift-stat-row">
+
+          <!-- Doanh Thu Theo Buổi -->
+          <div class="dash-table-card shift-stat-card">
+            <div class="shift-stat-header">
+              <i class="fa-solid fa-sun shift-stat-icon"></i>
+              <h4 class="shift-stat-title">Doanh Thu Theo Buổi</h4>
+            </div>
+            <div class="shift-period-grid" id="shiftStatPeriodGrid">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Doanh Thu Theo Nhân Viên -->
+          <div class="dash-table-card shift-stat-card">
+            <div class="shift-stat-header">
+              <i class="fa-solid fa-users shift-stat-icon"></i>
+              <h4 class="shift-stat-title">Doanh Thu Theo Nhân Viên</h4>
+            </div>
+            <div class="shift-staff-list" id="shiftStatStaffList">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+        </div>
+
         <!-- Filter + search bar -->
-        <div class="dash-actions-bar" style="margin-bottom: 0">
+        <div class="dash-actions-bar" style="margin-bottom:0;">
           <div class="dash-filter-group">
-            <div class="dash-search-box" style="width: 280px">
+            <div class="dash-search-box" style="width:280px;">
               <i class="fa-solid fa-search dash-search-icon"></i>
               <input
                 type="text"
@@ -214,74 +189,54 @@
           </div>
         </div>
 
-        <!-- Transactions table -->
-        <div class="dash-table-card no-padding" style="margin-top: 16px">
+        <!-- Shift list table -->
+        <div class="dash-table-card no-padding" style="margin-top:16px;">
           <table class="dash-table no-margin">
             <thead>
               <tr>
-                <th>Mã Đơn</th>
-                <th>Thời Gian</th>
-                <th>Tóm Tắt Món</th>
-                <th>Thanh Toán</th>
-                <th class="right">Tổng Tiền</th>
-                <th>Trạng Thái</th>
-                <th class="right td-actions">Thao Tác</th>
+                <th>Mã Ca</th>
+                <th>Nhân Viên</th>
+                <th>Thời Gian Mở</th>
+                <th>Tiền Mở Ca</th>
+                <th>Tiền Chốt</th>
+                <th>Tình Trạng</th>
+                <th class="td-actions">Thao Tác</th>
               </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
           </table>
 
           <div class="dash-pagination pd-25">
             <div class="dash-pagination-info" id="cashierShiftPaginationInfo">
               Đang tải dữ liệu ca...
             </div>
-            <div class="dash-pagination-controls">
-              <button class="dash-page-btn" disabled>
-                <i class="fa-solid fa-chevron-left"></i>
-              </button>
-              <button class="dash-page-btn active">1</button>
-              <button class="dash-page-btn">2</button>
-              <button class="dash-page-btn">3</button>
-              <span class="dash-pagination-dots">...</span>
-              <button class="dash-page-btn">22</button>
-              <button class="dash-page-btn">
-                <i class="fa-solid fa-chevron-right"></i>
-              </button>
-            </div>
+            <div class="dash-pagination-controls"></div>
           </div>
         </div>
+
       </div>
     </div>
 
     <!-- Confirm close shift modal -->
     <div class="staff-modal-backdrop" id="closeShiftModal">
-      <div class="staff-modal" style="max-width: 440px">
+      <div class="staff-modal" style="max-width:440px;">
         <div class="staff-modal-header">
           <h3 class="staff-modal-title">
-            <i
-              class="fa-solid fa-lock"
-              style="margin-right: 8px; color: var(--primary-color)"
-            ></i
-            >Xác Nhận Chốt Ca
+            <i class="fa-solid fa-lock" style="margin-right:8px;color:var(--primary-color);"></i>
+            Xác Nhận Chốt Ca
           </h3>
           <button class="staff-modal-close" id="btnCancelClose">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
-        <div class="staff-modal-body" style="gap: 12px">
-          <p
-            style="margin: 0; font-size: 0.9rem; color: var(--dash-text-muted)"
-          >
-            Xác nhận chốt ca hiện tại. Vui lòng nhập số tiền thực tế để hệ thống
-            đối chiếu.
+        <div class="staff-modal-body" style="gap:12px;">
+          <p style="margin:0;font-size:0.9rem;color:var(--dash-text-muted);">
+            Xác nhận chốt ca hiện tại. Vui lòng nhập số tiền thực tế để hệ thống đối chiếu.
           </p>
-          <div class="form-group" style="margin-bottom: 0">
-            <label
-              for="closeShiftExpectedInput"
-              style="display: block; margin-bottom: 8px"
-              >Số tiền chốt ca (VND)</label
-            >
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="closeShiftExpectedInput" style="display:block;margin-bottom:8px;">
+              Số tiền chốt ca (VND)
+            </label>
             <input
               type="number"
               id="closeShiftExpectedInput"
@@ -291,76 +246,22 @@
               placeholder="Nhập số tiền thực tế..."
             />
           </div>
-          <div
-            style="
-              background: rgba(255, 255, 255, 0.04);
-              border: 1px solid rgba(203, 213, 225, 0.1);
-              border-radius: 10px;
-              padding: 14px;
-              display: flex;
-              flex-direction: column;
-              gap: 8px;
-            "
-          >
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.85rem;
-              "
-            >
-              <span style="color: var(--dash-text-muted)">Tiền mặt</span>
-              <span
-                id="closeShiftCashTotal"
-                style="color: var(--color-success); font-weight: 600"
-                >0₫</span
-              >
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(203,213,225,0.1);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span style="color:var(--dash-text-muted);">Tiền mặt</span>
+              <span id="closeShiftCashTotal" style="color:var(--color-success);font-weight:600;">0₫</span>
             </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.85rem;
-              "
-            >
-              <span style="color: var(--dash-text-muted)">Chuyển khoản</span>
-              <span
-                id="closeShiftTransferTotal"
-                style="color: var(--color-info); font-weight: 600"
-                >0₫</span
-              >
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span style="color:var(--dash-text-muted);">Chuyển khoản</span>
+              <span id="closeShiftTransferTotal" style="color:var(--color-info);font-weight:600;">0₫</span>
             </div>
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.85rem;
-              "
-            >
-              <span style="color: var(--dash-text-muted)">Đơn huỷ</span>
-              <span
-                id="closeShiftCancelledTotal"
-                style="color: var(--color-danger); font-weight: 600"
-                >0₫</span
-              >
+            <div style="display:flex;justify-content:space-between;font-size:0.85rem;">
+              <span style="color:var(--dash-text-muted);">Đơn huỷ</span>
+              <span id="closeShiftCancelledTotal" style="color:var(--color-danger);font-weight:600;">0₫</span>
             </div>
-            <div
-              style="
-                border-top: 1px solid rgba(203, 213, 225, 0.1);
-                padding-top: 8px;
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.9rem;
-              "
-            >
-              <span style="color: white; font-weight: 600"
-                >Tổng doanh thu ca</span
-              >
-              <span
-                id="closeShiftRevenueTotal"
-                style="color: var(--primary-color); font-weight: 700"
-                >0₫</span
-              >
+            <div style="border-top:1px solid rgba(203,213,225,0.1);padding-top:8px;display:flex;justify-content:space-between;font-size:0.9rem;">
+              <span style="color:white;font-weight:600;">Tổng doanh thu ca</span>
+              <span id="closeShiftRevenueTotal" style="color:var(--primary-color);font-weight:700;">0₫</span>
             </div>
           </div>
         </div>
@@ -375,13 +276,11 @@
 
     <script src="Common.js?v=20260420a"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
-    <script src="RealtimeShiftSync.js?v=20260421a"></script>
+    <script src="RealtimeShiftSync.js?v=20260506a"></script>
     <script>
       // Auth guard - Staff and Manager can all access cashier reports
       const user = window.ensureAuthByRole(["Staff", "Manager"]);
-      if (!user) {
-        /* redirected by guard */
-      }
+      if (!user) { /* redirected by guard */ }
     </script>
   </body>
 </html>

@@ -101,7 +101,7 @@ public class OrdersController : ControllerBase
     {
         var user = (User)HttpContext.Items["User"];
         var timeZone = ResolveBusinessTimeZone();
-        var nowLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+        var nowLocal = BusinessTimeHelper.GetNow(_context);
         var localToday = nowLocal.Date;
         var localTomorrow = localToday.AddDays(1);
 
@@ -118,8 +118,7 @@ public class OrdersController : ControllerBase
         paidRows = paidRows
             .Where(x =>
             {
-                var paidAtUtc = DateTime.SpecifyKind(x.payment.PaidAt, DateTimeKind.Utc);
-                var paidAtLocal = TimeZoneInfo.ConvertTimeFromUtc(paidAtUtc, timeZone);
+                var paidAtLocal = ToBusinessLocal(x.payment.PaidAt, timeZone);
                 return paidAtLocal >= localToday && paidAtLocal < localTomorrow;
             })
             .ToList();
@@ -215,13 +214,14 @@ public class OrdersController : ControllerBase
             })
             .ToList();
 
-        var localToday = DateTime.Now.Date;
+        var timeZone = ResolveBusinessTimeZone();
+        var localToday = BusinessTimeHelper.GetNow(_context).Date;
         var trendStart = localToday.AddDays(-6);
         var paymentsInTrend = payments
             .Where(p => p.PaidAt != default)
             .Select(p => new
             {
-                LocalDate = p.PaidAt.ToLocalTime().Date,
+                LocalDate = ToBusinessLocal(p.PaidAt, timeZone).Date,
                 p.Price
             })
             .Where(x => x.LocalDate >= trendStart && x.LocalDate <= localToday)
@@ -255,7 +255,8 @@ public class OrdersController : ControllerBase
     [HttpGet("admin-list")]
     public IActionResult GetAdminOrderList()
     {
-        var now = DateTime.Now.Date;
+        var timeZone = ResolveBusinessTimeZone();
+        var now = BusinessTimeHelper.GetNow(_context).Date;
 
         var orders = _context.Orders
             .AsNoTracking()
@@ -297,7 +298,7 @@ public class OrdersController : ControllerBase
             };
         }).ToList();
 
-        var todayOrders = rows.Count(x => x.DateTime.ToLocalTime().Date == now);
+        var todayOrders = rows.Count(x => ToBusinessLocal(x.DateTime, timeZone).Date == now);
         var openOrders = rows.Count(x => x.Status == "Open");
         var completedOrders = rows.Count(x => x.Status == "Completed");
 
@@ -315,7 +316,8 @@ public class OrdersController : ControllerBase
     [HttpGet("monthly-report")]
     public IActionResult GetMonthlyReport([FromQuery] int? month, [FromQuery] int? year)
     {
-        var now = DateTime.Now;
+        var timeZone = ResolveBusinessTimeZone();
+        var now = BusinessTimeHelper.GetNow(_context);
         var selectedMonth = month.GetValueOrDefault(now.Month);
         var selectedYear = year.GetValueOrDefault(now.Year);
         if (selectedMonth < 1 || selectedMonth > 12)
@@ -372,7 +374,7 @@ public class OrdersController : ControllerBase
 
         var revenueByDay = payments
             .Where(p => p.PaidAt != default)
-            .GroupBy(p => p.PaidAt.ToLocalTime().Date.Day)
+            .GroupBy(p => ToBusinessLocal(p.PaidAt, timeZone).Date.Day)
             .ToDictionary(g => g.Key, g => new
             {
                 Revenue = g.Sum(x => x.Price),
@@ -380,11 +382,11 @@ public class OrdersController : ControllerBase
             });
 
         var importByDay = imports
-            .GroupBy(i => i.ImportDate.ToLocalTime().Date.Day)
+            .GroupBy(i => ToBusinessLocal(i.ImportDate, timeZone).Date.Day)
             .ToDictionary(g => g.Key, g => g.Sum(x => x.TotalCost));
 
         var expenseByDay = expenses
-            .GroupBy(e => e.Date.ToLocalTime().Date.Day)
+            .GroupBy(e => ToBusinessLocal(e.Date, timeZone).Date.Day)
             .ToDictionary(g => g.Key, g => g.Sum(x => x.Amount));
 
         var daily = new List<MonthlyDailySummaryDto>();
@@ -419,28 +421,17 @@ public class OrdersController : ControllerBase
 
     private TimeZoneInfo ResolveBusinessTimeZone()
     {
-        var configured = _context.SystemConfigs.AsNoTracking().OrderBy(x => x.Id).Select(x => x.TimeZoneId).FirstOrDefault();
-        var candidates = new[]
-        {
-            configured,
-            "Asia/Ho_Chi_Minh",
-            "SE Asia Standard Time"
-        };
+        return BusinessTimeHelper.ResolveTimeZone(_context);
+    }
 
-        foreach (var value in candidates)
-        {
-            if (string.IsNullOrWhiteSpace(value)) continue;
-            try
-            {
-                return TimeZoneInfo.FindSystemTimeZoneById(value.Trim());
-            }
-            catch
-            {
-                // continue fallback list
-            }
-        }
-
-        return TimeZoneInfo.Local;
+    private static DateTime ToBusinessLocal(DateTime value, TimeZoneInfo timeZone)
+    {
+        if (value == default) return value;
+        if (value.Kind == DateTimeKind.Utc)
+            return TimeZoneInfo.ConvertTimeFromUtc(value, timeZone);
+        if (value.Kind == DateTimeKind.Local)
+            return TimeZoneInfo.ConvertTime(value, timeZone);
+        return value;
     }
 }
 

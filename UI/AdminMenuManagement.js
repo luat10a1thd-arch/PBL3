@@ -183,7 +183,25 @@ function setupImageUploadInput({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Find the closest form submit button to disable it during upload
+    const form = hiddenInput.closest("form");
+    const submitBtn = form ? form.querySelector("button[type='submit']") : null;
+    const originalBtnHTML = submitBtn ? submitBtn.innerHTML : "";
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải ảnh...';
+      submitBtn.style.opacity = "0.7";
+      submitBtn.style.cursor = "not-allowed";
+    }
+
     try {
+      // Optional visual feedback on the preview box
+      const previewBox = document.getElementById(previewId);
+      if (previewBox) {
+        previewBox.style.opacity = "0.5";
+      }
+
       const uploadedUrl = await uploadImageFile(file);
       if (!uploadedUrl) return;
       hiddenInput.value = uploadedUrl;
@@ -196,6 +214,19 @@ function setupImageUploadInput({
       }
     } finally {
       fileInput.value = "";
+      
+      const previewBox = document.getElementById(previewId);
+      if (previewBox) {
+        previewBox.style.opacity = "1";
+      }
+
+      // Re-enable the submit button
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHTML;
+        submitBtn.style.opacity = "1";
+        submitBtn.style.cursor = "pointer";
+      }
     }
   });
 }

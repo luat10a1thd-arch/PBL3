@@ -154,7 +154,7 @@ function bindRevenueSummary(summary) {
 async function loadCashierRevenueSummary() {
   try {
     const summary = await shiftApiRequest(
-      "/Orders/app/cashier-summary",
+      "/Orders/cashier-summary",
       "GET",
       null,
       true,
@@ -180,12 +180,12 @@ function renderCashierShiftRows(shifts) {
   if (headRow) {
     headRow.innerHTML = `
             <th>Mã Ca</th>
-            <th>Trạng thái</th>
-            <th>Nhân viên</th>
-            <th>Loại tiền</th>
-            <th class="right">Số tiền</th>
-            <th>Tình trạng</th>
-            <th class="right td-actions">Thao tác</th>`;
+            <th>Nhân Viên</th>
+            <th>Thời Gian Mở</th>
+            <th class="right">Tiền Mở Ca</th>
+            <th class="right">Tiền Chốt</th>
+            <th>Tình Trạng</th>
+            <th class="right td-actions">Thao Tác</th>`;
   }
 
   const tbody = document.querySelector(".cashier-page .dash-table tbody");
@@ -200,22 +200,33 @@ function renderCashierShiftRows(shifts) {
       const statusDot = closed ? "out-of-stock" : "in-stock";
       const statusTextClass = closed ? "text-danger" : "text-success";
       const statusText = closed ? "Đã Chốt" : "Đang Mở";
-      const amount = formatVnd(
-        closed ? Number(shift.expected || 0) : Number(shift.opening || 0),
-      );
+      const opening = Number(shift.opening || 0);
+      const expected = Number(shift.expected || 0);
+      
+      // Format opening time
+      let openTimeStr = "-";
+      if (shift.openedAt || shift.createdAt) {
+        const dt = new Date(shift.openedAt || shift.createdAt);
+        if (!Number.isNaN(dt.getTime())) {
+          openTimeStr = dt.toLocaleString("vi-VN", { 
+            day: "2-digit", month: "2-digit",
+            hour: "2-digit", minute: "2-digit"
+          });
+        }
+      }
 
       return `
                 <tr data-shift-id="${shiftId}">
                     <td><span class="dash-product-name">#CA-${String(shiftId).padStart(4, "0")}</span></td>
-                    <td>${closed ? "Đã chốt" : "Đang mở"}</td>
                     <td>
                         <div class="dash-flex-col">
                             <span class="dash-product-name">${shift.employeeName || `NV #${shift.employeeId}`}</span>
                             <span class="dash-product-id">ID: ${shift.employeeId}</span>
                         </div>
                     </td>
-                    <td><span class="dash-category-badge ${closed ? "tea" : "coffee"}">${closed ? "Tiền chốt" : "Tiền mở"}</span></td>
-                    <td class="right dash-price">${amount}</td>
+                    <td><span class="dash-product-id" style="font-size:0.85rem;">${openTimeStr}</span></td>
+                    <td class="right dash-cost">${formatVnd(opening)}</td>
+                    <td class="right dash-price">${closed ? formatVnd(expected) : '<span class="dash-product-id">—</span>'}</td>
                     <td>
                         <div class="dash-status-indicator">
                             <div class="dash-status-dot ${statusDot}"></div>
@@ -375,6 +386,125 @@ function wireCashierShiftModal() {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SHIFT STATISTICS — Revenue by Period & by Staff
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PERIOD_CONFIG = [
+  {
+    key: "morning",
+    label: "Buổi Sáng",
+    time: "06:00 – 12:00",
+    icon: "fa-sun",
+    startHour: 6,
+    endHour: 12,
+  },
+  {
+    key: "afternoon",
+    label: "Buổi Chiều",
+    time: "12:00 – 17:00",
+    icon: "fa-cloud-sun",
+    startHour: 12,
+    endHour: 17,
+  },
+  {
+    key: "evening",
+    label: "Buổi Tối",
+    time: "17:00 – 23:00",
+    icon: "fa-moon",
+    startHour: 17,
+    endHour: 23,
+  },
+];
+
+function getPeriodKeyForShift(shift) {
+  const raw = shift.openedAt || shift.createdAt;
+  if (!raw) return null;
+  const dt = new Date(raw);
+  if (Number.isNaN(dt.getTime())) return null;
+  const h = dt.getHours();
+  for (const p of PERIOD_CONFIG) {
+    if (h >= p.startHour && h < p.endHour) return p.key;
+  }
+  return null;
+}
+
+function renderShiftStatsByPeriod(shifts) {
+  const grid = document.getElementById("shiftStatPeriodGrid");
+  if (!grid) return;
+
+  // Aggregate: only count CLOSED shifts (expected > 0)
+  const acc = {};
+  for (const p of PERIOD_CONFIG) acc[p.key] = { revenue: 0, count: 0 };
+
+  for (const shift of shifts) {
+    const key = getPeriodKeyForShift(shift);
+    if (!key) continue;
+    const closed = isShiftClosed(shift);
+    const revenue = closed ? Number(shift.expected || 0) : 0;
+    acc[key].revenue += revenue;
+    acc[key].count += 1;
+  }
+
+  grid.innerHTML = PERIOD_CONFIG.map((p) => {
+    const { revenue, count } = acc[p.key];
+    return `
+      <div class="shift-period-card ${p.key}">
+        <i class="fa-solid ${p.icon} shift-period-icon"></i>
+        <span class="shift-period-label">${p.label}</span>
+        <span class="shift-period-time">${p.time}</span>
+        <span class="shift-period-revenue">${formatVnd(revenue)}</span>
+        <span class="shift-period-count">${count} ca</span>
+      </div>`;
+  }).join("");
+}
+
+function renderShiftStatsByStaff(shifts) {
+  const list = document.getElementById("shiftStatStaffList");
+  if (!list) return;
+
+  // Aggregate per employee
+  const map = new Map();
+  for (const shift of shifts) {
+    const id = Number(shift.employeeId || 0);
+    const name = shift.employeeName || `NV #${id}`;
+    const closed = isShiftClosed(shift);
+    const revenue = closed ? Number(shift.expected || 0) : 0;
+
+    if (!map.has(id)) {
+      map.set(id, { name, revenue: 0, shifts: 0 });
+    }
+    const entry = map.get(id);
+    entry.revenue += revenue;
+    entry.shifts += 1;
+  }
+
+  const sorted = [...map.values()].sort((a, b) => b.revenue - a.revenue);
+
+  if (!sorted.length) {
+    list.innerHTML = `<div class="shift-stat-empty">
+      <i class="fa-solid fa-chart-pie" style="margin-right:6px;"></i>Chưa có dữ liệu
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = sorted.map((staff, idx) => {
+    const rank = idx + 1;
+    const rankClass = rank === 1 ? "top" : "";
+    return `
+      <div class="shift-staff-row">
+        <div class="shift-staff-rank ${rankClass}">#${rank}</div>
+        <div class="shift-staff-info">
+          <div class="shift-staff-name">${staff.name}</div>
+          <div class="shift-staff-meta">${staff.shifts} ca làm việc</div>
+        </div>
+        <div class="shift-staff-revenue">${formatVnd(staff.revenue)}</div>
+      </div>`;
+  }).join("");
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function loadInitialShiftData() {
   try {
     const shifts = await shiftApiRequest("/Shifts");
@@ -388,6 +518,8 @@ async function loadInitialShiftData() {
     );
     updateShiftSummary(currentShift || null);
     renderCashierShiftRows(shifts);
+    renderShiftStatsByPeriod(shifts);
+    renderShiftStatsByStaff(shifts);
     await loadCashierRevenueSummary();
     await refreshShiftStatusText();
     wireCashierShiftModal();

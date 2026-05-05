@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="vi">
   <head>
     <base href="/app/">
@@ -41,7 +41,7 @@
           <i class="fa-solid fa-file-invoice-dollar"></i>
           <span>Chốt Ca</span>
         </a>
-        <a href="/app/cashier/inventory" class="cashier-topbar-tab active">
+        <a href="/app/cashier/inventory" class="cashier-topbar-tab">
           <i class="fa-solid fa-box-open"></i>
           <span>Xuất Kho</span>
         </a>
@@ -107,12 +107,13 @@
         </div>
 
         <div class="dash-table-card no-padding">
-          <table class="dash-table no-margin">
+          <table class="dash-table no-margin" id="usageTable">
             <thead>
               <tr>
                 <th>Nguyên Liệu</th>
                 <th>Đơn Vị</th>
                 <th class="right">Tồn Kho</th>
+                <th>Trạng Thái</th>
                 <th class="right td-actions">Thao Tác</th>
               </tr>
             </thead>

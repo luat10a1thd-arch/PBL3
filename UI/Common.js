@@ -771,6 +771,30 @@ function enhanceAdminSidebarNav() {
   );
 }
 
+function highlightActiveNavItem() {
+  const currentPath = window.location.pathname.replace(/\/$/, "");
+
+  // Highlight sidebar nav items
+  document.querySelectorAll(".dash-sidebar .dash-nav-item, .dash-bottom-actions .dash-nav-item").forEach((link) => {
+    link.classList.remove("active");
+    const href = (link.getAttribute("href") || "").replace(/\/$/, "");
+    if (!href || href === "#") return;
+    if (currentPath === href || currentPath.startsWith(href + "/")) {
+      link.classList.add("active");
+    }
+  });
+
+  // Highlight cashier topbar nav items if present
+  document.querySelectorAll(".cashier-topbar-nav .cashier-topbar-nav-item, .cashier-topbar-tabs .cashier-topbar-tab").forEach((link) => {
+    link.classList.remove("active");
+    const href = (link.getAttribute("href") || "").replace(/\/$/, "");
+    if (!href || href === "#") return;
+    if (currentPath === href) {
+      link.classList.add("active");
+    }
+  });
+}
+
 function removeHeaderCheckboxes() {
   document
     .querySelectorAll(".dash-table thead input[type='checkbox']")
@@ -785,6 +809,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ensureToastStyles();
   startTopbarRealtimeClock();
   enhanceAdminSidebarNav();
+  highlightActiveNavItem(); // Must run AFTER enhanceAdminSidebarNav so dynamic links are present
   bindSettingsLinks();
   ensureAdminHeaderLogout();
   moveHeaderSearchToActionsBar();
