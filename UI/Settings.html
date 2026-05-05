@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <title>Cài Đặt - Cafe 24/7</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="admin-dashboard dash-bg-wrapper">
+    <div class="dash-bg-overlay"></div>
+    <div class="dash-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="dash-sidebar">
+      <div class="dash-logo-wrap">
+        <i class="fa-solid fa-mug-saucer dash-logo-icon"></i>
+        <div class="dash-logo-text-wrap">
+          <h1 class="dash-logo-title">CAFE 24/7</h1>
+          <p class="dash-logo-subtitle">Bảng Quản Trị</p>
+        </div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="AdminDashboard.html" class="dash-nav-item">
+          <i class="fa-solid fa-chart-line dash-nav-icon"></i>
+          <span class="dash-nav-text">Tổng Quan</span>
+        </a>
+        <a href="Orders.html" class="dash-nav-item">
+          <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
+          <span class="dash-nav-text">Đơn Hàng</span>
+        </a>
+        <a href="AdminMenuManagement.html" class="dash-nav-item">
+          <i class="fa-solid fa-utensils dash-nav-icon"></i>
+          <span class="dash-nav-text">Thực Đơn</span>
+        </a>
+        <a href="Inventory.html" class="dash-nav-item">
+          <i class="fa-solid fa-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Kho Hàng</span>
+        </a>
+        <a href="ImportHistory.html" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Lịch Sử Nhập</span>
+        </a>
+        <a href="StaffManagement.html" class="dash-nav-item">
+          <i class="fa-solid fa-users dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhân Viên</span>
+        </a>
+        <a href="CashierInterface.html" class="dash-nav-item">
+          <i class="fa-solid fa-cash-register dash-nav-icon"></i>
+          <span class="dash-nav-text">Thu Ngân</span>
+        </a>
+        <a href="MonthlyReport.html" class="dash-nav-item">
+          <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
+          <span class="dash-nav-text">Báo Cáo Tháng</span>
+        </a>
+      </nav>
+
+      <div class="dash-bottom-actions">
+        <a href="ShiftClosingReport.html" class="dash-nav-item">
+          <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
+          <span class="dash-nav-text">Chốt Ca</span>
+        </a>
+        <a href="Settings.html" class="dash-nav-item active">
+          <i class="fa-solid fa-gear dash-nav-icon"></i>
+          <span class="dash-nav-text">Cài Đặt</span>
+        </a>
+        <div class="dash-user-profile">
+          <div class="dash-user-avatar" id="userAvatar">AM</div>
+          <div class="dash-user-info">
+            <span class="dash-user-name" id="userName">Alex Morgan</span>
+            <span class="dash-user-role" id="userRole">Quản Trị Viên</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <header class="dash-header">
+        <div class="dash-header-left">
+          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <h2 class="dash-page-title">Cài Đặt Hệ Thống</h2>
+        </div>
+        
+        <div class="dash-header-right">
+          <button class="dash-notification-btn">
+            <i class="fa-solid fa-bell"></i>
+            <span class="dash-notification-dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="dash-content-area">
+        <div class="dash-content-container">
+          
+          <div class="dash-settings-grid">
+            <!-- General Settings -->
+            <div class="dash-settings-card">
+              <div class="dash-settings-card-header">
+                <i class="fa-solid fa-sliders"></i>
+                <h3>Cài Đặt Chung</h3>
+              </div>
+              <div class="dash-settings-card-body">
+                <div class="settings-form-group">
+                  <label>Múi Giờ</label>
+                  <select id="timezoneSelect" class="dash-input-field">
+                    <option value="UTC">UTC (Giờ Phối Hợp Quốc Tế)</option>
+                    <option value="Asia/Ho_Chi_Minh" selected>Asia/Ho_Chi_Minh (UTC+7)</option>
+                    <option value="Asia/Bangkok">Asia/Bangkok (UTC+7)</option>
+                    <option value="Asia/Singapore">Asia/Singapore (UTC+8)</option>
+                  </select>
+                </div>
+                <div class="settings-form-group">
+                  <label>Định Dạng Ngày Tháng</label>
+                  <select id="dateFormatSelect" class="dash-input-field">
+                    <option value="dd/MM/yyyy">DD/MM/YYYY</option>
+                    <option value="MM/dd/yyyy">MM/DD/YYYY</option>
+                    <option value="yyyy-MM-dd">YYYY-MM-DD</option>
+                  </select>
+                </div>
+                <div class="settings-form-group">
+                  <label>Định Dạng Tiền Tệ</label>
+                  <select id="currencySelect" class="dash-input-field">
+                    <option value="VND" selected>Đồng Việt Nam (₫)</option>
+                    <option value="USD">US Dollar ($)</option>
+                    <option value="EUR">Euro (€)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- API Settings -->
+            <div class="dash-settings-card">
+              <div class="dash-settings-card-header">
+                <i class="fa-solid fa-plug"></i>
+                <h3>Cài Đặt API</h3>
+              </div>
+              <div class="dash-settings-card-body">
+                <div class="settings-form-group">
+                  <label>URL API Server</label>
+                  <input type="text" id="apiUrlInput" class="dash-input-field" placeholder="http://localhost:4000" />
+                </div>
+                <div class="settings-form-group">
+                  <label>Hết Thời Gian Chờ (Giây)</label>
+                  <input type="number" id="apiTimeoutInput" class="dash-input-field" min="5" max="300" value="30" />
+                </div>
+                <button class="dash-btn-secondary" id="testApiBtn">
+                  <i class="fa-solid fa-wifi"></i> Kiểm Tra Kết Nối
+                </button>
+              </div>
+            </div>
+
+            <!-- Data Settings -->
+            <div class="dash-settings-card">
+              <div class="dash-settings-card-header">
+                <i class="fa-solid fa-database"></i>
+                <h3>Cài Đặt Dữ Liệu</h3>
+              </div>
+              <div class="dash-settings-card-body">
+                <div class="settings-form-group">
+                  <label>
+                    <input type="checkbox" id="autoRefreshToggle" checked />
+                    Tự Động Làm Mới Dữ Liệu
+                  </label>
+                </div>
+                <div class="settings-form-group">
+                  <label>Khoảng Thời Gian Làm Mới (Giây)</label>
+                  <input type="number" id="refreshIntervalInput" class="dash-input-field" min="5" max="300" value="30" />
+                </div>
+                <div class="settings-form-group">
+                  <label>Số Hàng Trên Trang</label>
+                  <input type="number" id="pageRowsInput" class="dash-input-field" min="5" max="100" value="20" />
+                </div>
+                <button class="dash-btn-danger" id="clearCacheBtn">
+                  <i class="fa-solid fa-trash"></i> Xóa Bộ Nhớ Đệm
+                </button>
+              </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="dash-settings-card">
+              <div class="dash-settings-card-header">
+                <i class="fa-solid fa-info"></i>
+                <h3>Thông Tin Hệ Thống</h3>
+              </div>
+              <div class="dash-settings-card-body">
+                <div class="settings-info-row">
+                  <span class="settings-info-label">Phiên Bản:</span>
+                  <span class="settings-info-value" id="versionInfo">v1.0.0</span>
+                </div>
+                <div class="settings-info-row">
+                  <span class="settings-info-label">Trạng Thái API:</span>
+                  <span class="settings-info-value" id="apiStatusInfo">
+                    <span class="dash-status-dot in-stock"></span>
+                    Hoạt Động
+                  </span>
+                </div>
+                <div class="settings-info-row">
+                  <span class="settings-info-label">Giờ Máy Chủ (UTC):</span>
+                  <span class="settings-info-value" id="serverTimeInfo">-</span>
+                </div>
+                <div class="settings-info-row">
+                  <span class="settings-info-label">Giờ Hệ Thống:</span>
+                  <span class="settings-info-value" id="localTimeInfo">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Backup & Recovery -->
+            <div class="dash-settings-card">
+              <div class="dash-settings-card-header">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <h3>Sao Lưu & Khôi Phục</h3>
+              </div>
+              <div class="dash-settings-card-body">
+                <button class="dash-btn-secondary" id="backupBtn">
+                  <i class="fa-solid fa-download"></i> Xuất Dữ Liệu
+                </button>
+                <button class="dash-btn-secondary" id="restoreBtn">
+                  <i class="fa-solid fa-upload"></i> Nhập Dữ Liệu
+                </button>
+                <input type="file" id="restoreFileInput" style="display:none;" accept=".json" />
+              </div>
+            </div>
+
+            <!-- About -->
+            <div class="dash-settings-card">
+              <div class="dash-settings-card-header">
+                <i class="fa-solid fa-circle-question"></i>
+                <h3>Về Ứng Dụng</h3>
+              </div>
+              <div class="dash-settings-card-body">
+                <p class="settings-about-text">
+                  <strong>Cafe 24/7 - Hệ Thống Quản Lý Quán Cà Phê</strong>
+                </p>
+                <p class="settings-about-text">
+                  Phiên bản: <span id="appVersion">1.0.0</span>
+                </p>
+                <p class="settings-about-text">
+                  © 2026 Cafe 24/7. Tất cả các quyền được bảo lưu.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-settings-actions">
+            <button class="dash-btn-secondary" id="resetBtn">
+              <i class="fa-solid fa-undo"></i> Khôi Phục Mặc Định
+            </button>
+            <button class="dash-btn-primary" id="saveBtn">
+              <i class="fa-solid fa-check"></i> Lưu Cài Đặt
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <script src="Common.js"></script>
+    <script src="Settings.js"></script>
+  </body>
+</html>
