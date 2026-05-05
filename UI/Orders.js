@@ -179,10 +179,6 @@ function renderRows() {
                         <span class="${statusTextClass}">${statusText}</span>
                     </div>
                 </td>
-                <td class="right td-actions">
-                    <button class="dash-action-btn" onclick="onEditOrder(${row.orderId})" title="Sửa"><i class="fa-solid fa-pen"></i></button>
-                    <button class="dash-action-btn" onclick="onDeleteOrder(${row.orderId})" title="Xóa"><i class="fa-solid fa-trash"></i></button>
-                </td>
             </tr>`;
     })
     .join("");

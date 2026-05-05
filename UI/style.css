@@ -3092,7 +3092,9 @@ body.cashier-page {
   margin-bottom: 20px;
 }
 @media (max-width: 900px) {
-  .shift-stat-row { grid-template-columns: 1fr; }
+  .shift-stat-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Stat card — reuses dash-table-card base */
@@ -3173,12 +3175,24 @@ body.cashier-page {
   text-align: center;
 }
 /* Per-period accent colours */
-.shift-period-card.morning .shift-period-icon { color: #f59e0b; }
-.shift-period-card.afternoon .shift-period-icon { color: #c56517; }
-.shift-period-card.evening .shift-period-icon { color: #6366f1; }
-.shift-period-card.morning { border-color: rgba(245, 158, 11, 0.2); }
-.shift-period-card.afternoon { border-color: rgba(197, 101, 23, 0.25); }
-.shift-period-card.evening { border-color: rgba(99, 102, 241, 0.2); }
+.shift-period-card.morning .shift-period-icon {
+  color: #f59e0b;
+}
+.shift-period-card.afternoon .shift-period-icon {
+  color: #c56517;
+}
+.shift-period-card.evening .shift-period-icon {
+  color: #6366f1;
+}
+.shift-period-card.morning {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+.shift-period-card.afternoon {
+  border-color: rgba(197, 101, 23, 0.25);
+}
+.shift-period-card.evening {
+  border-color: rgba(99, 102, 241, 0.2);
+}
 
 /* ── Staff revenue list (right stat card) ── */
 .shift-staff-list {
@@ -3188,8 +3202,12 @@ body.cashier-page {
   max-height: 260px;
   overflow-y: auto;
 }
-.shift-staff-list::-webkit-scrollbar { width: 4px; }
-.shift-staff-list::-webkit-scrollbar-track { background: transparent; }
+.shift-staff-list::-webkit-scrollbar {
+  width: 4px;
+}
+.shift-staff-list::-webkit-scrollbar-track {
+  background: transparent;
+}
 .shift-staff-list::-webkit-scrollbar-thumb {
   background: rgba(197, 101, 23, 0.4);
   border-radius: 4px;
@@ -3222,7 +3240,10 @@ body.cashier-page {
   justify-content: center;
   flex-shrink: 0;
 }
-.shift-staff-rank.top { background: rgba(197,101,23,0.35); color: #fff; }
+.shift-staff-rank.top {
+  background: rgba(197, 101, 23, 0.35);
+  color: #fff;
+}
 .shift-staff-info {
   flex: 1;
   min-width: 0;
@@ -3399,7 +3420,7 @@ body.cashier-page {
 }
 /* Center flex containers inside inventory table cells */
 #inventoryTable .dash-product-cell {
-  justify-content: center;
+  justify-content: flex-start;
 }
 #inventoryTable .dash-status-indicator,
 #inventoryTable .dash-table-actions {
@@ -3412,7 +3433,7 @@ body.cashier-page {
 } /* checkbox */
 #inventoryTable th:nth-child(2),
 #inventoryTable td:nth-child(2) {
-  width: 40%;
+  width: 30%;
 } /* Tên Nguyên Liệu */
 #inventoryTable th:nth-child(3),
 #inventoryTable td:nth-child(3) {
@@ -3428,5 +3449,5 @@ body.cashier-page {
 } /* Số Lượng */
 #inventoryTable th:nth-child(6),
 #inventoryTable td:nth-child(6) {
-  width: 11%;
+  width: 21%;
 } /* Thao Tác */
