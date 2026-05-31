@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="vi">
   <head>
     <base href="/app/">
@@ -80,10 +80,10 @@
           <span class="dash-nav-text">Cài Đặt</span>
         </a>
         <div class="dash-user-profile">
-          <div class="dash-user-avatar">AM</div>
+          <div class="dash-user-avatar" id="sidebarUserAvatar">AM</div>
           <div class="dash-user-info">
-            <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Lý</span>
+            <span class="dash-user-name" id="sidebarUserName">Alex Morgan</span>
+            <span class="dash-user-role" id="sidebarUserRole">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -99,20 +99,45 @@
           >
             <i class="fa-solid fa-bars"></i>
           </button>
-          <h2 class="dash-page-title">Báo Cáo Tháng</h2>
+          <div>
+            <h2 class="dash-page-title">Báo Cáo Tháng</h2>
+            <p class="dash-page-subtitle">Thống kê doanh thu và chi phí theo tháng</p>
+          </div>
           <div class="dash-shift-badge">
             <div class="dash-shift-dot"></div>
-            <span class="dash-shift-text">Tháng 3 / 2026</span>
+            <span class="dash-shift-text" id="headerShiftText">-</span>
           </div>
         </div>
 
         <div class="dash-header-right">
-          <button
-            class="dash-btn-secondary"
-            style="height: 38px; padding: 0 14px; font-size: 0.85rem"
-          >
-            <i class="fa-solid fa-download"></i> Xuất Excel
-          </button>
+          <!-- Month/Year select & Action buttons -->
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select class="dash-select-box" id="selectMonth" style="width:110px;">
+              <option value="1">Tháng 1</option>
+              <option value="2">Tháng 2</option>
+              <option value="3">Tháng 3</option>
+              <option value="4">Tháng 4</option>
+              <option value="5">Tháng 5</option>
+              <option value="6">Tháng 6</option>
+              <option value="7">Tháng 7</option>
+              <option value="8">Tháng 8</option>
+              <option value="9">Tháng 9</option>
+              <option value="10">Tháng 10</option>
+              <option value="11">Tháng 11</option>
+              <option value="12">Tháng 12</option>
+            </select>
+            <select class="dash-select-box" id="selectYear" style="width:90px;">
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+            </select>
+            <button class="dash-btn-secondary" id="btnExportExcel" style="padding: 8px 14px;">
+              <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </button>
+            <button class="dash-btn-secondary" id="btnPrintReport" style="padding: 8px 14px;">
+              <i class="fa-solid fa-print"></i> In Báo Cáo
+            </button>
+          </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
             <span class="dash-notification-dot"></span>
@@ -122,36 +147,9 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
-          <!-- Month selector -->
-          <div class="dash-actions-bar" style="margin-bottom: 0">
-            <div class="dash-filter-group" style="gap: 10px">
-              <select class="dash-select-box" id="selectMonth">
-                <option>Tháng 1</option>
-                <option>Tháng 2</option>
-                <option selected>Tháng 3</option>
-                <option>Tháng 4</option>
-                <option>Tháng 5</option>
-                <option>Tháng 6</option>
-                <option>Tháng 7</option>
-                <option>Tháng 8</option>
-                <option>Tháng 9</option>
-                <option>Tháng 10</option>
-                <option>Tháng 11</option>
-                <option>Tháng 12</option>
-              </select>
-              <select class="dash-select-box" id="selectYear">
-                <option>2024</option>
-                <option>2025</option>
-                <option selected>2026</option>
-              </select>
-            </div>
-            <button class="dash-btn-secondary">
-              <i class="fa-solid fa-print"></i> In Báo Cáo
-            </button>
-          </div>
 
-          <!-- KPI cards -->
-          <div class="dash-kpi-grid" style="margin-top: 20px">
+          <!-- KPI grid -->
+          <div class="dash-kpi-grid">
             <div class="dash-card">
               <h3 class="dash-kpi-title">Tổng Doanh Thu</h3>
               <p class="dash-kpi-value text-primary" id="monthlyKpiRevenue">
@@ -437,6 +435,44 @@
             </div>
           </div>
 
+          <!-- Bảng hiệu suất nhân viên -->
+          <div class="dash-table-card no-padding" style="margin-bottom: 20px;" id="monthlyEmployeeCard">
+            <div
+              style="
+                padding: 18px 20px 12px;
+                border-bottom: 1px solid rgba(203, 213, 225, 0.08);
+              "
+            >
+              <h3
+                style="
+                  margin: 0;
+                  font-size: 0.95rem;
+                  font-weight: 700;
+                  color: white;
+                "
+              >
+                <i class="fa-solid fa-users-gear" style="color: var(--primary-color); margin-right: 8px;"></i>Hiệu Suất Nhân Viên
+              </h3>
+            </div>
+            <table class="dash-table no-margin">
+              <thead>
+                <tr>
+                  <th>Nhân Viên</th>
+                  <th class="right">Số Ca Làm</th>
+                  <th class="right">Tiền Đầu Ca</th>
+                  <th class="right">Tiền Thực Tế Cuối Ca</th>
+                  <th class="right">Số Đơn Hoàn Tất</th>
+                  <th class="right">Tổng Doanh Số</th>
+                </tr>
+              </thead>
+              <tbody id="monthlyEmployeeBody">
+                <tr>
+                  <td colspan="6" style="text-align:center;padding:24px;color:var(--dash-text-muted)">Đang tải...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <!-- Bảng doanh thu theo ngày -->
           <div class="dash-table-card no-padding" id="monthlyDailyCard">
             <div
@@ -501,49 +537,47 @@
                 <tr>
                   <td><strong>03/03/2026</strong></td>
                   <td>Thứ Ba</td>
-                  <td class="right">105</td>
+                  <td class="right">104</td>
                   <td class="right dash-cost">9,200,000₫</td>
-                  <td class="right dash-cost">13,500,000₫</td>
-                  <td class="right dash-price">22,700,000₫</td>
-                  <td class="right dash-cost">7,800,000₫</td>
+                  <td class="right dash-cost">12,400,000₫</td>
+                  <td class="right dash-price">21,600,000₫</td>
+                  <td class="right dash-cost">6,800,000₫</td>
                 </tr>
                 <tr>
                   <td><strong>04/03/2026</strong></td>
                   <td>Thứ Tư</td>
                   <td class="right">112</td>
-                  <td class="right dash-cost">10,100,000₫</td>
-                  <td class="right dash-cost">15,200,000₫</td>
-                  <td class="right dash-price">25,300,000₫</td>
-                  <td class="right dash-cost">8,400,000₫</td>
+                  <td class="right dash-cost">9,850,000₫</td>
+                  <td class="right dash-cost">13,500,000₫</td>
+                  <td class="right dash-price">23,350,000₫</td>
+                  <td class="right dash-cost">7,200,000₫</td>
                 </tr>
                 <tr>
                   <td><strong>05/03/2026</strong></td>
                   <td>Thứ Năm</td>
-                  <td class="right">119</td>
-                  <td class="right dash-cost">11,300,000₫</td>
-                  <td class="right dash-cost">16,900,000₫</td>
-                  <td class="right dash-price">28,200,000₫</td>
-                  <td class="right dash-cost">9,500,000₫</td>
+                  <td class="right">115</td>
+                  <td class="right dash-cost">10,200,000₫</td>
+                  <td class="right dash-cost">14,100,000₫</td>
+                  <td class="right dash-price">24,300,000₫</td>
+                  <td class="right dash-cost">7,500,000₫</td>
                 </tr>
                 <tr>
                   <td><strong>06/03/2026</strong></td>
                   <td>Thứ Sáu</td>
-                  <td class="right">138</td>
-                  <td class="right dash-cost">14,200,000₫</td>
-                  <td class="right dash-cost">19,800,000₫</td>
-                  <td class="right dash-price">34,000,000₫</td>
-                  <td class="right dash-cost">11,200,000₫</td>
+                  <td class="right">130</td>
+                  <td class="right dash-cost">11,500,000₫</td>
+                  <td class="right dash-cost">16,800,000₫</td>
+                  <td class="right dash-price">28,300,000₫</td>
+                  <td class="right dash-cost">8,600,000₫</td>
                 </tr>
                 <tr>
                   <td><strong>07/03/2026</strong></td>
-                  <td>
-                    <span class="dash-category-badge breakfast">Thứ Bảy</span>
-                  </td>
-                  <td class="right">156</td>
-                  <td class="right dash-cost">16,500,000₫</td>
-                  <td class="right dash-cost">22,100,000₫</td>
-                  <td class="right dash-price">38,600,000₫</td>
-                  <td class="right dash-cost">12,800,000₫</td>
+                  <td>Thứ Bảy</td>
+                  <td class="right">155</td>
+                  <td class="right dash-cost">13,800,000₫</td>
+                  <td class="right dash-cost">21,400,000₫</td>
+                  <td class="right dash-price">35,200,000₫</td>
+                  <td class="right dash-cost">10,500,000₫</td>
                 </tr>
                 <tr>
                   <td><strong>08/03/2026</strong></td>

@@ -269,6 +269,51 @@ function renderDailyTable(data) {
     }
 }
 
+function renderEmployeeSummary(data) {
+    const tbody = document.getElementById('monthlyEmployeeBody');
+    if (!tbody) return;
+
+    const employeeRows = data.employeeSummary || [];
+
+    if (!employeeRows.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--dash-text-muted)">Không có dữ liệu hiệu suất nhân viên trong tháng này</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = employeeRows.map((row, index) => {
+        // Initials for avatar preview
+        let initials = 'NV';
+        if (row.employeeName) {
+            const parts = row.employeeName.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            } else if (parts.length === 1 && parts[0]) {
+                initials = parts[0].slice(0, 2).toUpperCase();
+            }
+        }
+
+        return `
+            <tr${index === employeeRows.length - 1 ? ' class="no-border-row"' : ''}>
+                <td>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div class="dash-user-avatar" style="width:34px;height:34px;border-radius:50%;background:rgba(224,86,36,0.15);color:var(--primary-color);font-size:0.82rem;font-weight:700;display:flex;align-items:center;justify-content:center;border:1px solid rgba(224,86,36,0.25);">
+                            ${initials}
+                        </div>
+                        <div class="dash-flex-col">
+                            <span class="dash-product-name">${row.employeeName || 'N/A'}</span>
+                            <span class="dash-product-id">ID: #${row.employeeId}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="right" style="font-weight:600;color:white;">${row.shiftCount} ca</td>
+                <td class="right dash-cost">${formatVnd(row.totalOpening)}</td>
+                <td class="right dash-price">${formatVnd(row.totalExpected)}</td>
+                <td class="right">${row.orderCount} đơn</td>
+                <td class="right dash-price" style="font-weight:700;color:var(--color-success);">${formatVnd(row.totalSales)}</td>
+            </tr>`;
+    }).join('');
+}
+
 async function loadMonthlyData() {
     const { month, year } = getSelectedMonthYear();
     monthlyState.month = month;
@@ -282,6 +327,7 @@ async function loadMonthlyData() {
     renderChart(data);
     renderSupplierSummary(data);
     renderPaymentMethodSummary(data);
+    renderEmployeeSummary(data);
     renderDailyTable(data);
 }
 
@@ -298,6 +344,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         const yearSelect = document.getElementById('selectYear');
         if (monthSelect) monthSelect.addEventListener('change', loadMonthlyData);
         if (yearSelect) yearSelect.addEventListener('change', loadMonthlyData);
+
+        const btnExportExcel = document.getElementById('btnExportExcel');
+        const btnPrintReport = document.getElementById('btnPrintReport');
+        
+        if (btnExportExcel) {
+            btnExportExcel.addEventListener('click', () => {
+                if (typeof window.exportTableToCsv === 'function') {
+                    const table = document.querySelector('.dash-table-card .dash-table');
+                    if (table) window.exportTableToCsv(table, `BaoCaoThang_${monthlyState.month}_${monthlyState.year}.csv`);
+                    else window.showWarningToast?.('Không tìm thấy bảng dữ liệu để xuất');
+                } else {
+                    window.showWarningToast?.('Chức năng xuất Excel chưa sẵn sàng');
+                }
+            });
+        }
+        
+        if (btnPrintReport) {
+            btnPrintReport.addEventListener('click', () => {
+                window.print();
+            });
+        }
 
         await loadMonthlyData();
     } catch (error) {

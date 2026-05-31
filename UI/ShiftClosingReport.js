@@ -93,12 +93,8 @@ function getFilteredShifts() {
 }
 
 function updateKpis(shifts) {
-  const titleNodes = document.querySelectorAll(
-    ".dash-kpi-grid .dash-kpi-title",
-  );
-  const valueNodes = document.querySelectorAll(
-    ".dash-kpi-grid .dash-kpi-value",
-  );
+  const getTitleNode = (i) => document.getElementById(`shiftKpiTitle${i}`);
+  const getValueNode = (i) => document.getElementById(`shiftKpiValue${i}`);
 
   const openShifts = shifts.filter((s) => !isShiftClosed(s));
   const closedShifts = shifts.filter((s) => isShiftClosed(s));
@@ -111,15 +107,15 @@ function updateKpis(shifts) {
     0,
   );
 
-  if (titleNodes[0]) titleNodes[0].textContent = "Ca Đang Mở";
-  if (titleNodes[1]) titleNodes[1].textContent = "Ca Đã Chốt";
-  if (titleNodes[2]) titleNodes[2].textContent = "Tổng Tiền Mở Ca";
-  if (titleNodes[3]) titleNodes[3].textContent = "Tổng Tiền Chốt Ca";
+  const t0 = getTitleNode(0); if (t0) t0.textContent = "Ca Đang Mở";
+  const t1 = getTitleNode(1); if (t1) t1.textContent = "Ca Đã Chốt";
+  const t2 = getTitleNode(2); if (t2) t2.textContent = "Tổng Tiền Mở Ca";
+  const t3 = getTitleNode(3); if (t3) t3.textContent = "Tổng Tiền Chốt Ca";
 
-  if (valueNodes[0]) valueNodes[0].textContent = String(openShifts.length);
-  if (valueNodes[1]) valueNodes[1].textContent = String(closedShifts.length);
-  if (valueNodes[2]) valueNodes[2].textContent = formatVnd(openingTotal);
-  if (valueNodes[3]) valueNodes[3].textContent = formatVnd(expectedTotal);
+  const v0 = getValueNode(0); if (v0) v0.textContent = String(openShifts.length);
+  const v1 = getValueNode(1); if (v1) v1.textContent = String(closedShifts.length);
+  const v2 = getValueNode(2); if (v2) v2.textContent = formatVnd(openingTotal);
+  const v3 = getValueNode(3); if (v3) v3.textContent = formatVnd(expectedTotal);
 
   const badge = document.querySelector(".dash-shift-text");
   if (badge) {

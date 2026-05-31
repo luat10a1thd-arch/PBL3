@@ -8,12 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         const username = usernameInput.value.trim();
-        const password = passwordInput.value.trim();
+        const password = passwordInput.value;
 
         if (!username || !password) {
             window.showWarningToast?.('Vui lòng nhập đầy đủ tài khoản và mật khẩu!');
             return;
         }
+
+        btnLogin.disabled = true;
+        const originalText = btnLogin.innerHTML;
+        btnLogin.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i>Đang đăng nhập...';
 
         try {
             const response = await fetch(`${API_URL}/Users/authenticate`, {
@@ -57,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Lỗi khi đăng nhập:', error);
             window.showErrorToast?.('Lỗi kết nối đến server. Vui lòng thử lại sau!');
+        } finally {
+            btnLogin.disabled = false;
+            btnLogin.innerHTML = originalText;
         }
     });
 

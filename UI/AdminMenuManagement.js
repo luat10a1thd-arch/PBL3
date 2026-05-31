@@ -595,7 +595,7 @@ function renderItemsTable(searchTerm = "") {
                     <button class="dash-action-btn" onclick="editItem(${item.itemId})">
                         <i class="fa-solid fa-pen"></i>
                     </button>
-                    <button class="dash-action-btn delete" onclick="deleteItem(${item.itemId}, '${item.name}')">
+                    <button class="dash-action-btn delete" onclick="deleteItem(${item.itemId})">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -652,7 +652,7 @@ function renderCategoriesTable(searchTerm = "") {
                     <button class="dash-action-btn" onclick="editCategory(${cat.categoryId})">
                         <i class="fa-solid fa-pen"></i>
                     </button>
-                    <button class="dash-action-btn delete" onclick="deleteCategory(${cat.categoryId}, '${cat.name}')">
+                    <button class="dash-action-btn delete" onclick="deleteCategory(${cat.categoryId})">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -707,7 +707,7 @@ function renderToppingsTable(searchTerm = "") {
                     <button class="dash-action-btn" onclick="editTopping(${top.toppingId})">
                         <i class="fa-solid fa-pen"></i>
                     </button>
-                    <button class="dash-action-btn delete" onclick="deleteTopping(${top.toppingId}, '${top.name}')">
+                    <button class="dash-action-btn delete" onclick="deleteTopping(${top.toppingId})">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -1018,7 +1018,9 @@ function closeModal() {
 }
 
 // Delete functions with styled confirm dialog
-async function deleteItem(itemId, itemName) {
+async function deleteItem(itemId) {
+  const item = items.find(i => i.itemId === itemId);
+  const itemName = item ? item.name : "món này";
   const confirmed = await showConfirm(
     `Bạn có chắc muốn xóa món "${itemName}"?`,
     "Món này sẽ bị xóa vĩnh viễn!",
@@ -1035,7 +1037,9 @@ async function deleteItem(itemId, itemName) {
   }
 }
 
-async function deleteCategory(categoryId, categoryName) {
+async function deleteCategory(categoryId) {
+  const category = categories.find(c => c.categoryId === categoryId);
+  const categoryName = category ? category.name : "danh mục này";
   const confirmed = await showConfirm(
     `Bạn có chắc muốn xóa danh mục "${categoryName}"?`,
     "Danh mục này sẽ bị xóa vĩnh viễn!",
@@ -1052,7 +1056,9 @@ async function deleteCategory(categoryId, categoryName) {
   }
 }
 
-async function deleteTopping(toppingId, toppingName) {
+async function deleteTopping(toppingId) {
+  const topping = toppings.find(t => t.toppingId === toppingId);
+  const toppingName = topping ? topping.name : "topping này";
   const confirmed = await showConfirm(
     `Bạn có chắc muốn xóa topping "${toppingName}"?`,
     "Topping này sẽ bị xóa vĩnh viễn!",

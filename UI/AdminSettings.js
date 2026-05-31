@@ -300,8 +300,12 @@ function setupSettingsActions() {
 
   const keywordInput = document.getElementById("activityKeywordInput");
   if (keywordInput) {
+    let keywordDebounce = null;
     keywordInput.addEventListener("input", () => {
-      loadActivityLogs().catch(() => {});
+      clearTimeout(keywordDebounce);
+      keywordDebounce = setTimeout(() => {
+        loadActivityLogs().catch(() => {});
+      }, 400);
     });
   }
 }

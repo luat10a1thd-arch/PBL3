@@ -60,8 +60,8 @@ function renderLogs(logs) {
             <tr>
                 <td style="color:#b6a8a2;">${time}</td>
                 <td style="font-weight:600; color:white;">${actionLabel}</td>
-                <td>${log.actorDisplayName}</td>
-                <td style="color:#b6a8a2; font-size: 0.9em; max-width:300px;">${log.description}</td>
+                <td>${window.escapeHtml ? window.escapeHtml(log.actorDisplayName) : log.actorDisplayName}</td>
+                <td style="color:#b6a8a2; font-size: 0.9em; max-width:300px;">${window.escapeHtml ? window.escapeHtml(log.description) : log.description}</td>
                 <td><span class="${badgeClass}">${badgeLabel}</span></td>
             </tr>
         `;

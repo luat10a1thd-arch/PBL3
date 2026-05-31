@@ -281,6 +281,7 @@ function setupStockInModal() {
     const unitPriceInput = document.getElementById('stockInUnitPriceInput');
     const autoTotalLabel = document.getElementById('stockInAutoTotalCost');
     const dateInput = document.getElementById('stockInDateInput');
+    const noteInput = document.getElementById('stockInNoteInput');
     const ingredientSelect = document.getElementById('stockInIngredientSelect');
     const supplierSelect = document.getElementById('stockInSupplierSelect');
     const openIngredientModalBtn = document.getElementById('stockInOpenIngredientModalBtn');
@@ -320,6 +321,7 @@ function setupStockInModal() {
         dateInput.value = toLocalDateTimeInputValue(new Date());
         quantityInput.value = '';
         unitPriceInput.value = '';
+        if (noteInput) noteInput.value = '';
         updateAutoTotal();
         quickNameInput.value = '';
         quickUomInput.value = '';
@@ -398,13 +400,16 @@ function setupStockInModal() {
                 ingredientSelect.value = String(ingredientId);
             }
 
+            const note = noteInput ? noteInput.value.trim() : '';
+
             const result = await inventoryApiRequest('/imports/stock-in', 'POST', {
                 SupplierId: supplierId,
                 IngredientId: ingredientId,
                 Quantity: quantity,
                 UnitPrice: unitPrice,
                 TotalCost: totalCost,
-                ImportDate: importDate
+                ImportDate: importDate,
+                Note: note
             });
 
             if (!result) return;
@@ -414,6 +419,7 @@ function setupStockInModal() {
             closeModal();
             quantityInput.value = '';
             unitPriceInput.value = '';
+            if (noteInput) noteInput.value = '';
             updateAutoTotal();
             window.showSuccessToast?.('Nhập hàng thành công');
         } catch (error) {

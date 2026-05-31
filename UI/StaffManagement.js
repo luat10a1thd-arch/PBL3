@@ -94,7 +94,7 @@ async function staffApiRequest(endpoint, method = "GET", body = null) {
 
   const response = await fetch(`${STAFF_API_URL}${endpoint}`, options);
   if (response.status === 401) {
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
     window.location.href = "/app/login";
     return null;
   }
@@ -183,7 +183,7 @@ function renderStaffRows(employees) {
                     <div class="dash-table-actions">
                         <button class="dash-action-btn" title="Chi tiết"><i class="fa-solid fa-eye"></i></button>
                         <button class="dash-action-btn" title="Chỉnh sửa"><i class="fa-solid fa-pen"></i></button>
-                        <button class="dash-action-btn delete" title="Xoá" onclick="deleteItem(${id})"><i class="fa-solid fa-trash"></i></button>
+                        <button class="dash-action-btn delete" title="Xoá"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </td>
             </tr>
@@ -359,32 +359,17 @@ function setupModal() {
       } finally {
         selectedStaffIds = [];
         updateBulkDeleteButton();
-        await loadStaffData();
+        const employees = await staffApiRequest("/employees");
+        if (employees) {
+          staffState.employees = employees;
+          redrawStaff();
+        }
       }
     });
   }
 }
 
-async function deleteItem(id) {
-  if (typeof window.showConfirmModal !== "function") {
-    window.showWarningToast?.("Không thể mở popup xác nhận");
-    return;
-  }
-  const confirmed = await window.showConfirmModal(
-    "Bạn có chắc muốn xóa nhân viên này?",
-  );
-  if (!confirmed) return;
-  try {
-    await fetch(`${STAFF_API_URL}/Users/${id}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    window.showSuccessToast?.("Xóa thành công");
-    await loadStaffData();
-  } catch (err) {
-    window.showErrorToast?.("Lỗi: " + err.message);
-  }
-}
+
 
 function clearStaffForm() {
   const ids = [

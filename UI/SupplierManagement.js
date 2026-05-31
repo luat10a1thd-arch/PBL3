@@ -130,16 +130,15 @@ function updateKpis(suppliers, importStats) {
     const stats = importStats.get(supplierId);
     if (stats) {
       hasImport += 1;
-      const firstDate = stats.dates.sort(
-        (a, b) => a.getTime() - b.getTime(),
-      )[0];
-      if (
-        firstDate &&
-        firstDate.getMonth() === now.getMonth() &&
-        firstDate.getFullYear() === now.getFullYear()
-      ) {
+    }
+
+    const createdDate = new Date(supplier.createdAt);
+    if (
+        !Number.isNaN(createdDate.getTime()) &&
+        createdDate.getMonth() === now.getMonth() &&
+        createdDate.getFullYear() === now.getFullYear()
+    ) {
         newThisMonth += 1;
-      }
     }
 
     if (!String(supplier.contactInfo || "").trim()) {

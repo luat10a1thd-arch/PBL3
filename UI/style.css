@@ -22,6 +22,8 @@
   --color-purple-bg: rgba(168, 85, 247, 0.1);
   --dash-border: rgba(203, 213, 225, 0.2);
   --dash-text-muted: #b6a8a2;
+  --background-light: #0d0503;
+  --background-dark: #1a0906;
 }
 
 .bd-container {
@@ -74,14 +76,14 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 12px rgba(197, 101, 23, 0.3);
   -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary:hover,
 .save-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 6px 20px rgba(197, 101, 23, 0.4);
 }
 
 .btn-primary:active,
@@ -697,6 +699,7 @@ body.admin-dashboard {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   position: relative;
+  animation: growBar 0.6s ease-out;
 }
 .dash-chart-bar.active {
   background: #c56517;
@@ -1959,7 +1962,7 @@ body.cashier-page {
   flex: 1;
   display: flex;
   overflow: hidden;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 62px);
 }
 
 /* ---- Left: Menu Panel ---- */
@@ -2039,7 +2042,7 @@ body.cashier-page {
   overflow-y: auto;
   padding: 20px 25px;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
   gap: 15px;
   align-content: start;
 }
@@ -2500,7 +2503,6 @@ body.cashier-page {
     width: 300px;
   }
   .cashier-menu-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     padding: 15px;
   }
 }
@@ -2521,6 +2523,11 @@ body.cashier-page {
   .cashier-menu-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+@keyframes growBar {
+  from { height: 0; }
+  to   { height: var(--bar-h, 100%); }
 }
 
 /* ==================== STAFF MANAGEMENT ==================== */

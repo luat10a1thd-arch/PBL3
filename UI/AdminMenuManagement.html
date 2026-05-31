@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="vi">
   <head>
     <base href="/app/">
@@ -55,7 +55,8 @@
         <a href="/app/vouchers" class="dash-nav-item">
           <i class="fa-solid fa-ticket dash-nav-icon"></i>
           <span class="dash-nav-text">Mã Giảm Giá</span>
-        </a>        <a href="/app/reports" class="dash-nav-item">
+        </a>
+        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
@@ -71,10 +72,10 @@
           <span class="dash-nav-text">Cài Đặt</span>
         </a>
         <div class="dash-user-profile">
-          <div class="dash-user-avatar">AM</div>
+          <div class="dash-user-avatar" id="sidebarUserAvatar">AM</div>
           <div class="dash-user-info">
-            <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Lý</span>
+            <span class="dash-user-name" id="sidebarUserName">Alex Morgan</span>
+            <span class="dash-user-role" id="sidebarUserRole">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -92,14 +93,14 @@
           </div>
           <div class="dash-shift-badge">
             <div class="dash-shift-dot"></div>
-            <span class="dash-shift-text">CA 2: 12:00 - 17:00</span>
+            <span class="dash-shift-text" id="headerShiftText">CA 2: 12:00 - 17:00</span>
           </div>
         </div>
-        
+
         <div class="dash-header-right">
           <div class="dash-search-box">
             <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm kiếm món..." class="dash-search-input" />
+            <input type="text" placeholder="Tìm kiếm món..." class="dash-search-input" id="menuSearchInput" />
           </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
@@ -110,26 +111,26 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
-          
+
           <div class="dash-kpi-grid">
             <div class="dash-card">
               <h3 class="dash-kpi-title">Tổng Số Món</h3>
-              <p class="dash-kpi-value">142</p>
+              <p class="dash-kpi-value" id="menuKpiTotal">0</p>
             </div>
-            
+
             <div class="dash-card">
               <h3 class="dash-kpi-title">Danh Mục</h3>
-              <p class="dash-kpi-value">8</p>
+              <p class="dash-kpi-value" id="menuKpiCategories">0</p>
             </div>
 
             <div class="dash-card">
               <h3 class="dash-kpi-title out-of-stock-text">Hết Hàng</h3>
-              <p class="dash-kpi-value out-of-stock-text">3</p>
+              <p class="dash-kpi-value out-of-stock-text" id="menuKpiOutOfStock">0</p>
             </div>
 
             <div class="dash-card">
               <h3 class="dash-kpi-title low-stock-text">Sắp Hết</h3>
-              <p class="dash-kpi-value low-stock-text">12</p>
+              <p class="dash-kpi-value low-stock-text" id="menuKpiLowStock">0</p>
             </div>
           </div>
 
@@ -146,19 +147,15 @@
               </button>
             </div>
             <div class="dash-filter-group">
-              <select class="dash-select-box">
+              <select class="dash-select-box" id="menuCategoryFilter">
                 <option value="all">Tất cả danh mục</option>
-                <option>Cà phê</option>
-                <option>Trà</option>
-                <option>Bánh ngọt</option>
-                <option>Ăn sáng</option>
               </select>
             </div>
             <div style="display: flex; gap: 10px;">
               <button class="dash-btn-secondary text-danger" id="btnBulkDelete" style="display:none;">
                 <i class="fa-solid fa-trash"></i> Xóa Đã Chọn
               </button>
-              <button class="dash-btn-primary">
+              <button class="dash-btn-primary" id="btnAddNew">
                 <i class="fa-solid fa-plus"></i> Thêm Món Mới
               </button>
             </div>
@@ -166,11 +163,11 @@
 
           <div class="dash-table-card no-padding">
             <div class="dash-table-header pd-25">
-              <h3 class="dash-table-title"><i class="fa-solid fa-utensils"></i> Danh Sách Món</h3>
+              <h3 class="dash-table-title" id="tableTitle"><i class="fa-solid fa-utensils"></i> Danh Sách Món</h3>
               <i class="fa-solid fa-ellipsis-vertical dash-table-icon"></i>
             </div>
             <table class="dash-table no-margin">
-              <thead>
+              <thead id="menuTableHead">
                 <tr>
                   <th class="td-checkbox"></th>
                   <th>Chi Tiết Món</th>
@@ -181,105 +178,21 @@
                   <th class="right td-actions">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="menuTableBody">
                 <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC2FZHNEdQDjyFSnUmWtyA9hOBNBIKJxn5J1ETUmVHrai1SvkYzHa83tXBav7mfBgZOcEqC-sHh_hFCzm0hlMBc6BaafVptspFs_CERUV-szKGFKUSmOqHeDzBCKdkk4p1UNaIHZqvdZavOzcSmZE35IGxQ3Pbhbwt2Lo5-wAOZ0ltCfP9l40X8h_kulsNTtiqoY6PoaUiyxoeZ2wYRObj_DqEs8ZVV6QjSfuT6R-AbI3d6PtSvKsm4B9pTFxLh1E8Kx75OsLSQAQ');"></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Classic Latte</span>
-                        <span class="dash-product-id">ID: #CF-001</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge coffee">Cà phê</span></td>
-                  <td class="right dash-cost">30,000₫</td>
-                  <td class="right dash-price">112,500₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span>Còn hàng</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBahs0GeDUhEHNFnbzO513EN0LUeiBtB1McIzMu-ekYsCtc1eOoN7rtinT1VZcBgTKRg2hMmitXcfrxBGaF6ZIYrG2L-VWiL1zYD1yqBif8UVxlB_o9j8WsYQsT054efYP6zksvI4cNAFrv_tGtbso5np4bQ6OzDRA2o_5HOyUsukLWzS4Rl8mTu_SiSkq_k73wtgazshUtGEoqbX8u4PFbsCoVG3XOpnQZ9-VF3yBClhy8LLCGj0hNvq8As3Iu5e-R6bw4YHX3WA');"></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Butter Croissant</span>
-                        <span class="dash-product-id">ID: #PA-024</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge pastries">Bánh ngọt</span></td>
-                  <td class="right dash-cost">21,250₫</td>
-                  <td class="right dash-price">93,750₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot low-stock"></div>
-                      <span>Sắp hết (4)</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="no-border-row">
-                  <td class="td-checkbox"><input type="checkbox" /></td>
-                  <td>
-                    <div class="dash-product-cell">
-                      <div class="dash-product-img" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoMoyDuyMhHhiqAhvX8Kw13EtPUiEhcvt4yW3yue8-8d5AlJwztSJGikZCreFho1rdO5X6qIOldecw5EIE8TKy9SPGNn6wrscM78k3cQqpQaAO-whvr-XjJ-aGv4v5-0ogzabxM2a4DGkqPSBlqhpztdWJa6FhxlCNAxfmGlK0qpGdZLkexDdk9F2K_Gy6WI92S4NNRB7U18xu2UGZueEGSaQPRA6OX78b4C3_x8RnJdme1ma84F_LsciaaNH7vuY6wV8CaCiraA');"></div>
-                      <div class="dash-product-info">
-                        <span class="dash-product-name">Avocado Toast</span>
-                        <span class="dash-product-id">ID: #BR-005</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="dash-category-badge breakfast">Ăn sáng</span></td>
-                  <td class="right dash-cost">62,500₫</td>
-                  <td class="right dash-price">223,750₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span>Còn hàng</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <div class="dash-table-actions">
-                      <button class="dash-action-btn"><i class="fa-solid fa-pen"></i></button>
-                      <button class="dash-action-btn delete"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                  </td>
+                  <td colspan="7" style="text-align:center; padding:32px; color:#b6a8a2;">Đang tải...</td>
                 </tr>
               </tbody>
             </table>
 
             <div class="dash-pagination pd-25">
               <div class="dash-pagination-info">
-                Đang hiển thị <span>1</span> đến <span>5</span> trong số <span>142</span> kết quả
+                Đang hiển thị <span id="pageFrom">0</span> đến <span id="pageTo">0</span> trong số <span id="pageTotal">0</span> kết quả
               </div>
-              <div class="dash-pagination-controls">
+              <div class="dash-pagination-controls" id="paginationControls">
                 <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="dash-page-btn active">1</button>
-                <button class="dash-page-btn">2</button>
-                <button class="dash-page-btn">3</button>
-                <span class="dash-pagination-dots">...</span>
-                <button class="dash-page-btn">12</button>
-                <button class="dash-page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
               </div>
             </div>
           </div>
@@ -289,14 +202,5 @@
     </main>
     <script src="Common.js?v=20260420a"></script>
     <script src="AdminMenuManagement.js?v=20260420a"></script>
-    <script>
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebarOverlay = document.getElementById('sidebarOverlay');
-      const sidebar = document.querySelector('.dash-sidebar');
-      function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); }
-      function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); }
-      sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-      sidebarOverlay.addEventListener('click', closeSidebar);
-    </script>
   </body>
 </html>

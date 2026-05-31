@@ -403,6 +403,63 @@ public class OrdersController : ControllerBase
             });
         }
 
+        // Employee KPI calculation
+        var monthShifts = _context.Shifts
+            .AsNoTracking()
+            .Include(s => s.Employee)
+            .Where(s => s.ClosedAt >= periodStart && s.ClosedAt < periodEnd)
+            .ToList();
+
+        var monthOrders = _context.Orders
+            .AsNoTracking()
+            .Include(o => o.Employee)
+            .Where(o => o.CreatedAt >= periodStart && o.CreatedAt < periodEnd && o.Total > 0)
+            .ToList();
+
+        // Get all unique employee IDs from shifts and orders
+        var empIds = monthShifts.Select(s => s.EmployeeId)
+            .Union(monthOrders.Select(o => o.EmployeeId))
+            .Distinct()
+            .ToList();
+
+        var employeeSummary = new List<MonthlyEmployeeSummaryDto>();
+        foreach (var empId in empIds)
+        {
+            var empShifts = monthShifts.Where(s => s.EmployeeId == empId).ToList();
+            var empOrders = monthOrders.Where(o => o.EmployeeId == empId).ToList();
+            
+            // Find employee name
+            var employee = empShifts.FirstOrDefault()?.Employee ?? empOrders.FirstOrDefault()?.Employee;
+            string empName = "N/A";
+            if (employee != null)
+            {
+                empName = $"{employee.FirstName} {employee.LastName}".Trim();
+                if (string.IsNullOrEmpty(empName)) empName = employee.Username;
+            }
+            else
+            {
+                var dbUser = _context.Users.Find(empId);
+                if (dbUser != null)
+                {
+                    empName = $"{dbUser.FirstName} {dbUser.LastName}".Trim();
+                    if (string.IsNullOrEmpty(empName)) empName = dbUser.Username;
+                }
+            }
+
+            employeeSummary.Add(new MonthlyEmployeeSummaryDto
+            {
+                EmployeeId = empId,
+                EmployeeName = empName,
+                ShiftCount = empShifts.Count,
+                TotalOpening = empShifts.Sum(s => s.Opening),
+                TotalExpected = empShifts.Sum(s => s.Expected),
+                OrderCount = empOrders.Count,
+                TotalSales = empOrders.Sum(o => o.Total)
+            });
+        }
+        
+        employeeSummary = employeeSummary.OrderByDescending(x => x.TotalSales).ToList();
+
         return Ok(new MonthlyReportDto
         {
             Month = selectedMonth,
@@ -415,7 +472,8 @@ public class OrdersController : ControllerBase
             PaymentCount = payments.Count,
             Daily = daily,
             SupplierSummary = supplierSummary,
-            PaymentMethodSummary = paymentMethodSummary
+            PaymentMethodSummary = paymentMethodSummary,
+            EmployeeSummary = employeeSummary
         });
     }
 
@@ -529,6 +587,18 @@ public class MonthlyReportDto
     public List<MonthlyDailySummaryDto> Daily { get; set; } = new();
     public List<MonthlySupplierSummaryDto> SupplierSummary { get; set; } = new();
     public List<MonthlyPaymentMethodSummaryDto> PaymentMethodSummary { get; set; } = new();
+    public List<MonthlyEmployeeSummaryDto> EmployeeSummary { get; set; } = new();
+}
+
+public class MonthlyEmployeeSummaryDto
+{
+    public int EmployeeId { get; set; }
+    public string EmployeeName { get; set; } = string.Empty;
+    public int ShiftCount { get; set; }
+    public decimal TotalOpening { get; set; }
+    public decimal TotalExpected { get; set; }
+    public int OrderCount { get; set; }
+    public decimal TotalSales { get; set; }
 }
 
 public class MonthlyDailySummaryDto

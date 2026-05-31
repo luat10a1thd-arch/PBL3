@@ -1,22 +1,13 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="vi">
   <head>
     <base href="/app/">
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>Báo Cáo Chốt Ca - Cafe 24/7</title>
     <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body class="admin-dashboard dash-bg-wrapper">
     <div class="dash-bg-overlay"></div>
@@ -63,7 +54,8 @@
         <a href="/app/vouchers" class="dash-nav-item">
           <i class="fa-solid fa-ticket dash-nav-icon"></i>
           <span class="dash-nav-text">Mã Giảm Giá</span>
-        </a>        <a href="/app/reports" class="dash-nav-item">
+        </a>
+        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
@@ -79,10 +71,10 @@
           <span class="dash-nav-text">Cài Đặt</span>
         </a>
         <div class="dash-user-profile">
-          <div class="dash-user-avatar">AM</div>
+          <div class="dash-user-avatar" id="sidebarUserAvatar">AM</div>
           <div class="dash-user-info">
-            <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Lý</span>
+            <span class="dash-user-name" id="sidebarUserName">Alex Morgan</span>
+            <span class="dash-user-role" id="sidebarUserRole">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -91,28 +83,23 @@
     <main class="dash-main">
       <header class="dash-header">
         <div class="dash-header-left">
-          <button
-            class="dash-hamburger"
-            id="sidebarToggle"
-            aria-label="Mở menu"
-          >
+          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
             <i class="fa-solid fa-bars"></i>
           </button>
-          <h2 class="dash-page-title">Báo Cáo Chốt Ca (Shift #8922)</h2>
+          <div>
+            <h2 class="dash-page-title">Báo Cáo Chốt Ca</h2>
+            <p class="dash-page-subtitle">Quản lý và theo dõi ca làm việc</p>
+          </div>
           <div class="dash-shift-badge">
             <div class="dash-shift-dot"></div>
-            <span class="dash-shift-text">CA 2: 12:00 - 17:00</span>
+            <span class="dash-shift-text" id="headerShiftText">-</span>
           </div>
         </div>
 
         <div class="dash-header-right">
           <div class="dash-search-box">
             <i class="fa-solid fa-search dash-search-icon"></i>
-            <input
-              type="text"
-              placeholder="Tìm kiếm hoá đơn..."
-              class="dash-search-input"
-            />
+            <input type="text" placeholder="Tìm kiếm ca..." class="dash-search-input" id="shiftSearchInput" />
           </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
@@ -123,36 +110,34 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
+
+          <!-- KPI grid -->
           <div class="dash-kpi-grid">
             <div class="dash-card">
-              <h3 class="dash-kpi-title">Tiền Mặt</h3>
-              <p class="dash-kpi-value">11,250,000₫</p>
+              <h3 class="dash-kpi-title" id="shiftKpiTitle0">Ca Đang Mở</h3>
+              <p class="dash-kpi-value" id="shiftKpiValue0">0</p>
             </div>
-
             <div class="dash-card">
-              <h3 class="dash-kpi-title">Chuyển Khoản Ngân Hàng</h3>
-              <p class="dash-kpi-value">20,512,500₫</p>
+              <h3 class="dash-kpi-title" id="shiftKpiTitle1">Ca Đã Chốt</h3>
+              <p class="dash-kpi-value" id="shiftKpiValue1">0</p>
             </div>
-
             <div class="dash-card">
-              <h3 class="dash-kpi-title out-of-stock-text">
-                Hoàn Trả & Huỷ Tiền
-              </h3>
-              <p class="dash-kpi-value out-of-stock-text">-612,500₫</p>
+              <h3 class="dash-kpi-title" id="shiftKpiTitle2">Tiền Mở Ca</h3>
+              <p class="dash-kpi-value" id="shiftKpiValue2">0₫</p>
             </div>
-
             <div class="dash-card">
-              <h3 class="dash-kpi-title text-primary">Tổng Doanh Thu Ca Mới</h3>
-              <p class="dash-kpi-value text-primary">31,762,500₫</p>
+              <h3 class="dash-kpi-title" id="shiftKpiTitle3">Tiền Chốt Ca</h3>
+              <p class="dash-kpi-value" id="shiftKpiValue3">0₫</p>
             </div>
           </div>
 
+          <!-- Actions bar -->
           <div class="dash-actions-bar">
             <div class="dash-filter-group">
-              <select class="dash-select-box">
-                <option>Tất cả trạng thái</option>
-                <option>Thành công</option>
-                <option>Đã Huỷ</option>
+              <select class="dash-select-box" id="shiftStatusFilter">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="open">Đang Mở</option>
+                <option value="closed">Đã Chốt</option>
               </select>
             </div>
             <div class="dash-flex-row">
@@ -168,217 +153,57 @@
             </div>
           </div>
 
-          <div
-            class="dash-table-card"
-            style="padding: 16px 20px; margin-bottom: 16px"
-          >
-            <div
-              style="
-                display: flex;
-                align-items: flex-start;
-                gap: 10px;
-                color: var(--dash-text-muted);
-                font-size: 0.88rem;
-              "
-            >
-              <i
-                class="fa-solid fa-circle-info"
-                style="color: var(--primary-color); margin-top: 2px"
-              ></i>
-              <span
-                ><strong style="color: white">Hướng dẫn:</strong> Bấm
+          <!-- Info hint -->
+          <div class="dash-table-card" style="padding: 16px 20px; margin-bottom: 16px">
+            <div style="display:flex;align-items:flex-start;gap:10px;color:var(--dash-text-muted);font-size:0.88rem;">
+              <i class="fa-solid fa-circle-info" style="color:var(--primary-color);margin-top:2px"></i>
+              <span><strong style="color:white">Hướng dẫn:</strong> Bấm
                 <em>Mở Ca</em> để nhập tiền đầu ca. Khi kết thúc ca, bấm
-                <em>Chốt Ca</em> và nhập số tiền thực tế cuối ca để hệ thống
-                tính chênh lệch.</span
-              >
+                <em>Chốt Ca</em> và nhập số tiền thực tế cuối ca để hệ thống tính chênh lệch.</span>
             </div>
           </div>
 
+          <!-- Shift table -->
           <div class="dash-table-card no-padding">
+            <div class="dash-table-header pd-25">
+              <h3 class="dash-table-title" id="shiftTableTitle">
+                <i class="fa-solid fa-clock-rotate-left"></i> Danh Sách Ca Làm Việc
+              </h3>
+              <i class="fa-solid fa-ellipsis-vertical dash-table-icon"></i>
+            </div>
             <table class="dash-table no-margin">
               <thead>
                 <tr>
-                  <th class="td-checkbox">Mã Đơn Hàng</th>
-                  <th>Thời Gian</th>
-                  <th>Tóm Tắt Món Ăn</th>
-                  <th>Thanh Toán</th>
-                  <th class="right">Tổng Tiền</th>
+                  <th>Mã Ca</th>
+                  <th>Nhân Viên</th>
                   <th>Trạng Thái</th>
+                  <th class="right">Tiền Mở Ca</th>
+                  <th class="right">Tiền Chốt Ca</th>
+                  <th class="right">Chênh Lệch</th>
                   <th class="right td-actions">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="shiftTableBody">
                 <tr>
-                  <td class="td-checkbox">
-                    <span class="dash-product-name">#8926</span>
-                  </td>
-                  <td>09:15 AM</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name"
-                        >Flat White, Blueberry Muffin</span
-                      >
-                      <span class="dash-product-id">Bàn 4 • Dùng tại quán</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="dash-category-badge tea">Chuyển Khoản</span>
-                  </td>
-                  <td class="right dash-price">237,500₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Hoàn Thành</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <button class="dash-action-btn">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </button>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox">
-                    <span class="dash-product-name">#8925</span>
-                  </td>
-                  <td>09:00 AM</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Espresso (Double)</span>
-                      <span class="dash-product-id">Mang đi</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="dash-category-badge coffee">Tiền Mặt</span>
-                  </td>
-                  <td class="right price-cancelled">75,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot out-of-stock"></div>
-                      <span class="text-danger">Đã Huỷ</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <button class="dash-action-btn">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </button>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox">
-                    <span class="dash-product-name">#8924</span>
-                  </td>
-                  <td>08:42 AM</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name"
-                        >Avocado Toast, Earl Grey Tea</span
-                      >
-                      <span class="dash-product-id">Bàn 2 • Dùng tại quán</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="dash-category-badge coffee">Tiền Mặt</span>
-                  </td>
-                  <td class="right dash-price">450,000₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Hoàn Thành</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <button class="dash-action-btn">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </button>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="td-checkbox">
-                    <span class="dash-product-name">#8923</span>
-                  </td>
-                  <td>08:35 AM</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name"
-                        >Cappuccino (Regular)</span
-                      >
-                      <span class="dash-product-id">Quầy • Mang đi</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="dash-category-badge tea">Chuyển Khoản</span>
-                  </td>
-                  <td class="right dash-price">112,500₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Hoàn Thành</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <button class="dash-action-btn">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </button>
-                  </td>
-                </tr>
-
-                <tr class="no-border-row">
-                  <td class="td-checkbox">
-                    <span class="dash-product-name">#8922</span>
-                  </td>
-                  <td>08:30 AM</td>
-                  <td>
-                    <div class="dash-flex-col">
-                      <span class="dash-product-name">Latte, Croissant</span>
-                      <span class="dash-product-id">Bàn 1 • Dùng tại quán</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="dash-category-badge coffee">Tiền Mặt</span>
-                  </td>
-                  <td class="right dash-price">312,500₫</td>
-                  <td>
-                    <div class="dash-status-indicator">
-                      <div class="dash-status-dot in-stock"></div>
-                      <span class="text-success">Hoàn Thành</span>
-                    </div>
-                  </td>
-                  <td class="right td-actions">
-                    <button class="dash-action-btn">
-                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                    </button>
-                  </td>
+                  <td colspan="7" style="text-align:center;padding:32px;color:#b6a8a2;">Đang tải...</td>
                 </tr>
               </tbody>
             </table>
 
             <div class="dash-pagination pd-25">
-              <div class="dash-pagination-info">
-                Đang hiển thị <span>1</span> đến <span>5</span> trong số
-                <span>124</span> kết quả
-              </div>
-              <div class="dash-pagination-controls">
-                <button class="dash-page-btn" disabled>
-                  <i class="fa-solid fa-chevron-left"></i>
-                </button>
+              <div class="dash-pagination-info" id="shiftPaginationInfo">Đang hiển thị 0 kết quả</div>
+              <div class="dash-pagination-controls" id="shiftPaginationControls">
+                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
                 <button class="dash-page-btn active">1</button>
-                <button class="dash-page-btn">2</button>
-                <button class="dash-page-btn">3</button>
-                <span class="dash-pagination-dots">...</span>
-                <button class="dash-page-btn">25</button>
-                <button class="dash-page-btn">
-                  <i class="fa-solid fa-chevron-right"></i>
-                </button>
+                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </main>
+
     <script src="Common.js?v=20260420a"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="ShiftClosingReport.js?v=20260420a"></script>

@@ -315,6 +315,16 @@ window.showPromptModal = function showPromptModal(message, defaultValue = "") {
   });
 };
 
+window.escapeHtml = function escapeHtml(unsafe) {
+  if (unsafe === null || unsafe === undefined) return "";
+  return String(unsafe)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 function escapeCsvValue(value) {
   const text = String(value ?? "");
   if (text.includes(",") || text.includes('"') || text.includes("\n")) {

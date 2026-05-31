@@ -10,6 +10,7 @@ let currentOrder = {
   paymentMethod: "cash",
   voucherCode: "",
   voucherDiscount: 0,
+  hasActiveShift: false,
 };
 
 let menuItems = [];
@@ -272,7 +273,7 @@ function renderCategoryTabs() {
     const categoryId = normalizeCategoryValue(cat.categoryId ?? cat.CategoryId);
     tabsHTML += `
             <button class="cashier-category-btn ${currentCategory === categoryId ? "active" : ""}" data-category="${categoryId}">
-                <i class="fa-solid ${icon}"></i> ${categoryName || "Danh mục"}
+                <i class="fa-solid ${icon}"></i> ${window.escapeHtml ? window.escapeHtml(categoryName || "Danh mục") : (categoryName || "Danh mục")}
             </button>
         `;
   });
@@ -477,7 +478,7 @@ function renderOrderItems() {
                 <i class="fa-solid fa-utensils" style="color: #999; font-size: 20px;"></i>
             </div>
             <div class="cashier-order-item-details">
-                <p class="cashier-order-item-name">${item.name}</p>
+                <p class="cashier-order-item-name">${window.escapeHtml ? window.escapeHtml(item.name) : item.name}</p>
                 <span class="cashier-order-item-price">${formatCurrency(item.price)} / cái</span>
             </div>
             <div class="cashier-qty-control">
@@ -558,6 +559,19 @@ function updateOrderTotals() {
     voucherNote.textContent = currentOrder.voucherCode
       ? `Đang áp mã: ${currentOrder.voucherCode}`
       : "Chưa áp mã giảm giá";
+  }
+
+  const payBtn = document.querySelector(".cashier-pay-btn");
+  if (payBtn) {
+    if (total === 0 || !currentOrder.hasActiveShift) {
+      payBtn.disabled = true;
+      payBtn.style.opacity = "0.5";
+      payBtn.style.cursor = "not-allowed";
+    } else {
+      payBtn.disabled = false;
+      payBtn.style.opacity = "1";
+      payBtn.style.cursor = "pointer";
+    }
   }
 }
 
@@ -674,7 +688,6 @@ async function processPayment() {
   try {
     showLoading("Đang xử lý thanh toán...");
 
-    // Create order
     const orderData = {
       tableId: 0,
       items: currentOrder.items.map((item) => ({
@@ -683,6 +696,7 @@ async function processPayment() {
       })),
       paymentMethod: currentOrder.paymentMethod,
       discountAmount: Math.max(0, currentOrder.voucherDiscount || 0),
+      voucherCode: currentOrder.voucherCode || "",
     };
 
     const result = await apiRequest(
@@ -699,9 +713,8 @@ async function processPayment() {
     showSuccess("Thanh toán thành công!");
 
     // Print receipt
-    showConfirmDialog("In hóa đơn?").then((ok) => {
-      if (ok) printReceipt(receiptOrder);
-    });
+    const ok = await showConfirmDialog("In hóa đơn?");
+    if (ok) printReceipt(receiptOrder);
 
     // Reset order
     currentOrder.items = [];
@@ -765,7 +778,7 @@ function printReceipt(order = currentOrder) {
       <tbody>
         ${order.items.map(item => `
           <tr>
-            <td>${item.name}</td>
+            <td>${window.escapeHtml ? window.escapeHtml(item.name) : item.name}</td>
             <td class="center">${item.quantity}</td>
             <td class="right">${Number(item.price || 0).toLocaleString("vi-VN")}</td>
             <td class="right">${Number((item.price || 0) * (item.quantity || 0)).toLocaleString("vi-VN")}</td>
@@ -917,19 +930,29 @@ async function refreshShiftStatusText() {
   const shiftTextNode = document.getElementById("cashierShiftStatus");
   if (!shiftTextNode) return;
 
+  const shiftBanner = document.getElementById("shiftWarningBanner");
   try {
     const current = await apiRequest("/shifts/current");
     if (current) {
       shiftTextNode.textContent = `Ca đang mở #${current.shiftId}`;
+      currentOrder.hasActiveShift = true;
+      if (shiftBanner) shiftBanner.style.display = "none";
+      updateOrderTotals();
       return;
     }
   } catch (error) {
     if (!String(error?.message || "").includes("404")) {
       shiftTextNode.textContent = "Không thể tải trạng thái ca";
+      currentOrder.hasActiveShift = false;
+      if (shiftBanner) shiftBanner.style.display = "block";
+      updateOrderTotals();
       return;
     }
   }
   shiftTextNode.textContent = "Chưa mở ca";
+  currentOrder.hasActiveShift = false;
+  if (shiftBanner) shiftBanner.style.display = "block";
+  updateOrderTotals();
 }
 
 async function initRealtimeShiftStatus() {

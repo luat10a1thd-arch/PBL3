@@ -38,7 +38,7 @@ async function ordersApiRequest(endpoint) {
     window.showWarningToast?.(
       "Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.",
     );
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
     window.location.href = "/app/login";
     return null;
   }
@@ -143,15 +143,19 @@ function renderRows() {
       const time = formatOrderTime(row.dateTime || row.paidAt || row.createdAt);
       const isCompleted =
         String(row.status || "").toLowerCase() === "completed";
-      const statusDotClass = isCompleted ? "in-stock" : "warning";
-      const statusTextClass = isCompleted ? "text-success" : "text-warning";
-      const statusText = isCompleted ? "Hoàn Thành" : "Chờ xử lý";
+      const isCancelled =
+        String(row.status || "").toLowerCase() === "cancelled";
+      const statusDotClass = isCompleted ? "in-stock" : (isCancelled ? "critical" : "warning");
+      const statusTextClass = isCompleted ? "text-success" : (isCancelled ? "text-danger" : "text-warning");
+      const statusText = isCompleted ? "Hoàn Thành" : (isCancelled ? "Đã Hủy" : "Chờ xử lý");
       const paymentLabel = isCompleted
         ? String(row.paymentMethod || "")
             .toLowerCase()
             .includes("cash")
           ? "Tiền mặt"
-          : "Chuyển khoản"
+          : String(row.paymentMethod || "").toLowerCase().includes("qr")
+            ? "Mã QR"
+            : "Chuyển khoản"
         : "Đang mở";
       const tableIcon = "fa-bag-shopping";
 

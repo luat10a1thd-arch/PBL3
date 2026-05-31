@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="vi">
   <head>
     <base href="/app/">
@@ -51,10 +51,10 @@
 
       <div class="cashier-topbar-right">
         <div class="cashier-topbar-user">
-          <div class="cashier-topbar-avatar">TN</div>
+          <div class="cashier-topbar-avatar" id="txtCurrentUserAvatar">TN</div>
           <div>
-            <div class="cashier-topbar-user-name">Trần Văn Hùng</div>
-            <div class="cashier-topbar-user-role">Nhân Viên</div>
+            <div class="cashier-topbar-user-name" id="txtCurrentUserName">Nhân Viên</div>
+            <div class="cashier-topbar-user-role" id="txtCurrentUserRole">Staff</div>
           </div>
         </div>
         <a href="/app/login" class="cashier-topbar-logout">
@@ -88,12 +88,13 @@
           <div class="cashier-order-header">
             <div>
               <h2 class="cashier-order-title">Đơn Hàng Hiện Tại</h2>
-              <span class="cashier-order-meta">Mã #20392 &bull; Tại quầy</span>
+              <span class="cashier-order-meta">Mã #— &bull; Tại quầy</span>
             </div>
             <button class="cashier-order-clear-btn" title="Xoá tất cả">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
+
           <div class="cashier-order-tools">
             <div class="cashier-voucher-row">
               <input
@@ -109,75 +110,28 @@
             <div class="cashier-voucher-note">Chưa áp mã giảm giá</div>
           </div>
 
-          <div class="cashier-order-items">
-            <div class="cashier-order-item">
-              <div
-                class="cashier-order-item-img"
-                style="
-                  background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuDgDKa3Ysf7GoImVKbhn45CFTPLGd_Yj9zyex-MW1CJbKn4fHfWwp51WNnkUyKPa2Igj0s1Ct5_jgytylJreonsLIwNDY9Lv48XW2r-Fh7EjyoVQR8g1tYUSar7bflmFsa4LS4rtqScvgXo8j2TSQtro7ngOdKGWj3pB6X2DQe7drlomD59tU3yj1Ffd7QRPXm7C9o2v5F_0g9d-yyG2ClOCJO-YytOtYwzQNmc_3Iqulza6AGCud7bdffd1hGN7gMUmPubydB6WA&quot;);
-                "
-              ></div>
-              <div class="cashier-order-item-details">
-                <p class="cashier-order-item-name">Cappuccino</p>
-                <span class="cashier-order-item-price">112,500₫ / cái</span>
-              </div>
-              <div class="cashier-qty-control">
-                <button class="cashier-qty-btn">
-                  <i class="fa-solid fa-minus"></i>
-                </button>
-                <span class="cashier-qty-value">2</span>
-                <button class="cashier-qty-btn">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-              <span class="cashier-order-item-total">225,000₫</span>
-            </div>
+          <!-- Banner cảnh báo chưa mở ca -->
+          <div
+            id="shiftWarningBanner"
+            style="
+              display: none;
+              background: linear-gradient(135deg, rgba(239,68,68,.12), rgba(239,68,68,.04));
+              border: 1px solid rgba(239,68,68,.3);
+              border-radius: 8px;
+              padding: 10px 14px;
+              margin: 8px 14px 0;
+              font-size: .82rem;
+              color: #fca5a5;
+              gap: 8px;
+              align-items: center;
+            "
+          >
+            <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>
+            Chưa mở ca &mdash; không thể thanh toán.
+          </div>
 
-            <div class="cashier-order-item">
-              <div
-                class="cashier-order-item-img"
-                style="
-                  background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBahs0GeDUhEHNFnbzO513EN0LUeiBtB1McIzMu-ekYsCtc1eOoN7rtinT1VZcBgTKRg2hMmitXcfrxBGaF6ZIYrG2L-VWiL1zYD1yqBif8UVxlB_o9j8WsYQsT054efYP6zksvI4cNAFrv_tGtbso5np4bQ6OzDRA2o_5HOyUsukLWzS4Rl8mTu_SiSkq_k73wtgazshUtGEoqbX8u4PFbsCoVG3XOpnQZ9-VF3yBClhy8LLCGj0hNvq8As3Iu5e-R6bw4YHX3WA&quot;);
-                "
-              ></div>
-              <div class="cashier-order-item-details">
-                <p class="cashier-order-item-name">Bánh Sừng Bò</p>
-                <span class="cashier-order-item-price">93,750₫ / cái</span>
-              </div>
-              <div class="cashier-qty-control">
-                <button class="cashier-qty-btn">
-                  <i class="fa-solid fa-minus"></i>
-                </button>
-                <span class="cashier-qty-value">1</span>
-                <button class="cashier-qty-btn">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-              <span class="cashier-order-item-total">93,750₫</span>
-            </div>
-
-            <div class="cashier-order-item">
-              <div
-                class="cashier-order-item-img"
-                style="
-                  background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuCXB4JOVcwnNZSebiHAGhyKLgSjQgY135YuZkK0gx_UPq2q6voHgNzKhUU6dlwq7gem6X-bwy0725EaYvL77WnPWVnRQIgpB9Lf8socvtLLn7Hzp8_zn853xcX4lp4wJuts7WPX7ga0lv6DYSnAs60UDw1iiMCPqheqTGsyxocSxCUC9lFdSGYPRRmyrXcFw22DeQwe7boeht9fgjiOgRgI6zBpv4HItovvimVIq6Lvr5hxQ_rGMx4gJEGgQAMFx6pMe-awgzxqaw&quot;);
-                "
-              ></div>
-              <div class="cashier-order-item-details">
-                <p class="cashier-order-item-name">Trà Hoa Nhài</p>
-                <span class="cashier-order-item-price">75,000₫ / cái</span>
-              </div>
-              <div class="cashier-qty-control">
-                <button class="cashier-qty-btn">
-                  <i class="fa-solid fa-minus"></i>
-                </button>
-                <span class="cashier-qty-value">1</span>
-                <button class="cashier-qty-btn">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-              <span class="cashier-order-item-total">75,000₫</span>
-            </div>
+          <div class="cashier-order-items" id="cashierOrderItems">
+            <!-- Đơn hàng sẽ được render bởi JS -->
           </div>
 
           <div class="cashier-order-totals">
@@ -191,9 +145,7 @@
             </div>
             <div class="cashier-total-row">
               <span class="label">Giảm Giá</span>
-              <span class="value text-success" id="cashierDiscountValue"
-                >- 0₫</span
-              >
+              <span class="value text-success" id="cashierDiscountValue">- 0₫</span>
             </div>
             <div class="cashier-total-divider"></div>
             <div class="cashier-grand-total">

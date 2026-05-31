@@ -45,3 +45,10 @@ obj
 LocalDatabase.db
 
 .vs
+
+# Student guides and study markdown documents
+DOC/
+
+# AI agents configuration & locks
+.agents/
+skills-lock.json

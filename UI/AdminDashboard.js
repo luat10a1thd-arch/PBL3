@@ -47,7 +47,7 @@ async function dashboardApiRequest(endpoint) {
   });
 
   if (response.status === 401) {
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
     window.location.href = "/app/login";
     return null;
   }
@@ -127,11 +127,17 @@ function renderRevenueTrend(revenueTrend, trendLabels) {
     node.textContent = labels[index] || "";
   });
 
+  const todayDow = new Date().getDay(); // 0=Sun,1=Mon,...
+  // labels = ["T2","T3","T4","T5","T6","T7","CN"] → index 0=Mon ... 6=Sun
+  const todayIndex = todayDow === 0 ? 6 : todayDow - 1;
+
   bars.forEach((bar, index) => {
     const value = normalized[index] || 0;
     const height = Math.max(18, Math.round((value / max) * 100));
+    bar.style.setProperty("--bar-h", `${height}%`);
     bar.style.height = `${height}%`;
     bar.title = `${labels[index]}: ${formatCurrencyVnd(value)}`;
+    bar.classList.toggle("active", index === todayIndex);
   });
 }
 
