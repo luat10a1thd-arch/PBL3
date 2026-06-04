@@ -58,13 +58,15 @@ public class ItemService : IItemService
         if (item.BasePrice < 0)
             throw new AppException("Item price must be non-negative");
 
-        var categoryExists = _context.Categories.Any(c => c.CategoryId == item.CategoryId);
-        if (!categoryExists)
+        var category = _context.Categories.Find(item.CategoryId);
+        if (category == null)
             throw new AppException("Category does not exist");
 
         if (_context.Items.Any(i => i.Name == item.Name && i.CategoryId == item.CategoryId))
             throw new AppException($"Item '{item.Name}' already exists in this category");
 
+        var normalizedImageUrl = NormalizeImageUrl(item.ImageUrl);
+        item.ImageUrl = string.IsNullOrWhiteSpace(normalizedImageUrl) ? category.ImageUrl : normalizedImageUrl;
         _context.Items.Add(item);
         _context.SaveChanges();
     }
@@ -81,8 +83,8 @@ public class ItemService : IItemService
         if (item.BasePrice < 0)
             throw new AppException("Item price must be non-negative");
 
-        var categoryExists = _context.Categories.Any(c => c.CategoryId == item.CategoryId);
-        if (!categoryExists)
+        var category = _context.Categories.Find(item.CategoryId);
+        if (category == null)
             throw new AppException("Category does not exist");
 
         if (_context.Items.Any(i => i.Name == item.Name && i.CategoryId == item.CategoryId && i.ItemId != id))
@@ -91,6 +93,8 @@ public class ItemService : IItemService
         existingItem.Name = item.Name;
         existingItem.CategoryId = item.CategoryId;
         existingItem.BasePrice = item.BasePrice;
+        var normalizedImageUrl = NormalizeImageUrl(item.ImageUrl);
+        existingItem.ImageUrl = string.IsNullOrWhiteSpace(normalizedImageUrl) ? category.ImageUrl : normalizedImageUrl;
 
         _context.Items.Update(existingItem);
         _context.SaveChanges();
@@ -107,5 +111,13 @@ public class ItemService : IItemService
 
         _context.Items.Remove(item);
         _context.SaveChanges();
+    }
+
+    private static string NormalizeImageUrl(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        return value.Trim();
     }
 }

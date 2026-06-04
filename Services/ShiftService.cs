@@ -7,7 +7,7 @@ namespace WebApi.Services;
 public interface IShiftService
 {
     ShiftSummaryDto OpenShift(int employeeId, decimal openingAmount);
-    ShiftSummaryDto CloseShift(int shiftId, decimal expectedAmount);
+    ShiftSummaryDto CloseShift(int shiftId, int employeeId, decimal expectedAmount);
     ShiftSummaryDto GetCurrentShift(int employeeId);
     IEnumerable<ShiftSummaryDto> GetAllShifts();
 }
@@ -26,7 +26,7 @@ public class ShiftService : IShiftService
         var user = _context.Users.Find(employeeId);
         if (user == null) throw new KeyNotFoundException("Employee not found");
 
-        var current = _context.Shifts.FirstOrDefault(x => x.EmployeeId == employeeId && x.Expected == 0);
+        var current = _context.Shifts.FirstOrDefault(x => x.EmployeeId == employeeId && x.ClosedAt == null);
         if (current != null) throw new AppException("Nhân viên đang có ca chưa chốt");
 
         var shift = new Shift
@@ -42,13 +42,15 @@ public class ShiftService : IShiftService
         return MapToSummary(shift, user.FirstName, user.LastName, false);
     }
 
-    public ShiftSummaryDto CloseShift(int shiftId, decimal expectedAmount)
+    public ShiftSummaryDto CloseShift(int shiftId, int employeeId, decimal expectedAmount)
     {
         var shift = _context.Shifts.Include(x => x.Employee).FirstOrDefault(x => x.ShiftId == shiftId);
         if (shift == null) throw new KeyNotFoundException("Shift not found");
-        if (shift.Expected > 0) throw new AppException("Ca đã được chốt");
+        if (shift.ClosedAt != null) throw new AppException("Ca đã được chốt");
+        if (shift.EmployeeId != employeeId) throw new AppException("Bạn chỉ có thể chốt ca của chính mình");
 
         shift.Expected = expectedAmount;
+        shift.ClosedAt = BusinessTimeHelper.GetNow(_context);
         _context.Shifts.Update(shift);
         _context.SaveChanges();
 
@@ -59,7 +61,7 @@ public class ShiftService : IShiftService
     {
         var shift = _context.Shifts
             .Include(x => x.Employee)
-            .Where(x => x.EmployeeId == employeeId && x.Expected == 0)
+            .Where(x => x.EmployeeId == employeeId && x.ClosedAt == null)
             .OrderByDescending(x => x.ShiftId)
             .FirstOrDefault();
 
@@ -72,7 +74,7 @@ public class ShiftService : IShiftService
         return _context.Shifts
             .Include(x => x.Employee)
             .OrderByDescending(x => x.ShiftId)
-            .Select(x => MapToSummary(x, x.Employee.FirstName, x.Employee.LastName, x.Expected > 0))
+            .Select(x => MapToSummary(x, x.Employee.FirstName, x.Employee.LastName, x.ClosedAt != null))
             .ToList();
     }
 

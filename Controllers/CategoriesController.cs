@@ -1,6 +1,7 @@
 namespace WebApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 using WebApi.Authorization;
 using WebApi.Entities;
 using WebApi.Services;
@@ -31,27 +32,49 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
-    public IActionResult Create(Category model)
+    public IActionResult Create([FromBody] CategoryUpsertRequest model)
     {
-        _categoryService.Create(model);
+        _categoryService.Create(new Category
+        {
+            Name = model.Name,
+            Description = model.Description,
+            ImageUrl = model.ImageUrl
+        });
         return Ok(new { message = "Category created successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Category model)
+    public IActionResult Update(int id, [FromBody] CategoryUpsertRequest model)
     {
-        _categoryService.Update(id, model);
+        _categoryService.Update(id, new Category
+        {
+            Name = model.Name,
+            Description = model.Description,
+            ImageUrl = model.ImageUrl
+        });
         return Ok(new { message = "Category updated successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
         _categoryService.Delete(id);
         return Ok(new { message = "Category deleted successfully" });
     }
+}
+
+public sealed class CategoryUpsertRequest
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [JsonPropertyName("description")]
+    public string Description { get; set; } = string.Empty;
+
+    [JsonPropertyName("imageUrl")]
+    public string ImageUrl { get; set; } = string.Empty;
 }

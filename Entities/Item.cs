@@ -16,6 +16,8 @@ public class Item
 	[Column(TypeName = "decimal(18, 2)")]
 	public decimal BasePrice { get; set; }
 
+	public string ImageUrl { get; set; }
+
 	[ForeignKey("CategoryId")]
 	public Category Category { get; set; }
 }	

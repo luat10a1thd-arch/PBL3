@@ -1,184 +1,192 @@
 <!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-  <title>Bán Hàng - Cafe 24/7</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-</head>
+  <head>
+    <base href="/app/">
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <title>Bán Hàng - Cafe 24/7</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body class="cashier-page dash-bg-wrapper">
-  <div class="dash-bg-overlay"></div>
+  <body class="cashier-page dash-bg-wrapper">
+    <div class="dash-bg-overlay"></div>
 
-  <!-- Top navigation bar -->
-  <header class="cashier-topbar">
-    <div class="cashier-topbar-brand">
-      <i class="fa-solid fa-mug-saucer cashier-topbar-brand-icon"></i>
-      <span class="cashier-topbar-brand-name">CAFE 24/7</span>
-    </div>
-
-    <div class="cashier-topbar-shift">
-      <div class="cashier-topbar-shift-dot"></div>
-      <span>CA 2 &bull; 12:00 – 17:00</span>
-    </div>
-
-    <nav class="cashier-topbar-tabs">
-      <a href="CashierInterface.html" class="cashier-topbar-tab active">
-        <i class="fa-solid fa-cash-register"></i>
-        <span>Bán Hàng</span>
-      </a>
-      <a href="CashierShiftReport.html" class="cashier-topbar-tab">
-        <i class="fa-solid fa-file-invoice-dollar"></i>
-        <span>Chốt Ca</span>
-      </a>
-    </nav>
-
-    <div class="cashier-topbar-right">
-      <div class="cashier-topbar-user">
-        <div class="cashier-topbar-avatar">TN</div>
-        <div>
-          <div class="cashier-topbar-user-name">Trần Văn Hùng</div>
-          <div class="cashier-topbar-user-role">Thu Ngân</div>
-        </div>
-      </div>
-      <a href="LoginPage.html" class="cashier-topbar-logout">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Đăng Xuất
-      </a>
-    </div>
-  </header>
-
-  <!-- Main content -->
-  <div class="cashier-body">
-    <div class="cashier-layout">
-
-      <!-- Left: Menu Grid -->
-      <div class="cashier-menu-panel">
-        <div class="cashier-menu-filter">
-          <div class="cashier-menu-filter-header">
-            <h3 class="cashier-menu-filter-title">Thực Đơn</h3>
-          </div>
-          <div class="cashier-category-tabs">
-            <!-- Category tabs will be dynamically loaded by JavaScript -->
-          </div>
-        </div>
-
-        <div class="cashier-menu-grid">
-          <!-- Items will be dynamically loaded by JavaScript -->
-        </div>
+    <!-- Top navigation bar -->
+    <header class="cashier-topbar">
+      <div class="cashier-topbar-brand">
+        <i class="fa-solid fa-mug-saucer cashier-topbar-brand-icon"></i>
+        <span class="cashier-topbar-brand-name">CAFE 24/7</span>
       </div>
 
-      <!-- Right: Order Summary -->
-      <aside class="cashier-order-panel">
-        <div class="cashier-order-header">
+      <div class="cashier-topbar-shift">
+        <div class="cashier-topbar-shift-dot"></div>
+        <span id="cashierShiftStatus">Đang kiểm tra ca...</span>
+      </div>
+
+      <nav class="cashier-topbar-tabs">
+        <a href="/app/cashier" class="cashier-topbar-tab">
+          <i class="fa-solid fa-cash-register"></i>
+          <span>Bán Hàng</span>
+        </a>
+        <a href="/app/cashier/shift" class="cashier-topbar-tab">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>Chốt Ca</span>
+        </a>
+        <a href="/app/cashier/inventory" class="cashier-topbar-tab">
+          <i class="fa-solid fa-box-open"></i>
+          <span>Xuất Kho</span>
+        </a>
+      </nav>
+
+      <div class="cashier-topbar-right">
+        <div class="cashier-topbar-user">
+          <div class="cashier-topbar-avatar" id="txtCurrentUserAvatar">TN</div>
           <div>
-            <h2 class="cashier-order-title">Đơn Hàng Hiện Tại</h2>
-            <span class="cashier-order-meta">Mã #20392 &bull; Bàn 4</span>
+            <div class="cashier-topbar-user-name" id="txtCurrentUserName">Nhân Viên</div>
+            <div class="cashier-topbar-user-role" id="txtCurrentUserRole">Staff</div>
           </div>
-          <button class="cashier-order-clear-btn" title="Xoá tất cả">
-            <i class="fa-solid fa-trash-can"></i>
-          </button>
         </div>
+        <a href="/app/login" class="cashier-topbar-logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Đăng Xuất
+        </a>
+      </div>
+    </header>
 
-        <div class="cashier-order-items">
-          <div class="cashier-order-item">
-            <div class="cashier-order-item-img" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgDKa3Ysf7GoImVKbhn45CFTPLGd_Yj9zyex-MW1CJbKn4fHfWwp51WNnkUyKPa2Igj0s1Ct5_jgytylJreonsLIwNDY9Lv48XW2r-Fh7EjyoVQR8g1tYUSar7bflmFsa4LS4rtqScvgXo8j2TSQtro7ngOdKGWj3pB6X2DQe7drlomD59tU3yj1Ffd7QRPXm7C9o2v5F_0g9d-yyG2ClOCJO-YytOtYwzQNmc_3Iqulza6AGCud7bdffd1hGN7gMUmPubydB6WA");'></div>
-            <div class="cashier-order-item-details">
-              <p class="cashier-order-item-name">Cappuccino</p>
-              <span class="cashier-order-item-price">112,500₫ / cái</span>
+    <!-- Main content -->
+    <div class="cashier-body">
+      <div class="cashier-layout">
+        <!-- Left: Menu Grid -->
+        <div class="cashier-menu-panel">
+          <div class="cashier-menu-filter">
+            <div class="cashier-menu-filter-header">
+              <h3 class="cashier-menu-filter-title">Thực Đơn</h3>
             </div>
-            <div class="cashier-qty-control">
-              <button class="cashier-qty-btn"><i class="fa-solid fa-minus"></i></button>
-              <span class="cashier-qty-value">2</span>
-              <button class="cashier-qty-btn"><i class="fa-solid fa-plus"></i></button>
+            <div class="cashier-category-tabs">
+              <!-- Category tabs will be dynamically loaded by JavaScript -->
             </div>
-            <span class="cashier-order-item-total">225,000₫</span>
           </div>
 
-          <div class="cashier-order-item">
-            <div class="cashier-order-item-img" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBahs0GeDUhEHNFnbzO513EN0LUeiBtB1McIzMu-ekYsCtc1eOoN7rtinT1VZcBgTKRg2hMmitXcfrxBGaF6ZIYrG2L-VWiL1zYD1yqBif8UVxlB_o9j8WsYQsT054efYP6zksvI4cNAFrv_tGtbso5np4bQ6OzDRA2o_5HOyUsukLWzS4Rl8mTu_SiSkq_k73wtgazshUtGEoqbX8u4PFbsCoVG3XOpnQZ9-VF3yBClhy8LLCGj0hNvq8As3Iu5e-R6bw4YHX3WA");'></div>
-            <div class="cashier-order-item-details">
-              <p class="cashier-order-item-name">Bánh Sừng Bò</p>
-              <span class="cashier-order-item-price">93,750₫ / cái</span>
-            </div>
-            <div class="cashier-qty-control">
-              <button class="cashier-qty-btn"><i class="fa-solid fa-minus"></i></button>
-              <span class="cashier-qty-value">1</span>
-              <button class="cashier-qty-btn"><i class="fa-solid fa-plus"></i></button>
-            </div>
-            <span class="cashier-order-item-total">93,750₫</span>
-          </div>
-
-          <div class="cashier-order-item">
-            <div class="cashier-order-item-img" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCXB4JOVcwnNZSebiHAGhyKLgSjQgY135YuZkK0gx_UPq2q6voHgNzKhUU6dlwq7gem6X-bwy0725EaYvL77WnPWVnRQIgpB9Lf8socvtLLn7Hzp8_zn853xcX4lp4wJuts7WPX7ga0lv6DYSnAs60UDw1iiMCPqheqTGsyxocSxCUC9lFdSGYPRRmyrXcFw22DeQwe7boeht9fgjiOgRgI6zBpv4HItovvimVIq6Lvr5hxQ_rGMx4gJEGgQAMFx6pMe-awgzxqaw");'></div>
-            <div class="cashier-order-item-details">
-              <p class="cashier-order-item-name">Trà Hoa Nhài</p>
-              <span class="cashier-order-item-price">75,000₫ / cái</span>
-            </div>
-            <div class="cashier-qty-control">
-              <button class="cashier-qty-btn"><i class="fa-solid fa-minus"></i></button>
-              <span class="cashier-qty-value">1</span>
-              <button class="cashier-qty-btn"><i class="fa-solid fa-plus"></i></button>
-            </div>
-            <span class="cashier-order-item-total">75,000₫</span>
+          <div class="cashier-menu-grid">
+            <!-- Items will be dynamically loaded by JavaScript -->
           </div>
         </div>
 
-        <div class="cashier-order-totals">
-          <div class="cashier-total-row">
-            <span class="label">Tạm Tính</span>
-            <span class="value">393,750₫</span>
-          </div>
-          <div class="cashier-total-row">
-            <span class="label">VAT (8%)</span>
-            <span class="value">31,500₫</span>
-          </div>
-          <div class="cashier-total-row">
-            <span class="label">Giảm Giá</span>
-            <span class="value text-success">- 0₫</span>
-          </div>
-          <div class="cashier-total-divider"></div>
-          <div class="cashier-grand-total">
-            <span class="label">Tổng Cộng</span>
-            <span class="amount">425,250₫</span>
-          </div>
-
-          <div class="cashier-payment-methods">
-            <button class="cashier-payment-btn active">
-              <i class="fa-solid fa-money-bill-wave"></i>
-              Tiền Mặt
-            </button>
-            <button class="cashier-payment-btn">
-              <i class="fa-solid fa-credit-card"></i>
-              Chuyển Khoản
-            </button>
-            <button class="cashier-payment-btn">
-              <i class="fa-solid fa-qrcode"></i>
-              QR Code
+        <!-- Right: Order Summary -->
+        <aside class="cashier-order-panel">
+          <div class="cashier-order-header">
+            <div>
+              <h2 class="cashier-order-title">Đơn Hàng Hiện Tại</h2>
+              <span class="cashier-order-meta">Mã #— &bull; Tại quầy</span>
+            </div>
+            <button class="cashier-order-clear-btn" title="Xoá tất cả">
+              <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
 
-          <div class="cashier-action-btns">
-            <button class="cashier-icon-btn" title="Huỷ đơn">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-            <button class="cashier-icon-btn" title="In hoá đơn">
-              <i class="fa-solid fa-print"></i>
-            </button>
-            <button class="cashier-pay-btn">
-              <i class="fa-solid fa-check"></i>
-              Thanh Toán
-            </button>
+          <div class="cashier-order-tools">
+            <div class="cashier-voucher-row">
+              <input
+                type="text"
+                id="cashierVoucherInput"
+                class="cashier-voucher-input"
+                placeholder="Nhập mã giảm giá..."
+              />
+              <button class="cashier-voucher-btn" id="cashierApplyVoucherBtn">
+                Áp mã
+              </button>
+            </div>
+            <div class="cashier-voucher-note">Chưa áp mã giảm giá</div>
           </div>
-        </div>
-      </aside>
 
+          <!-- Banner cảnh báo chưa mở ca -->
+          <div
+            id="shiftWarningBanner"
+            style="
+              display: none;
+              background: linear-gradient(135deg, rgba(239,68,68,.12), rgba(239,68,68,.04));
+              border: 1px solid rgba(239,68,68,.3);
+              border-radius: 8px;
+              padding: 10px 14px;
+              margin: 8px 14px 0;
+              font-size: .82rem;
+              color: #fca5a5;
+              gap: 8px;
+              align-items: center;
+            "
+          >
+            <i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>
+            Chưa mở ca &mdash; không thể thanh toán.
+          </div>
+
+          <div class="cashier-order-items" id="cashierOrderItems">
+            <!-- Đơn hàng sẽ được render bởi JS -->
+          </div>
+
+          <div class="cashier-order-totals">
+            <div class="cashier-total-row">
+              <span class="label">Tạm Tính</span>
+              <span class="value" id="cashierSubtotalValue">0₫</span>
+            </div>
+            <div class="cashier-total-row">
+              <span class="label">VAT (8%)</span>
+              <span class="value" id="cashierVatValue">0₫</span>
+            </div>
+            <div class="cashier-total-row">
+              <span class="label">Giảm Giá</span>
+              <span class="value text-success" id="cashierDiscountValue">- 0₫</span>
+            </div>
+            <div class="cashier-total-divider"></div>
+            <div class="cashier-grand-total">
+              <span class="label">Tổng Cộng</span>
+              <span class="amount" id="cashierGrandTotalValue">0₫</span>
+            </div>
+
+            <div class="cashier-payment-methods">
+              <button class="cashier-payment-btn active">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                Tiền Mặt
+              </button>
+              <button class="cashier-payment-btn">
+                <i class="fa-solid fa-credit-card"></i>
+                Chuyển Khoản
+              </button>
+              <button class="cashier-payment-btn">
+                <i class="fa-solid fa-qrcode"></i>
+                QR Code
+              </button>
+            </div>
+
+            <div class="cashier-action-btns">
+              <button class="cashier-icon-btn" title="Huỷ đơn">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+              <button class="cashier-icon-btn" title="In hoá đơn">
+                <i class="fa-solid fa-print"></i>
+              </button>
+              <button class="cashier-pay-btn">
+                <i class="fa-solid fa-check"></i>
+                Thanh Toán
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>
 
-  <script src="Common.js"></script>
-  <script src="CashierInterface.js"></script>
-</body>
+    <script src="Common.js?v=20260420a"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="CashierInterface.js?v=20260421a"></script>
+  </body>
 </html>

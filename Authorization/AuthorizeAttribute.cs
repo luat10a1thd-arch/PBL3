@@ -21,9 +21,22 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 
         // authorization
         var user = (User)context.HttpContext.Items["User"];
-        if (user == null || (_roles.Any() && !_roles.Contains(user.Role)))
+        if (user == null || (_roles.Any() && !IsRoleAllowed(user.Role, _roles)))
         {
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }
+    }
+
+    private static bool IsRoleAllowed(Role actualRole, IList<Role> allowedRoles)
+    {
+        if (allowedRoles.Contains(actualRole)) return true;
+
+        // Backward compatibility: legacy Owner maps to Admin
+        if (actualRole == Role.Owner && allowedRoles.Contains(Role.Admin)) return true;
+
+        // Admin can access all Manager endpoints
+        if (actualRole == Role.Admin && allowedRoles.Contains(Role.Manager)) return true;
+
+        return false;
     }
 }

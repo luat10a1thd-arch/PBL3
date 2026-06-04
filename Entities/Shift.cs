@@ -17,6 +17,8 @@ public class Shift
     [Column(TypeName = "decimal(18,2)")]
     public decimal Expected { get; set; }
 
+    public DateTime? ClosedAt { get; set; }
+
     [ForeignKey("EmployeeId")]
     public User Employee { get; set; }
 

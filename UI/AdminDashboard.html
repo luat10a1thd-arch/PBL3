@@ -1,12 +1,22 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="vi">
   <head>
+    <base href="/app/">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
     <title>Bảng Điều Khiển - Cafe 24/7</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="admin-dashboard dash-bg-wrapper">
     <div class="dash-bg-overlay"></div>
@@ -22,42 +32,45 @@
       </div>
 
       <nav class="dash-nav">
-        <a href="AdminDashboard.html" class="dash-nav-item active">
+        <a href="/app/dashboard" class="dash-nav-item">
           <i class="fa-solid fa-chart-line dash-nav-icon"></i>
           <span class="dash-nav-text">Tổng Quan</span>
         </a>
-        <a href="Orders.html" class="dash-nav-item">
+        <a href="/app/orders" class="dash-nav-item">
           <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
           <span class="dash-nav-text">Đơn Hàng</span>
         </a>
-        <a href="AdminMenuManagement.html" class="dash-nav-item">
+        <a href="/app/menu" class="dash-nav-item">
           <i class="fa-solid fa-utensils dash-nav-icon"></i>
           <span class="dash-nav-text">Thực Đơn</span>
         </a>
-        <a href="Inventory.html" class="dash-nav-item">
+        <a href="/app/inventory" class="dash-nav-item">
           <i class="fa-solid fa-box dash-nav-icon"></i>
           <span class="dash-nav-text">Kho Hàng</span>
         </a>
-        <a href="ImportHistory.html" class="dash-nav-item">
+        <a href="/app/imports" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Lịch Sử Nhập</span>
         </a>
-        <a href="StaffManagement.html" class="dash-nav-item">
+        <a href="/app/staff" class="dash-nav-item">
           <i class="fa-solid fa-users dash-nav-icon"></i>
           <span class="dash-nav-text">Nhân Viên</span>
         </a>
-        <a href="CashierInterface.html" class="dash-nav-item">
-          <i class="fa-solid fa-cash-register dash-nav-icon"></i>
-          <span class="dash-nav-text">Thu Ngân</span>
+        <a href="/app/suppliers" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
-        <a href="MonthlyReport.html" class="dash-nav-item">
+        <a href="/app/vouchers" class="dash-nav-item">
+          <i class="fa-solid fa-ticket dash-nav-icon"></i>
+          <span class="dash-nav-text">Mã Giảm Giá</span>
+        </a>        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
       </nav>
 
       <div class="dash-bottom-actions">
-        <a href="ShiftClosingReport.html" class="dash-nav-item">
+        <a href="/app/shift-report" class="dash-nav-item">
           <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
           <span class="dash-nav-text">Chốt Ca</span>
         </a>
@@ -69,7 +82,7 @@
           <div class="dash-user-avatar">AM</div>
           <div class="dash-user-info">
             <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Trị Viên</span>
+            <span class="dash-user-role">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -78,7 +91,11 @@
     <main class="dash-main">
       <header class="dash-header">
         <div class="dash-header-left">
-          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+          <button
+            class="dash-hamburger"
+            id="sidebarToggle"
+            aria-label="Mở menu"
+          >
             <i class="fa-solid fa-bars"></i>
           </button>
           <h2 class="dash-page-title">Tổng Quan</h2>
@@ -87,12 +104,8 @@
             <span class="dash-shift-text">CA 2: 12:00 - 17:00</span>
           </div>
         </div>
-        
+
         <div class="dash-header-right">
-          <div class="dash-search-box">
-            <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm kiếm đơn hàng..." class="dash-search-input" />
-          </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
             <span class="dash-notification-dot"></span>
@@ -102,21 +115,28 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
-          
           <div class="dash-kpi-grid">
             <div class="dash-card">
               <div class="dash-kpi-header">
-                <div class="dash-kpi-icon revenue"><i class="fa-solid fa-money-bill-wave"></i></div>
-                <div class="dash-kpi-badge revenue"><i class="fa-solid fa-arrow-trend-up"></i> 12%</div>
+                <div class="dash-kpi-icon revenue">
+                  <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <div class="dash-kpi-badge revenue">
+                  <i class="fa-solid fa-arrow-trend-up"></i> 12%
+                </div>
               </div>
               <h3 class="dash-kpi-title">Doanh Thu Hôm Nay</h3>
               <p class="dash-kpi-value">31,012,500₫</p>
             </div>
-            
+
             <div class="dash-card">
               <div class="dash-kpi-header">
-                <div class="dash-kpi-icon orders"><i class="fa-solid fa-receipt"></i></div>
-                <div class="dash-kpi-badge orders"><i class="fa-solid fa-arrow-trend-up"></i> 5%</div>
+                <div class="dash-kpi-icon orders">
+                  <i class="fa-solid fa-receipt"></i>
+                </div>
+                <div class="dash-kpi-badge orders">
+                  <i class="fa-solid fa-arrow-trend-up"></i> 5%
+                </div>
               </div>
               <h3 class="dash-kpi-title">Số Đơn Hàng</h3>
               <p class="dash-kpi-value">84</p>
@@ -124,8 +144,12 @@
 
             <div class="dash-card">
               <div class="dash-kpi-header">
-                <div class="dash-kpi-icon profit"><i class="fa-solid fa-wallet"></i></div>
-                <div class="dash-kpi-badge profit"><i class="fa-solid fa-arrow-trend-up"></i> 8%</div>
+                <div class="dash-kpi-icon profit">
+                  <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div class="dash-kpi-badge profit">
+                  <i class="fa-solid fa-arrow-trend-up"></i> 8%
+                </div>
               </div>
               <h3 class="dash-kpi-title">Lợi Nhuận Ròng</h3>
               <p class="dash-kpi-value">10,255,000₫</p>
@@ -144,22 +168,40 @@
                 </button>
               </div>
               <div class="dash-chart-container">
-                <div class="dash-chart-bar bar-mon"><span class="dash-chart-label">T2</span></div>
-                <div class="dash-chart-bar bar-tue"><span class="dash-chart-label">T3</span></div>
-                <div class="dash-chart-bar bar-wed"><span class="dash-chart-label">T4</span></div>
-                <div class="dash-chart-bar bar-thu"><span class="dash-chart-label">T5</span></div>
-                <div class="dash-chart-bar bar-fri"><span class="dash-chart-label">T6</span></div>
-                <div class="dash-chart-bar active bar-sat"><span class="dash-chart-label">T7</span></div>
-                <div class="dash-chart-bar bar-sun"><span class="dash-chart-label">CN</span></div>
+                <div class="dash-chart-bar bar-mon">
+                  <span class="dash-chart-label">T2</span>
+                </div>
+                <div class="dash-chart-bar bar-tue">
+                  <span class="dash-chart-label">T3</span>
+                </div>
+                <div class="dash-chart-bar bar-wed">
+                  <span class="dash-chart-label">T4</span>
+                </div>
+                <div class="dash-chart-bar bar-thu">
+                  <span class="dash-chart-label">T5</span>
+                </div>
+                <div class="dash-chart-bar bar-fri">
+                  <span class="dash-chart-label">T6</span>
+                </div>
+                <div class="dash-chart-bar active bar-sat">
+                  <span class="dash-chart-label">T7</span>
+                </div>
+                <div class="dash-chart-bar bar-sun">
+                  <span class="dash-chart-label">CN</span>
+                </div>
               </div>
             </div>
 
             <div class="dash-recent-orders-card">
-              <h3 class="dash-section-title recent-orders-title">Đơn Hàng Gần Đây</h3>
+              <h3 class="dash-section-title recent-orders-title">
+                Đơn Hàng Gần Đây
+              </h3>
               <div class="dash-orders-list">
                 <div class="dash-order-item">
                   <div class="dash-order-item-left">
-                    <div class="dash-order-icon"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-mug-hot"></i>
+                    </div>
                     <div class="dash-order-details">
                       <p class="dash-order-id">Đơn #2049</p>
                       <p class="dash-order-desc">Latte, Bánh Sừng Bò</p>
@@ -173,7 +215,9 @@
 
                 <div class="dash-order-item">
                   <div class="dash-order-item-left">
-                    <div class="dash-order-icon"><i class="fa-solid fa-cake-candles"></i></div>
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-cake-candles"></i>
+                    </div>
                     <div class="dash-order-details">
                       <p class="dash-order-id">Đơn #2048</p>
                       <p class="dash-order-desc">Bánh Phô Mai x2</p>
@@ -187,7 +231,9 @@
 
                 <div class="dash-order-item">
                   <div class="dash-order-item-left">
-                    <div class="dash-order-icon"><i class="fa-solid fa-cookie"></i></div>
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-cookie"></i>
+                    </div>
                     <div class="dash-order-details">
                       <p class="dash-order-id">Đơn #2047</p>
                       <p class="dash-order-desc">Bánh Quy Socola</p>
@@ -199,10 +245,13 @@
                   </div>
                 </div>
               </div>
-              <a href="#" class="dash-view-all">Xem tất cả đơn hàng <i class="fa-solid fa-arrow-right view-all-icon"></i></a>
+              <a href="#" class="dash-view-all" id="btnViewAllOrders"
+                >Xem tất cả đơn hàng
+                <i class="fa-solid fa-arrow-right view-all-icon"></i
+              ></a>
             </div>
           </div>
-          
+
           <div class="dash-bottom-grid">
             <div class="dash-table-card">
               <div class="dash-table-header">
@@ -221,17 +270,23 @@
                   <tr>
                     <td>Sữa Hạnh Nhân</td>
                     <td class="faded right">4 Cái</td>
-                    <td class="right"><span class="dash-status-badge critical">Nguy Cấp</span></td>
+                    <td class="right">
+                      <span class="dash-status-badge critical">Nguy Cấp</span>
+                    </td>
                   </tr>
                   <tr>
                     <td>Hạt Espresso</td>
                     <td class="faded right">2 kg</td>
-                    <td class="right"><span class="dash-status-badge low">Thấp</span></td>
+                    <td class="right">
+                      <span class="dash-status-badge low">Thấp</span>
+                    </td>
                   </tr>
                   <tr class="no-border-row">
                     <td>Ly Giấy</td>
                     <td class="faded right">45 Cái</td>
-                    <td class="right"><span class="dash-status-badge low">Thấp</span></td>
+                    <td class="right">
+                      <span class="dash-status-badge low">Thấp</span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -239,12 +294,12 @@
 
             <div class="dash-team-card">
               <div class="dash-team-bg-blur"></div>
-              
+
               <div class="dash-team-header">
                 <h3 class="dash-table-title">Đội Ngũ Trực Ca</h3>
                 <span class="dash-team-badge">Ca 2</span>
               </div>
-              
+
               <div class="dash-team-list">
                 <div class="dash-team-member">
                   <div class="dash-team-avatar primary">SJ</div>
@@ -257,7 +312,7 @@
                     <p class="dash-team-clock-time">11:55 AM</p>
                   </div>
                 </div>
-                
+
                 <div class="dash-team-member">
                   <div class="dash-team-avatar secondary">MC</div>
                   <div class="dash-team-info">
@@ -276,23 +331,10 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </main>
-    <script src="Common.js"></script>
-    <script>
-      // Auth guard - block anonymous and Staff
-      const user = window.ensureAuthByRole(['Admin', 'Owner']);
-      if (!user) { /* redirected by guard */ }
-
-      const sidebarToggle = document.getElementById('sidebarToggle');
-      const sidebarOverlay = document.getElementById('sidebarOverlay');
-      const sidebar = document.querySelector('.dash-sidebar');
-      function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('visible'); }
-      function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('visible'); }
-      sidebarToggle.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
-      sidebarOverlay.addEventListener('click', closeSidebar);
-    </script>
+    <script src="Common.js?v=20260420a"></script>
+    <script src="AdminDashboard.js?v=20260420a"></script>
   </body>
 </html>

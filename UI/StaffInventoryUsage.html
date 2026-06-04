@@ -1,0 +1,177 @@
+﻿<!doctype html>
+<html lang="vi">
+  <head>
+    <base href="/app/">
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <title>Xuất Kho - Cafe 24/7</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="cashier-page dash-bg-wrapper">
+    <div class="dash-bg-overlay"></div>
+
+    <header class="cashier-topbar">
+      <div class="cashier-topbar-brand">
+        <i class="fa-solid fa-mug-saucer cashier-topbar-brand-icon"></i>
+        <span class="cashier-topbar-brand-name">CAFE 24/7</span>
+      </div>
+
+      <div class="cashier-topbar-shift">
+        <div class="cashier-topbar-shift-dot"></div>
+        <span id="cashierShiftStatus">Đang kiểm tra ca...</span>
+      </div>
+
+      <nav class="cashier-topbar-tabs">
+        <a href="/app/cashier" class="cashier-topbar-tab">
+          <i class="fa-solid fa-cash-register"></i>
+          <span>Bán Hàng</span>
+        </a>
+        <a href="/app/cashier/shift" class="cashier-topbar-tab">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>Chốt Ca</span>
+        </a>
+        <a href="/app/cashier/inventory" class="cashier-topbar-tab">
+          <i class="fa-solid fa-box-open"></i>
+          <span>Xuất Kho</span>
+        </a>
+      </nav>
+
+      <div class="cashier-topbar-right">
+        <div class="cashier-topbar-user">
+          <div class="cashier-topbar-avatar">NV</div>
+          <div>
+            <div class="cashier-topbar-user-name">Đang tải...</div>
+            <div class="cashier-topbar-user-role">Nhân Viên</div>
+          </div>
+        </div>
+        <a href="/app/login" class="cashier-topbar-logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Đăng Xuất
+        </a>
+      </div>
+    </header>
+
+    <div class="cashier-body">
+      <div class="cashier-report-area">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+          "
+        >
+          <div>
+            <h2
+              style="
+                margin: 0;
+                font-size: 1.2rem;
+                font-weight: 700;
+                color: white;
+              "
+            >
+              Xuất Kho Nguyên Liệu
+            </h2>
+            <p
+              style="
+                margin: 4px 0 0;
+                font-size: 0.83rem;
+                color: var(--dash-text-muted);
+              "
+            >
+              Nhân viên ghi nhận nguyên liệu lấy từ kho để hệ thống trừ tồn.
+            </p>
+          </div>
+          <div class="dash-search-box" style="width: 300px">
+            <i class="fa-solid fa-search dash-search-icon"></i>
+            <input
+              type="text"
+              id="usageSearchInput"
+              placeholder="Tìm nguyên liệu..."
+              class="dash-search-input"
+            />
+          </div>
+        </div>
+
+        <div class="dash-table-card no-padding">
+          <table class="dash-table no-margin" id="usageTable">
+            <thead>
+              <tr>
+                <th>Nguyên Liệu</th>
+                <th>Đơn Vị</th>
+                <th class="right">Tồn Kho</th>
+                <th>Trạng Thái</th>
+                <th class="right td-actions">Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="usageTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="staff-modal-backdrop" id="usageModal">
+      <div class="staff-modal" style="max-width: 460px">
+        <div class="staff-modal-header">
+          <h3 class="staff-modal-title">Xuất Kho</h3>
+          <button class="staff-modal-close" id="usageCloseBtn">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="staff-modal-body">
+          <div class="form-group">
+            <label>Nguyên liệu</label>
+            <input
+              type="text"
+              class="staff-input"
+              id="usageIngredientName"
+              disabled
+            />
+          </div>
+          <div class="form-group">
+            <label>Số lượng xuất <span style="color: #ef4444">*</span></label>
+            <input
+              type="number"
+              min="0.01"
+              step="0.01"
+              class="staff-input"
+              id="usageQuantityInput"
+            />
+          </div>
+          <div class="form-group">
+            <label>Ghi chú</label>
+            <input
+              type="text"
+              class="staff-input"
+              id="usageNoteInput"
+              placeholder="Ví dụ: Pha chế ca tối"
+            />
+          </div>
+        </div>
+        <div class="staff-modal-footer">
+          <button class="dash-btn-secondary" id="usageCancelBtn">Huỷ</button>
+          <button class="dash-btn-primary" id="usageSubmitBtn">
+            <i class="fa-solid fa-floppy-disk"></i> Xác Nhận Xuất
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="Common.js?v=20260420a"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script src="StaffInventoryUsage.js?v=20260421a"></script>
+  </body>
+</html>

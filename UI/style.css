@@ -22,6 +22,8 @@
   --color-purple-bg: rgba(168, 85, 247, 0.1);
   --dash-border: rgba(203, 213, 225, 0.2);
   --dash-text-muted: #b6a8a2;
+  --background-light: #0d0503;
+  --background-dark: #1a0906;
 }
 
 .bd-container {
@@ -74,14 +76,14 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 12px rgba(197, 101, 23, 0.3);
   -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary:hover,
 .save-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 6px 20px rgba(197, 101, 23, 0.4);
 }
 
 .btn-primary:active,
@@ -442,7 +444,7 @@ body.admin-dashboard {
 }
 .dash-header {
   height: 70px;
-  border-bottom: 1px solid rgba(203, 213, 225, 0.1);
+  border-bottom: 1px solid rgba(203, 213, 225, 0.24);
   background-color: rgba(26, 9, 6, 0.6);
   backdrop-filter: blur(15px);
   display: flex;
@@ -697,6 +699,7 @@ body.admin-dashboard {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   position: relative;
+  animation: growBar 0.6s ease-out;
 }
 .dash-chart-bar.active {
   background: #c56517;
@@ -841,30 +844,44 @@ body.admin-dashboard {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  table-layout: auto;
 }
 .dash-table th {
-  padding: 11px 10px;
+  padding: 12px 14px;
   line-height: 1.35;
   vertical-align: middle;
-  border-bottom: 1px solid rgba(203, 213, 225, 0.1);
+  border-bottom: 1px solid rgba(203, 213, 225, 0.24);
   font-size: 0.75rem;
   color: #b6a8a2;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 .dash-table th.right {
   text-align: right;
 }
 .dash-table td {
-  padding: 12px 10px;
-  border-bottom: 1px solid rgba(203, 213, 225, 0.05);
+  padding: 13px 14px;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.12);
   font-size: 0.9rem;
   color: white;
+  vertical-align: middle;
 }
 .dash-table td.right {
   text-align: right;
 }
 .dash-table td.faded {
   color: #b6a8a2;
+}
+/* First column (usually ID/name) gets more width for readability */
+.dash-table th:first-child,
+.dash-table td:first-child {
+  padding-left: 20px;
+}
+/* Last column (usually actions) stays compact on the right */
+.dash-table th:last-child,
+.dash-table td:last-child {
+  padding-right: 20px;
 }
 .dash-status-badge {
   padding: 4px 8px;
@@ -1241,8 +1258,10 @@ h3.recent-orders-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   padding-top: 20px;
-  border-top: 1px solid rgba(203, 213, 225, 0.1);
+  border-top: 1px solid rgba(203, 213, 225, 0.2);
   margin-top: 20px;
 }
 
@@ -1258,12 +1277,13 @@ h3.recent-orders-title {
 
 .dash-pagination-controls {
   display: flex;
-  gap: 5px;
+  gap: 8px;
 }
 
 .dash-page-btn {
-  width: 32px;
-  height: 32px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1942,7 +1962,7 @@ body.cashier-page {
   flex: 1;
   display: flex;
   overflow: hidden;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 62px);
 }
 
 /* ---- Left: Menu Panel ---- */
@@ -2022,7 +2042,7 @@ body.cashier-page {
   overflow-y: auto;
   padding: 20px 25px;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
   gap: 15px;
   align-content: start;
 }
@@ -2111,8 +2131,8 @@ body.cashier-page {
 }
 
 .cashier-item-price {
-  font-size: 0.83rem;
-  font-weight: 700;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: var(--primary-color);
 }
 
@@ -2137,6 +2157,79 @@ body.cashier-page {
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+}
+
+.cashier-order-tools {
+  padding: 10px 14px 12px;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cashier-inline-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--dash-text-muted);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.cashier-inline-select {
+  width: 100%;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(203, 213, 225, 0.16);
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  padding: 0 10px;
+}
+
+.cashier-voucher-row {
+  display: flex;
+  gap: 8px;
+}
+
+.cashier-voucher-input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(203, 213, 225, 0.16);
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 0.82rem;
+  padding: 0 10px;
+}
+
+.cashier-voucher-input::placeholder {
+  color: var(--dash-text-muted);
+}
+
+.cashier-voucher-btn {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(197, 101, 23, 0.35);
+  background: rgba(197, 101, 23, 0.15);
+  color: var(--primary-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cashier-voucher-btn:hover {
+  background: rgba(197, 101, 23, 0.25);
+}
+
+.cashier-voucher-note {
+  font-size: 0.76rem;
+  color: var(--dash-text-muted);
 }
 
 .cashier-order-title {
@@ -2410,7 +2503,6 @@ body.cashier-page {
     width: 300px;
   }
   .cashier-menu-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     padding: 15px;
   }
 }
@@ -2431,6 +2523,11 @@ body.cashier-page {
   .cashier-menu-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+@keyframes growBar {
+  from { height: 0; }
+  to   { height: var(--bar-h, 100%); }
 }
 
 /* ==================== STAFF MANAGEMENT ==================== */
@@ -2526,6 +2623,11 @@ body.cashier-page {
   flex-direction: column;
   gap: 15px;
 }
+/* Override global .form-group label color for dark modal context */
+.staff-modal-body .form-group label,
+.staff-modal-body label {
+  color: var(--dash-text-muted);
+}
 .staff-modal-body::-webkit-scrollbar {
   width: 5px;
 }
@@ -2600,3 +2702,759 @@ body.cashier-page {
     border-radius: 12px;
   }
 }
+
+/* ====================================================================
+   DESIGN.MD IMPLEMENTATION — UI Polish & Consistency
+   ==================================================================== */
+
+/* --- Sidebar active state enhancement (design.md §4.4) --- */
+.dash-nav-item.active {
+  color: #ffffff;
+  background-color: rgba(197, 101, 23, 0.8);
+  box-shadow: 0 2px 8px rgba(197, 101, 23, 0.3);
+}
+.dash-nav-item.active .dash-nav-icon {
+  color: #ffffff;
+}
+.dash-nav-item.active .dash-nav-text {
+  font-weight: 600;
+}
+
+/* Smooth sidebar open/close on mobile (design.md §4.5) */
+@media (max-width: 768px) {
+  .dash-sidebar {
+    position: fixed;
+    top: 0;
+    left: -260px;
+    height: 100vh;
+    z-index: 1001;
+    transition: left 0.3s ease;
+  }
+  .dash-sidebar.open {
+    left: 0;
+  }
+  .dash-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  .dash-sidebar-overlay.visible {
+    display: block;
+  }
+  .dash-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: #b6a8a2;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .dash-hamburger:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+@media (min-width: 769px) {
+  .dash-hamburger {
+    display: none;
+  }
+  .dash-sidebar-overlay {
+    display: none !important;
+  }
+}
+
+/* --- KPI Card icon variants (design.md §3.2) --- */
+.dash-kpi-icon.items {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+.dash-kpi-icon.categories {
+  background-color: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+.dash-kpi-icon.success,
+.dash-kpi-icon.active-staff {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+.dash-kpi-icon.warning,
+.dash-kpi-icon.low-stock {
+  background-color: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+.dash-kpi-icon.danger,
+.dash-kpi-icon.out-stock {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* --- Text color utilities (design.md §6) --- */
+.text-primary {
+  color: var(--primary-color) !important;
+}
+.text-success {
+  color: var(--color-success) !important;
+}
+.text-warning {
+  color: var(--color-warning) !important;
+}
+.text-danger {
+  color: var(--color-danger) !important;
+}
+.text-info {
+  color: var(--color-info) !important;
+}
+.text-muted {
+  color: var(--dash-text-muted) !important;
+}
+
+/* --- Form image upload preview (design.md §3.4) --- */
+.form-image-preview-box {
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px dashed rgba(203, 213, 225, 0.25);
+  padding: 12px;
+  text-align: center;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+  transition: opacity 0.3s ease;
+}
+.form-image-preview-box img.form-image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+.form-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--dash-text-muted);
+  font-size: 0.85rem;
+}
+.form-image-placeholder i {
+  font-size: 2rem;
+  opacity: 0.4;
+}
+
+/* --- Form hint text (design.md §3.4) --- */
+.form-hint {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.78rem;
+  color: var(--dash-text-muted);
+  font-style: italic;
+}
+
+/* --- Cashier topbar nav active state (design.md §3.3) --- */
+.cashier-topbar-nav-item.active {
+  color: #ffffff !important;
+  border-bottom: 2px solid var(--primary-color);
+  font-weight: 600;
+}
+
+/* --- Dashboard KPI card hover glow (design.md §2.3) --- */
+.dash-card {
+  transition:
+    all 0.3s ease,
+    border-color 0.3s ease;
+}
+.dash-card:hover {
+  border-color: rgba(197, 101, 23, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* --- General flex utility --- */
+.dash-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+/* --- Modal improvements (design.md §3.4) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.modal-container {
+  background: linear-gradient(
+    150deg,
+    rgba(26, 9, 6, 0.98) 0%,
+    rgba(80, 50, 50, 0.98) 100%
+  );
+  border: 1px solid rgba(203, 213, 225, 0.2);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.15);
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+}
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--dash-text-muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.modal-close:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+}
+.modal-body {
+  padding: 20px 25px 25px;
+}
+.modal-body .form-group {
+  margin-bottom: 18px;
+}
+.modal-body .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dash-text-muted);
+}
+.modal-body .form-group label span {
+  color: var(--color-danger);
+}
+.modal-body .form-control {
+  width: 100%;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: white;
+  padding: 0 12px;
+  font-size: 0.9rem;
+  font-family: "Inter", sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.modal-body .form-control:focus {
+  border-color: var(--primary-color);
+  background: rgba(197, 101, 23, 0.08);
+}
+.modal-body textarea.form-control {
+  height: auto;
+  padding: 10px 12px;
+  resize: vertical;
+}
+.modal-body select.form-control {
+  appearance: none;
+  cursor: pointer;
+}
+.modal-body select.form-control option {
+  background: #1a0906;
+  color: white;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 10px;
+}
+.form-actions .btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--dash-text-muted);
+  padding: 0 18px;
+  height: 40px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-family: "Inter", sans-serif;
+}
+.form-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+.form-actions .btn-primary {
+  box-shadow: 0 4px 10px rgba(197, 101, 23, 0.3);
+}
+
+/* --- Btn secondary (design.md) --- */
+.dash-btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--dash-text-muted);
+  padding: 0 16px;
+  height: 38px;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+}
+.dash-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* --- Responsive table (design.md §4.5) --- */
+@media (max-width: 768px) {
+  .dash-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dash-content-area {
+    padding: 15px;
+  }
+  .dash-header {
+    padding: 0 15px;
+  }
+  .dash-actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .dash-filter-group {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .dash-search-box {
+    width: 100%;
+  }
+}
+
+/* ================================================================
+   SHIFT STATISTICS — Revenue by Period & by Staff
+   ================================================================ */
+
+/* Two-column row wrapping both stat cards */
+.shift-stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media (max-width: 900px) {
+  .shift-stat-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Stat card — reuses dash-table-card base */
+.shift-stat-card {
+  padding: 18px 20px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Card header row */
+.shift-stat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.12);
+}
+.shift-stat-icon {
+  font-size: 1rem;
+  color: var(--primary-color);
+}
+.shift-stat-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* ── Period cards (3 cols inside the left stat card) ── */
+.shift-period-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.shift-period-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(203, 213, 225, 0.1);
+  border-radius: 12px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: border-color 0.25s;
+}
+.shift-period-card:hover {
+  border-color: rgba(197, 101, 23, 0.4);
+}
+.shift-period-icon {
+  font-size: 1.3rem;
+  margin-bottom: 2px;
+}
+.shift-period-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--dash-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+.shift-period-time {
+  font-size: 0.65rem;
+  color: var(--dash-text-muted);
+  text-align: center;
+  opacity: 0.7;
+}
+.shift-period-revenue {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  white-space: nowrap;
+}
+.shift-period-count {
+  font-size: 0.72rem;
+  color: var(--dash-text-muted);
+  text-align: center;
+}
+/* Per-period accent colours */
+.shift-period-card.morning .shift-period-icon {
+  color: #f59e0b;
+}
+.shift-period-card.afternoon .shift-period-icon {
+  color: #c56517;
+}
+.shift-period-card.evening .shift-period-icon {
+  color: #6366f1;
+}
+.shift-period-card.morning {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+.shift-period-card.afternoon {
+  border-color: rgba(197, 101, 23, 0.25);
+}
+.shift-period-card.evening {
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+/* ── Staff revenue list (right stat card) ── */
+.shift-staff-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.shift-staff-list::-webkit-scrollbar {
+  width: 4px;
+}
+.shift-staff-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.shift-staff-list::-webkit-scrollbar-thumb {
+  background: rgba(197, 101, 23, 0.4);
+  border-radius: 4px;
+}
+
+.shift-staff-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(203, 213, 225, 0.08);
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+.shift-staff-row:hover {
+  background: rgba(197, 101, 23, 0.08);
+}
+.shift-staff-rank {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(197, 101, 23, 0.15);
+  border: 1px solid rgba(197, 101, 23, 0.35);
+  color: var(--primary-color);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.shift-staff-rank.top {
+  background: rgba(197, 101, 23, 0.35);
+  color: #fff;
+}
+.shift-staff-info {
+  flex: 1;
+  min-width: 0;
+}
+.shift-staff-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shift-staff-meta {
+  font-size: 0.72rem;
+  color: var(--dash-text-muted);
+}
+.shift-staff-revenue {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.shift-stat-empty {
+  text-align: center;
+  padding: 24px 0;
+  color: var(--dash-text-muted);
+  font-size: 0.85rem;
+}
+
+/* ================================================================
+   TABLE COLUMN WIDTH SYSTEM
+   Strategy: table-layout:fixed + explicit % widths per column.
+   All widths in a table must sum to 100%.
+   ================================================================ */
+
+/* Actions column: keep narrow on all tables */
+.dash-table th.td-actions,
+.dash-table td.td-actions {
+  width: 100px;
+  white-space: nowrap;
+}
+
+/* ── Cashier pages: fixed layout base ──────────────────────────── */
+.cashier-page .dash-table {
+  table-layout: fixed;
+  min-width: 600px;
+}
+/* Center all headers and cells by default */
+.cashier-page .dash-table th,
+.cashier-page .dash-table td {
+  text-align: center;
+}
+.cashier-page .dash-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Restore wrapping & center flex content inside complex cells */
+.cashier-page .dash-table td:has(.dash-status-indicator),
+.cashier-page .dash-table td:has(.dash-flex-col),
+.cashier-page .dash-table td:has(.dash-table-actions) {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+/* Center inline flex containers inside cashier table cells */
+.cashier-page .dash-table .dash-status-indicator,
+.cashier-page .dash-table .dash-table-actions {
+  justify-content: center;
+}
+.cashier-page .dash-table .dash-flex-col {
+  align-items: center;
+}
+
+/* ── /cashier/shift — Shift list table (7 columns) ─────────────
+   Col 1  Mã Ca          narrow ID
+   Col 2  Nhân Viên      name + sub-label, needs space
+   Col 3  Thời Gian Mở   date/time string
+   Col 4  Tiền Mở Ca     currency, right-aligned
+   Col 5  Tiền Chốt      currency, right-aligned
+   Col 6  Tình Trạng     status dot + text
+   Col 7  Thao Tác       icon button(s)
+   Total: 10+22+17+14+14+15+8 = 100%
+   ─────────────────────────────────────────────────────────────── */
+.cashier-report-area .dash-table th:nth-child(1),
+.cashier-report-area .dash-table td:nth-child(1) {
+  width: 10%;
+}
+.cashier-report-area .dash-table th:nth-child(2),
+.cashier-report-area .dash-table td:nth-child(2) {
+  width: 22%;
+}
+.cashier-report-area .dash-table th:nth-child(3),
+.cashier-report-area .dash-table td:nth-child(3) {
+  width: 17%;
+}
+.cashier-report-area .dash-table th:nth-child(4),
+.cashier-report-area .dash-table td:nth-child(4) {
+  width: 14%;
+}
+.cashier-report-area .dash-table th:nth-child(5),
+.cashier-report-area .dash-table td:nth-child(5) {
+  width: 14%;
+}
+.cashier-report-area .dash-table th:nth-child(6),
+.cashier-report-area .dash-table td:nth-child(6) {
+  width: 15%;
+}
+.cashier-report-area .dash-table th:nth-child(7),
+.cashier-report-area .dash-table td:nth-child(7) {
+  width: 8%;
+}
+
+/* ── /cashier/inventory — Inventory usage table (StaffInventoryUsage)
+   #usageTable overrides the generic cashier-report-area rule above  */
+#usageTable {
+  min-width: 480px;
+}
+#usageTable th,
+#usageTable td {
+  text-align: center;
+}
+#usageTable th:nth-child(1),
+#usageTable td:nth-child(1) {
+  width: 35%;
+} /* Nguyên Liệu */
+#usageTable th:nth-child(2),
+#usageTable td:nth-child(2) {
+  width: 12%;
+} /* Đơn Vị */
+#usageTable th:nth-child(3),
+#usageTable td:nth-child(3) {
+  width: 15%;
+} /* Tồn Kho */
+#usageTable th:nth-child(4),
+#usageTable td:nth-child(4) {
+  width: 20%;
+} /* Trạng Thái */
+#usageTable th:nth-child(5),
+#usageTable td:nth-child(5) {
+  width: 18%;
+} /* Thao Tác */
+
+/* ── /cashier/inventory (admin layout) — Ingredient table (6 cols)
+   Col 1  Checkbox        tiny
+   Col 2  Tên Nguyên Liệu name + icon cell, widest
+   Col 3  Đơn Vị          badge, compact
+   Col 4  Trạng Thái      status dot + text
+   Col 5  Số Lượng        number, right-aligned
+   Col 6  Thao Tác        action buttons
+   Total: 5+40+12+20+12+11 = 100%
+   ─────────────────────────────────────────────────────────────── */
+#inventoryTable {
+  table-layout: fixed;
+  min-width: 560px;
+}
+/* Center all th and td */
+#inventoryTable th,
+#inventoryTable td {
+  text-align: center;
+}
+#inventoryTable td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#inventoryTable td:has(.dash-product-cell),
+#inventoryTable td:has(.dash-status-indicator),
+#inventoryTable td:has(.dash-table-actions) {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+/* Center flex containers inside inventory table cells */
+#inventoryTable .dash-product-cell {
+  justify-content: flex-start;
+}
+#inventoryTable .dash-status-indicator,
+#inventoryTable .dash-table-actions {
+  justify-content: center;
+}
+/* Column widths — 6 columns, total = 100% */
+#inventoryTable th:nth-child(1),
+#inventoryTable td:nth-child(1) {
+  width: 5%;
+} /* checkbox */
+#inventoryTable th:nth-child(2),
+#inventoryTable td:nth-child(2) {
+  width: 30%;
+} /* Tên Nguyên Liệu */
+#inventoryTable th:nth-child(3),
+#inventoryTable td:nth-child(3) {
+  width: 12%;
+} /* Đơn Vị */
+#inventoryTable th:nth-child(4),
+#inventoryTable td:nth-child(4) {
+  width: 20%;
+} /* Trạng Thái */
+#inventoryTable th:nth-child(5),
+#inventoryTable td:nth-child(5) {
+  width: 12%;
+} /* Số Lượng */
+#inventoryTable th:nth-child(6),
+#inventoryTable td:nth-child(6) {
+  width: 21%;
+} /* Thao Tác */

@@ -31,7 +31,7 @@ public class ToppingsController : ControllerBase
         return Ok(topping);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
     public IActionResult Create(Toppings model)
     {
@@ -39,7 +39,7 @@ public class ToppingsController : ControllerBase
         return Ok(new { message = "Topping created successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
     public IActionResult Update(int id, Toppings model)
     {
@@ -47,7 +47,7 @@ public class ToppingsController : ControllerBase
         return Ok(new { message = "Topping updated successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {

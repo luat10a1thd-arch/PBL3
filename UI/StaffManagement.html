@@ -1,12 +1,22 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="vi">
   <head>
+    <base href="/app/">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
     <title>Quản Lý Nhân Viên - Cafe 24/7</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body class="admin-dashboard dash-bg-wrapper">
     <div class="dash-bg-overlay"></div>
@@ -22,42 +32,45 @@
       </div>
 
       <nav class="dash-nav">
-        <a href="AdminDashboard.html" class="dash-nav-item">
+        <a href="/app/dashboard" class="dash-nav-item">
           <i class="fa-solid fa-chart-line dash-nav-icon"></i>
           <span class="dash-nav-text">Tổng Quan</span>
         </a>
-        <a href="Orders.html" class="dash-nav-item">
+        <a href="/app/orders" class="dash-nav-item">
           <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
           <span class="dash-nav-text">Đơn Hàng</span>
         </a>
-        <a href="AdminMenuManagement.html" class="dash-nav-item">
+        <a href="/app/menu" class="dash-nav-item">
           <i class="fa-solid fa-utensils dash-nav-icon"></i>
           <span class="dash-nav-text">Thực Đơn</span>
         </a>
-        <a href="Inventory.html" class="dash-nav-item">
+        <a href="/app/inventory" class="dash-nav-item">
           <i class="fa-solid fa-box dash-nav-icon"></i>
           <span class="dash-nav-text">Kho Hàng</span>
         </a>
-        <a href="ImportHistory.html" class="dash-nav-item">
+        <a href="/app/imports" class="dash-nav-item">
           <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
           <span class="dash-nav-text">Lịch Sử Nhập</span>
         </a>
-        <a href="StaffManagement.html" class="dash-nav-item active">
+        <a href="/app/staff" class="dash-nav-item">
           <i class="fa-solid fa-users dash-nav-icon"></i>
           <span class="dash-nav-text">Nhân Viên</span>
         </a>
-        <a href="CashierInterface.html" class="dash-nav-item">
-          <i class="fa-solid fa-cash-register dash-nav-icon"></i>
-          <span class="dash-nav-text">Thu Ngân</span>
+        <a href="/app/suppliers" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhà Cung Cấp</span>
         </a>
-        <a href="MonthlyReport.html" class="dash-nav-item">
+        <a href="/app/vouchers" class="dash-nav-item">
+          <i class="fa-solid fa-ticket dash-nav-icon"></i>
+          <span class="dash-nav-text">Mã Giảm Giá</span>
+        </a>        <a href="/app/reports" class="dash-nav-item">
           <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
           <span class="dash-nav-text">Báo Cáo Tháng</span>
         </a>
       </nav>
 
       <div class="dash-bottom-actions">
-        <a href="ShiftClosingReport.html" class="dash-nav-item">
+        <a href="/app/shift-report" class="dash-nav-item">
           <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
           <span class="dash-nav-text">Chốt Ca</span>
         </a>
@@ -69,7 +82,7 @@
           <div class="dash-user-avatar">AM</div>
           <div class="dash-user-info">
             <span class="dash-user-name">Alex Morgan</span>
-            <span class="dash-user-role">Quản Trị Viên</span>
+            <span class="dash-user-role">Quản Lý</span>
           </div>
         </div>
       </div>
@@ -78,19 +91,21 @@
     <main class="dash-main">
       <header class="dash-header">
         <div class="dash-header-left">
-          <button class="dash-hamburger" id="sidebarToggle" aria-label="Mở menu">
+          <button
+            class="dash-hamburger"
+            id="sidebarToggle"
+            aria-label="Mở menu"
+          >
             <i class="fa-solid fa-bars"></i>
           </button>
           <div>
             <h2 class="dash-page-title">Quản Lý Nhân Viên</h2>
-            <p class="dash-page-subtitle">Quản lý thông tin, ca làm việc và hiệu suất nhân viên</p>
+            <p class="dash-page-subtitle">
+              Quản lý thông tin, ca làm việc và hiệu suất nhân viên
+            </p>
           </div>
         </div>
         <div class="dash-header-right">
-          <div class="dash-search-box">
-            <i class="fa-solid fa-search dash-search-icon"></i>
-            <input type="text" placeholder="Tìm theo tên hoặc mã NV..." class="dash-search-input" id="staffSearchInput" />
-          </div>
           <button class="dash-notification-btn">
             <i class="fa-solid fa-bell"></i>
             <span class="dash-notification-dot"></span>
@@ -100,7 +115,6 @@
 
       <div class="dash-content-area">
         <div class="dash-content-container">
-
           <!-- KPI Cards -->
           <div class="dash-kpi-grid">
             <div class="dash-card">
@@ -150,16 +164,35 @@
 
           <!-- Actions Bar -->
           <div class="dash-actions-bar">
-            <div class="dash-order-filter-tabs">
-              <button class="dash-filter-btn active" data-role="">Tất cả</button>
-              <button class="dash-filter-btn" data-role="Pha Chế">Pha chế</button>
-              <button class="dash-filter-btn" data-role="Thu Ngân">Thu ngân</button>
-              <button class="dash-filter-btn" data-role="Phục Vụ">Phục vụ</button>
-              <button class="dash-filter-btn" data-role="Quản Lý">Quản lý</button>
+            <div class="dash-filter-group">
+              <div class="dash-search-box">
+                <i class="fa-solid fa-search dash-search-icon"></i>
+                <input
+                  type="text"
+                  placeholder="Tìm theo tên hoặc mã NV..."
+                  class="dash-search-input"
+                  id="staffSearchInput"
+                />
+              </div>
+              <div class="dash-order-filter-tabs">
+                <button class="dash-filter-btn active" data-role="">
+                  Tất cả
+                </button>
+                <button class="dash-filter-btn" data-role="Manager">
+                  Quản lí
+                </button>
+                <button class="dash-filter-btn" data-role="Staff">
+                  Nhân viên
+                </button>
+              </div>
             </div>
             <div class="dash-flex-row">
-              <button class="dash-btn-secondary">
-                <i class="fa-solid fa-filter"></i> Lọc Nâng Cao
+              <button
+                class="dash-btn-secondary"
+                id="btnBulkDelete"
+                style="display: none; color: #ef4444; border-color: #ef4444"
+              >
+                <i class="fa-solid fa-trash"></i> Xóa Đã Chọn
               </button>
               <button class="dash-btn-primary" id="btnAddStaff">
                 <i class="fa-solid fa-user-plus"></i> Thêm Nhân Viên
@@ -172,7 +205,7 @@
             <table class="dash-table no-margin">
               <thead>
                 <tr>
-                  <th class="td-checkbox"><input type="checkbox" /></th>
+                  <th class="td-checkbox"></th>
                   <th>Nhân Viên</th>
                   <th>Chức Vụ</th>
                   <th>Ca Làm Việc</th>
@@ -188,15 +221,18 @@
             <div class="dash-pagination pd-25">
               <div class="dash-pagination-info">Đang tải dữ liệu...</div>
               <div class="dash-pagination-controls">
-                <button class="dash-page-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="dash-page-btn" disabled>
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
                 <button class="dash-page-btn active">1</button>
                 <button class="dash-page-btn">2</button>
                 <button class="dash-page-btn">3</button>
-                <button class="dash-page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <button class="dash-page-btn">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </main>
@@ -206,32 +242,43 @@
       <div class="staff-modal">
         <div class="staff-modal-header">
           <h3 class="staff-modal-title" id="modalTitle">Thêm Nhân Viên Mới</h3>
-          <button class="staff-modal-close" id="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+          <button class="staff-modal-close" id="btnCloseModal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
         <div class="staff-modal-body">
           <div class="staff-form-row">
             <div class="form-group">
-              <label>Họ và Tên <span style="color:#ef4444">*</span></label>
-              <input type="text" class="staff-input" id="staffNameInput" placeholder="Ví dụ: Nguyễn Văn A" />
+              <label>Họ và Tên <span style="color: #ef4444">*</span></label>
+              <input
+                type="text"
+                class="staff-input"
+                id="staffNameInput"
+                placeholder="Ví dụ: Nguyễn Văn A"
+              />
             </div>
             <div class="form-group">
               <label>Mã Nhân Viên</label>
-              <input type="text" class="staff-input" id="staffCodeInput" placeholder="Tự động tạo" disabled />
+              <input
+                type="text"
+                class="staff-input"
+                id="staffCodeInput"
+                placeholder="Tự động tạo"
+                disabled
+              />
             </div>
           </div>
           <div class="staff-form-row">
             <div class="form-group">
-              <label>Chức Vụ <span style="color:#ef4444">*</span></label>
+              <label>Chức Vụ <span style="color: #ef4444">*</span></label>
               <select class="staff-input" id="staffRoleInput">
                 <option value="">-- Chọn chức vụ --</option>
-                <option>Quản Lý</option>
-                <option>Pha Chế</option>
-                <option>Thu Ngân</option>
-                <option>Phục Vụ</option>
+                <option value="Manager">Quản lí</option>
+                <option value="Staff">Nhân viên</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Ca Làm Việc <span style="color:#ef4444">*</span></label>
+              <label>Ca Làm Việc <span style="color: #ef4444">*</span></label>
               <select class="staff-input" id="staffShiftInput">
                 <option value="">-- Chọn ca --</option>
                 <option>CA 1: 06:00 – 12:00</option>
@@ -243,18 +290,55 @@
           </div>
           <div class="staff-form-row">
             <div class="form-group">
-              <label>Số Điện Thoại <span style="color:#ef4444">*</span></label>
-              <input type="tel" class="staff-input" id="staffPhoneInput" placeholder="09xx xxx xxx" />
+              <label>Số Điện Thoại <span style="color: #ef4444">*</span></label>
+              <input
+                type="tel"
+                class="staff-input"
+                id="staffPhoneInput"
+                placeholder="09xx xxx xxx"
+              />
             </div>
             <div class="form-group">
               <label>Email</label>
-              <input type="email" class="staff-input" id="staffEmailInput" placeholder="email@cafe247.vn" />
+              <input
+                type="email"
+                class="staff-input"
+                id="staffEmailInput"
+                placeholder="email@cafe247.vn"
+              />
             </div>
           </div>
           <div class="staff-form-row">
             <div class="form-group">
-              <label>Lương / Tháng (₫) <span style="color:#ef4444">*</span></label>
-              <input type="number" class="staff-input" id="staffSalaryInput" placeholder="Ví dụ: 8000000" />
+              <label>Tên đăng nhập <span style="color: #ef4444">*</span></label>
+              <input
+                type="text"
+                class="staff-input"
+                id="staffUsernameInput"
+                placeholder="Ví dụ: nhanvien01"
+              />
+            </div>
+            <div class="form-group">
+              <label>Mật khẩu <span style="color: #ef4444">*</span></label>
+              <input
+                type="password"
+                class="staff-input"
+                id="staffPasswordInput"
+                placeholder="Tối thiểu 6 ký tự"
+              />
+            </div>
+          </div>
+          <div class="staff-form-row">
+            <div class="form-group">
+              <label
+                >Lương / Tháng (₫) <span style="color: #ef4444">*</span></label
+              >
+              <input
+                type="number"
+                class="staff-input"
+                id="staffSalaryInput"
+                placeholder="Ví dụ: 8000000"
+              />
             </div>
             <div class="form-group">
               <label>Trạng Thái</label>
@@ -266,9 +350,14 @@
             </div>
           </div>
           <div class="staff-form-row">
-            <div class="form-group" style="flex: 1;">
+            <div class="form-group" style="flex: 1">
               <label>Địa Chỉ</label>
-              <input type="text" class="staff-input" id="staffAddressInput" placeholder="Số nhà, đường, phường, quận, thành phố" />
+              <input
+                type="text"
+                class="staff-input"
+                id="staffAddressInput"
+                placeholder="Số nhà, đường, phường, quận, thành phố"
+              />
             </div>
           </div>
           <div class="staff-form-row">
@@ -278,20 +367,27 @@
             </div>
             <div class="form-group">
               <label>CCCD / CMND</label>
-              <input type="text" class="staff-input" id="staffIdentityInput" placeholder="12 chữ số" />
+              <input
+                type="text"
+                class="staff-input"
+                id="staffIdentityInput"
+                placeholder="12 chữ số"
+              />
             </div>
           </div>
         </div>
         <div class="staff-modal-footer">
           <button class="dash-btn-secondary" id="btnCancelModal">Huỷ</button>
-          <button class="dash-btn-primary" id="btnSaveStaff"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+          <button class="dash-btn-primary" id="btnSaveStaff">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu
+          </button>
         </div>
       </div>
     </div>
 
-    <script src="Common.js"></script>
+    <script src="Common.js?v=20260420a"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="RealtimeShiftSync.js"></script>
-    <script src="StaffManagement.js"></script>
+    <script src="StaffManagement.js?v=20260420a"></script>
   </body>
 </html>

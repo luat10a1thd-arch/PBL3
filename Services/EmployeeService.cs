@@ -28,7 +28,7 @@ public class EmployeeService : IEmployeeService
 
         if (!string.IsNullOrWhiteSpace(role))
         {
-            var roleFilter = role.Trim();
+            var roleFilter = NormalizeEmployeeRole(role);
             query = query.Where(e => e.Role == roleFilter);
         }
 
@@ -58,7 +58,7 @@ public class EmployeeService : IEmployeeService
         ValidateEmployee(employee);
 
         var normalizedName = employee.Name.Trim();
-        var normalizedRole = employee.Role.Trim();
+        var normalizedRole = NormalizeEmployeeRole(employee.Role);
         var normalizedSalary = NormalizeSalary(employee.BasicSalary);
 
         var duplicate = await _context.Employees.AnyAsync(e => e.Name == normalizedName && e.Role == normalizedRole);
@@ -83,7 +83,7 @@ public class EmployeeService : IEmployeeService
             throw new KeyNotFoundException("Không tìm thấy nhân viên");
 
         var normalizedName = employee.Name.Trim();
-        var normalizedRole = employee.Role.Trim();
+        var normalizedRole = NormalizeEmployeeRole(employee.Role);
         var normalizedSalary = NormalizeSalary(employee.BasicSalary);
 
         var duplicate = await _context.Employees.AnyAsync(e => e.EmployeeId != id && e.Name == normalizedName && e.Role == normalizedRole);
@@ -118,6 +118,18 @@ public class EmployeeService : IEmployeeService
 
         if (string.IsNullOrWhiteSpace(employee.Role))
             throw new AppException("Chức vụ không được để trống");
+    }
+
+    private static string NormalizeEmployeeRole(string role)
+    {
+        var normalized = (role ?? string.Empty).Trim().ToLowerInvariant();
+        if (normalized is "manager" or "admin" or "owner" or "quản lý" or "quan ly" or "chủ quán" or "chu quan")
+            return "Manager";
+
+        if (normalized is "staff" or "nhân viên" or "nhan vien" or "pha chế" or "pha che" or "thu ngân" or "thu ngan" or "phục vụ" or "phuc vu")
+            return "Staff";
+
+        throw new AppException("Chức vụ chỉ hỗ trợ: Chủ quán hoặc Nhân viên");
     }
 
     private static string NormalizeSalary(string salary)

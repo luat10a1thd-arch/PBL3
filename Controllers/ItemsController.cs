@@ -1,6 +1,7 @@
 namespace WebApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 using WebApi.Authorization;
 using WebApi.Entities;
 using WebApi.Services;
@@ -38,27 +39,54 @@ public class ItemsController : ControllerBase
         return Ok(items);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
-    public IActionResult Create(Item model)
+    public IActionResult Create([FromBody] ItemUpsertRequest model)
     {
-        _itemService.Create(model);
+        _itemService.Create(new Item
+        {
+            Name = model.Name,
+            CategoryId = model.CategoryId,
+            BasePrice = model.BasePrice,
+            ImageUrl = model.ImageUrl
+        });
         return Ok(new { message = "Item created successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Item model)
+    public IActionResult Update(int id, [FromBody] ItemUpsertRequest model)
     {
-        _itemService.Update(id, model);
+        _itemService.Update(id, new Item
+        {
+            Name = model.Name,
+            CategoryId = model.CategoryId,
+            BasePrice = model.BasePrice,
+            ImageUrl = model.ImageUrl
+        });
         return Ok(new { message = "Item updated successfully" });
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
         _itemService.Delete(id);
         return Ok(new { message = "Item deleted successfully" });
     }
+}
+
+public sealed class ItemUpsertRequest
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [JsonPropertyName("categoryId")]
+    public int CategoryId { get; set; }
+
+    [JsonPropertyName("basePrice")]
+    public decimal BasePrice { get; set; }
+
+    [JsonPropertyName("imageUrl")]
+    public string ImageUrl { get; set; } = string.Empty;
 }

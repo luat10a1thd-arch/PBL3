@@ -34,7 +34,7 @@ public class SuppliersController : ControllerBase
         return Ok(supplier);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPost]
     public async Task<IActionResult> Create(Supplier supplier)
     {
@@ -42,7 +42,7 @@ public class SuppliersController : ControllerBase
         return Ok(created);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Supplier supplier)
     {
@@ -50,7 +50,7 @@ public class SuppliersController : ControllerBase
         return Ok(updated);
     }
 
-    [Authorize(Role.Admin, Role.Owner)]
+    [Authorize(Role.Manager)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

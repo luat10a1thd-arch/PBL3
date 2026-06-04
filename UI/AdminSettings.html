@@ -1,0 +1,517 @@
+﻿<!doctype html>
+<html lang="vi">
+  <head>
+    <base href="/app/">
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <title>Cài Đặt Hệ Thống - Cafe 24/7</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="admin-dashboard dash-bg-wrapper">
+    <div class="dash-bg-overlay"></div>
+    <div class="dash-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="dash-sidebar">
+      <div class="dash-logo-wrap">
+        <i class="fa-solid fa-mug-saucer dash-logo-icon"></i>
+        <div class="dash-logo-text-wrap">
+          <h1 class="dash-logo-title">CAFE 24/7</h1>
+          <p class="dash-logo-subtitle">Bảng Quản Trị</p>
+        </div>
+      </div>
+
+      <nav class="dash-nav">
+        <a href="/app/dashboard" class="dash-nav-item">
+          <i class="fa-solid fa-chart-line dash-nav-icon"></i>
+          <span class="dash-nav-text">Tổng Quan</span>
+        </a>
+        <a href="/app/orders" class="dash-nav-item">
+          <i class="fa-solid fa-shopping-bag dash-nav-icon"></i>
+          <span class="dash-nav-text">Đơn Hàng</span>
+        </a>
+        <a href="/app/menu" class="dash-nav-item">
+          <i class="fa-solid fa-utensils dash-nav-icon"></i>
+          <span class="dash-nav-text">Thực Đơn</span>
+        </a>
+        <a href="/app/inventory" class="dash-nav-item">
+          <i class="fa-solid fa-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Kho Hàng</span>
+        </a>
+        <a href="/app/imports" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Lịch Sử Nhập</span>
+        </a>
+        <a href="/app/staff" class="dash-nav-item">
+          <i class="fa-solid fa-users dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhân Viên</span>
+        </a>
+        <a href="/app/suppliers" class="dash-nav-item">
+          <i class="fa-solid fa-truck-ramp-box dash-nav-icon"></i>
+          <span class="dash-nav-text">Nhà Cung Cấp</span>
+        </a>
+        <a href="/app/vouchers" class="dash-nav-item">
+          <i class="fa-solid fa-ticket dash-nav-icon"></i>
+          <span class="dash-nav-text">Mã Giảm Giá</span>
+        </a>        <a href="/app/reports" class="dash-nav-item">
+          <i class="fa-solid fa-chart-bar dash-nav-icon"></i>
+          <span class="dash-nav-text">Báo Cáo Tháng</span>
+        </a>
+      </nav>
+
+      <div class="dash-bottom-actions">
+        <a href="/app/shift-report" class="dash-nav-item">
+          <i class="fa-solid fa-file-invoice-dollar dash-nav-icon"></i>
+          <span class="dash-nav-text">Chốt Ca</span>
+        </a>
+        <a
+          href="/app/settings"
+          class="dash-nav-item dash-settings-link active"
+        >
+          <i class="fa-solid fa-gear dash-nav-icon"></i>
+          <span class="dash-nav-text">Cài Đặt</span>
+        </a>
+        <div class="dash-user-profile">
+          <div class="dash-user-avatar">--</div>
+          <div class="dash-user-info">
+            <span class="dash-user-name">Đang tải...</span>
+            <span class="dash-user-role">Admin</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <header class="dash-header">
+        <div class="dash-header-left">
+          <button
+            class="dash-hamburger"
+            id="sidebarToggle"
+            aria-label="Mở menu"
+          >
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div>
+            <h2 class="dash-page-title">Cài Đặt Hệ Thống</h2>
+            <p class="dash-page-subtitle">
+              Khu vực cấu hình dành riêng cho tài khoản Admin
+            </p>
+          </div>
+        </div>
+        <div class="dash-header-right">
+          <button class="dash-notification-btn">
+            <i class="fa-solid fa-shield-halved"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="dash-content-area">
+        <div class="dash-content-container">
+          <div class="dash-kpi-grid">
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Tài khoản hệ thống</h3>
+              <p class="dash-kpi-value" id="settingsTotalUsers">0</p>
+            </div>
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Admin</h3>
+              <p class="dash-kpi-value" id="settingsAdminCount">0</p>
+            </div>
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Quản lí</h3>
+              <p class="dash-kpi-value" id="settingsManagerCount">0</p>
+            </div>
+            <div class="dash-card">
+              <h3 class="dash-kpi-title">Nhân viên</h3>
+              <p class="dash-kpi-value" id="settingsStaffCount">0</p>
+            </div>
+          </div>
+
+          <div
+            class="dash-main-grid"
+            style="grid-template-columns: repeat(2, minmax(0, 1fr))"
+          >
+            <div class="dash-chart-card">
+              <div class="dash-section-header">
+                <div>
+                  <h3 class="dash-section-title">Phân quyền & tài khoản</h3>
+                  <p class="dash-section-subtitle">
+                    Quản lý người dùng mức hệ thống
+                  </p>
+                </div>
+              </div>
+              <div class="dash-orders-list">
+                <div class="dash-order-item">
+                  <div class="dash-order-item-left">
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div class="dash-order-details">
+                      <p class="dash-order-id">Admin</p>
+                      <p class="dash-order-desc">
+                        Toàn quyền cài đặt và quản trị tài khoản
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="dash-order-item">
+                  <div class="dash-order-item-left">
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div class="dash-order-details">
+                      <p class="dash-order-id">Quản lí</p>
+                      <p class="dash-order-desc">
+                        Vận hành cửa hàng, không truy cập cài đặt hệ thống
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="dash-order-item">
+                  <div class="dash-order-item-left">
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="dash-order-details">
+                      <p class="dash-order-id">Nhân viên</p>
+                      <p class="dash-order-desc">
+                        Nghiệp vụ quầy và thao tác bán hàng
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dash-recent-orders-card">
+              <h3 class="dash-section-title">Danh mục cài đặt</h3>
+              <div class="dash-orders-list">
+                <div class="dash-order-item">
+                  <div class="dash-order-item-left">
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div class="dash-order-details">
+                      <p class="dash-order-id">Thông tin cửa hàng</p>
+                      <p class="dash-order-desc">
+                        Tên, địa chỉ, múi giờ, giờ hoạt động, thuế
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="dash-order-item">
+                  <div class="dash-order-item-left">
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div class="dash-order-details">
+                      <p class="dash-order-id">Bảo mật</p>
+                      <p class="dash-order-desc">
+                        Chính sách mật khẩu, phiên đăng nhập, audit log
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="dash-order-item">
+                  <div class="dash-order-item-left">
+                    <div class="dash-order-icon">
+                      <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div class="dash-order-details">
+                      <p class="dash-order-id">Dữ liệu hệ thống</p>
+                      <p class="dash-order-desc">
+                        Sao lưu/khôi phục và cấu hình tích hợp
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-table-card" style="margin-top: 18px">
+            <div class="dash-table-header">
+              <h3 class="dash-table-title">
+                <i class="fa-solid fa-sliders"></i> Cấu Hình Hệ Thống
+              </h3>
+            </div>
+            <div style="padding: 20px 22px">
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label
+                    >Tên cửa hàng <span style="color: #ef4444">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="staff-input"
+                    id="cfgStoreName"
+                    placeholder="Ví dụ: CAFE 24/7"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Múi giờ <span style="color: #ef4444">*</span></label>
+                  <select class="staff-input" id="cfgTimeZoneId">
+                    <option value="Asia/Ho_Chi_Minh">Asia/Ho_Chi_Minh</option>
+                    <option value="UTC">UTC</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label>Số điện thoại</label>
+                  <input
+                    type="text"
+                    class="staff-input"
+                    id="cfgStorePhone"
+                    placeholder="Ví dụ: 0909xxxxxx"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    class="staff-input"
+                    id="cfgStoreEmail"
+                    placeholder="Ví dụ: cafe247@email.com"
+                  />
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group" style="flex: 1">
+                  <label>Địa chỉ</label>
+                  <input
+                    type="text"
+                    class="staff-input"
+                    id="cfgStoreAddress"
+                    placeholder="Số nhà, đường, quận, thành phố"
+                  />
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label>VAT (%) <span style="color: #ef4444">*</span></label>
+                  <input
+                    type="number"
+                    class="staff-input"
+                    id="cfgVatRatePercent"
+                    min="0"
+                    max="100"
+                    step="0.1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label
+                    >Timeout phiên (phút)
+                    <span style="color: #ef4444">*</span></label
+                  >
+                  <input
+                    type="number"
+                    class="staff-input"
+                    id="cfgSessionTimeoutMinutes"
+                    min="15"
+                    max="1440"
+                    step="1"
+                  />
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label
+                    >Giờ mở cửa (HH:mm)
+                    <span style="color: #ef4444">*</span></label
+                  >
+                  <input type="time" class="staff-input" id="cfgOpenTime" />
+                </div>
+                <div class="form-group">
+                  <label
+                    >Giờ đóng cửa (HH:mm)
+                    <span style="color: #ef4444">*</span></label
+                  >
+                  <input type="time" class="staff-input" id="cfgCloseTime" />
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label
+                    >Độ dài mật khẩu tối thiểu
+                    <span style="color: #ef4444">*</span></label
+                  >
+                  <input
+                    type="number"
+                    class="staff-input"
+                    id="cfgMinPasswordLength"
+                    min="6"
+                    max="64"
+                    step="1"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Cập nhật lần cuối</label>
+                  <input
+                    type="text"
+                    class="staff-input"
+                    id="cfgUpdatedAt"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label>Cloudinary CloudName</label>
+                  <input
+                    type="text"
+                    class="staff-input"
+                    id="cfgCloudinaryCloudName"
+                    placeholder="Ví dụ: demo-cloud"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Cloudinary ApiKey</label>
+                  <input
+                    type="text"
+                    class="staff-input"
+                    id="cfgCloudinaryApiKey"
+                    placeholder="Ví dụ: 123456789"
+                  />
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label>Cloudinary ApiSecret</label>
+                  <input
+                    type="password"
+                    class="staff-input"
+                    id="cfgCloudinaryApiSecret"
+                    placeholder="Nhập ApiSecret"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Cloudinary Folder</label>
+                  <input
+                    type="text"
+                    class="staff-input"
+                    id="cfgCloudinaryFolder"
+                    placeholder="Ví dụ: qlcafe"
+                  />
+                </div>
+              </div>
+
+              <div class="staff-form-row">
+                <div class="form-group">
+                  <label
+                    ><input type="checkbox" id="cfgEnableRealtimeSync" /> Bật
+                    đồng bộ thời gian thực</label
+                  >
+                </div>
+                <div class="form-group">
+                  <label
+                    ><input type="checkbox" id="cfgAllowManualShiftOpen" /> Cho
+                    phép mở ca thủ công</label
+                  >
+                </div>
+              </div>
+
+              <div
+                style="
+                  display: flex;
+                  justify-content: flex-end;
+                  gap: 10px;
+                  margin-top: 10px;
+                "
+              >
+                <button class="dash-btn-secondary" id="btnReloadSettings">
+                  <i class="fa-solid fa-rotate"></i> Tải lại
+                </button>
+                <button class="dash-btn-primary" id="btnSaveSettings">
+                  <i class="fa-solid fa-floppy-disk"></i> Lưu cài đặt
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-table-card" style="margin-top: 18px">
+            <div class="dash-table-header">
+              <h3 class="dash-table-title">
+                <i class="fa-solid fa-shield"></i> Nhật Ký Hệ Thống
+              </h3>
+            </div>
+            <div style="padding: 20px 22px">
+              <div class="dash-actions-bar" style="margin-bottom: 12px">
+                <div class="dash-filter-group">
+                  <select class="dash-select-box" id="activityActionFilter">
+                    <option value="">Tất cả hành động</option>
+                    <option value="ORDER_CREATED">ORDER_CREATED</option>
+                    <option value="INGREDIENT_CONSUMED">
+                      INGREDIENT_CONSUMED
+                    </option>
+                    <option value="SHIFT_OPENED">SHIFT_OPENED</option>
+                    <option value="USER_REGISTER">USER_REGISTER</option>
+                    <option value="SYSTEM_CONFIG_UPDATED">
+                      SYSTEM_CONFIG_UPDATED
+                    </option>
+                  </select>
+                  <input
+                    type="text"
+                    class="dash-search-input"
+                    id="activityKeywordInput"
+                    placeholder="Tìm theo nội dung hoặc người dùng..."
+                    style="min-width: 280px"
+                  />
+                </div>
+                <button class="dash-btn-secondary" id="btnReloadActivity">
+                  <i class="fa-solid fa-rotate"></i> Tải log
+                </button>
+              </div>
+              <div class="dash-table-card no-padding" style="margin: 0">
+                <table class="dash-table no-margin">
+                  <thead>
+                    <tr>
+                      <th>Thời Gian</th>
+                      <th>Người Thực Hiện</th>
+                      <th>Hành Động</th>
+                      <th>Mô Tả</th>
+                      <th>Mức Độ</th>
+                    </tr>
+                  </thead>
+                  <tbody id="activityLogTableBody">
+                    <tr>
+                      <td
+                        colspan="5"
+                        style="
+                          text-align: center;
+                          padding: 24px;
+                          color: var(--dash-text-muted);
+                        "
+                      >
+                        Đang tải dữ liệu log...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="Common.js?v=20260420a"></script>
+    <script src="AdminSettings.js?v=20260420b"></script>
+  </body>
+</html>
